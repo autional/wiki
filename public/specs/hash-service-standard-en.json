@@ -1,0 +1,159 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Argon2id password hashing service (standard configuration). gRPC-only service.",
+    "title": "Hash Service (Standard)",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/api/v1",
+  "paths": {
+    "/grpc/hash.HashService/Hash": {
+      "post": {
+        "summary": "Hash Password (Argon2id)",
+        "description": "Accepts a plaintext password and returns the Argon2id hash string.",
+        "operationId": "hash.Hash",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Hash"
+        ],
+        "parameters": [
+          {
+            "description": "Password to hash",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "description": "Plaintext password",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Argon2id hash string",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "hash": {
+                  "description": "Argon2id hash in self-describing format",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/grpc/hash.HashService/Verify": {
+      "post": {
+        "summary": "Verify Password",
+        "description": "Accepts a plaintext password and hash string, returns whether they match and if rehashing is needed.",
+        "operationId": "hash.Verify",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Hash"
+        ],
+        "parameters": [
+          {
+            "description": "Password and hash to verify",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "description": "Plaintext password",
+                  "type": "string"
+                },
+                "hash": {
+                  "description": "Self-describing hash string",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification result",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "valid": {
+                  "description": "Whether the password matches the hash",
+                  "type": "boolean"
+                },
+                "needs_rehash": {
+                  "description": "Whether the hash should be upgraded",
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/grpc/hash.HashService/Health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Returns the health status and hash algorithm of the service.",
+        "operationId": "hash.Health",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service health status",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "description": "Health status",
+                  "type": "string"
+                },
+                "algorithm": {
+                  "description": "Hash algorithm in use",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "description": "Argon2id password hashing operations",
+      "name": "Hash"
+    },
+    {
+      "description": "Service health check",
+      "name": "Health"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

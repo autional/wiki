@@ -1,0 +1,33 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "SAML 2.0 service providing enterprise-grade SAML SSO authentication",
+    "title": "SAML Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/saml-service/api/v1",
+  "paths": {},
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "SAML 2.0 Authentication Endpoints",
+      "name": "SAML"
+    },
+    {
+      "description": "SAML Management Endpoints: IdP/SP Configuration",
+      "name": "SAML Admin"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

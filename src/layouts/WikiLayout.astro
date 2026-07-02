@@ -1,0 +1,85 @@
+---
+import '../styles/global.css';
+
+const services = [
+  { name:'identity-service', title:'Identity Service', port:11001 },
+  { name:'profile-service', title:'Profile Service', port:11002 },
+  { name:'tenant-service', title:'Tenant Service', port:11003 },
+  { name:'session-service', title:'Session Service', port:11004 },
+  { name:'mfa-service', title:'MFA Service', port:11005 },
+  { name:'oauth-service', title:'OAuth Service', port:11006 },
+  { name:'wallet-service', title:'Wallet Service', port:11011 },
+  { name:'point-service', title:'Point Service', port:11012 },
+  { name:'audit-service', title:'Audit Service', port:11013 },
+  { name:'notification-service', title:'Notification Service', port:11014 },
+  { name:'communication-service', title:'Communication Service', port:11015 },
+  { name:'storage-service', title:'Storage Service', port:11016 },
+  { name:'billing-service', title:'Billing Service', port:11017 },
+  { name:'compliance-service', title:'Compliance Service', port:11018 },
+  { name:'status-service', title:'Status Service', port:11019 },
+  { name:'secret-service', title:'Secret Service', port:11020 },
+  { name:'saml-service', title:'SAML Service', port:11021 },
+  { name:'pay-service', title:'Pay Service', port:11022 },
+  { name:'thirdparty-service', title:'Thirdparty Service', port:11023 },
+  { name:'verification-service', title:'Verification Service', port:11024 },
+  { name:'rbac-service', title:'RBAC Service', port:11025 },
+  { name:'gateway-service', title:'Gateway Service', port:11080 },
+];
+
+const { title = 'Aucial API Wiki' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const currentSvc = Astro.url.pathname.split('/')[1] || '';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>{title}</title>
+  <link rel="canonical" href={canonical.href}>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=7">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=7">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=7">
+  <link rel="manifest" href="/site.webmanifest?v=7">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen text-neutral-900 bg-white">
+  <header class="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 backdrop-blur h-14 flex items-center justify-between px-6">
+    <a href="/" class="flex items-center gap-3 no-underline">
+      <img src="/logo-mark.svg" alt="Aucial" class="h-8 w-8 object-contain">
+      <span class="text-base font-extrabold text-[#1e3a5f]">Aucial</span>
+      <span class="text-xs font-medium uppercase tracking-[0.28em] text-neutral-400 ml-1">API Wiki</span>
+    </a>
+    <a href="https://www.aucial.com" class="text-xs font-medium text-neutral-500 hover:text-primary-800">aucial.com &rarr;</a>
+  </header>
+
+  <div class="flex h-[calc(100vh-56px)] overflow-hidden">
+    <!-- LEFT: Service nav -->
+    <aside class="w-60 shrink-0 border-r border-neutral-100 overflow-y-auto bg-neutral-50/50">
+      <div class="sticky top-0 bg-neutral-50/95 border-b border-neutral-100 px-4 py-3 z-10">
+        <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400">Services</span>
+      </div>
+      <nav class="py-2">
+        {services.map(s => (
+          <a href={`/${s.name}/`} class={`block mx-2 my-0.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
+            currentSvc === s.name
+              ? 'bg-primary-100 text-primary-800'
+              : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
+          }`}>
+            {s.title}
+          </a>
+        ))}
+      </nav>
+    </aside>
+
+    <!-- CENTER & RIGHT: flexible slot -->
+    <div class="flex-1 flex overflow-hidden">
+      <slot />
+    </div>
+  </div>
+</body>
+</html>

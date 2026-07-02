@@ -1,0 +1,6639 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Wallet Service API, providing account balance, transaction records, deposits, withdrawals and other functions",
+    "title": "Wallet Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/wallet-service/api/v1",
+  "paths": {
+    "/admin/wallets": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query wallet list, supports filtering by status and pagination",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Wallet List",
+        "parameters": [
+          {
+            "enum": [
+              "active",
+              "frozen",
+              "closed"
+            ],
+            "type": "string",
+            "description": "Status Filter",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page Number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items Per Page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wallet List",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a wallet for the specified user, supports specifying currency. Reference: GAAP/IFRS (Double-Entry Accounting Principles).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Create Wallet",
+        "parameters": [
+          {
+            "description": "Create Wallet Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateWalletRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Wallet created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/batch-freeze": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Batch freeze funds of multiple user wallets",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Batch Freeze",
+        "parameters": [
+          {
+            "description": "Batch Freeze Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchFreezeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchFreezeResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/batch-unfreeze": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Batch unfreeze multiple freeze records",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Batch Unfreeze",
+        "parameters": [
+          {
+            "description": "Batch Unfreeze Parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchUnfreezeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchUnfreezeResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/coupons": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get coupon list",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Coupon List",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.CouponListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new coupon",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Create Coupon",
+        "parameters": [
+          {
+            "description": "Create Coupon Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateCouponRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.CouponCreateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/coupons/{coupon_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update a specified coupon",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Update Coupon",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Coupon ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update Coupon Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateCouponRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.CouponCreateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified coupon",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Delete Coupon",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Coupon ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_wallet-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/coupons/{id}/usages": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get usage records of a specified coupon",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Coupon Usage Records",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Coupon ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page Number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items Per Page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.CouponUsageListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/fraud-rules": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get anti-fraud rule list",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Anti-Fraud Rules",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.FraudRuleListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Batch update anti-fraud rules",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Update Anti-Fraud Rules",
+        "parameters": [
+          {
+            "description": "Anti-Fraud Rule Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateFraudRulesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_wallet-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/fraud-rules/{wallet_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete an anti-fraud rule by ID",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Delete Anti-Fraud Rule",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Rule ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_wallet-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/freeze-records/{wallet_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin deletes a specified freeze record",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Delete Freeze Record",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Freeze Record ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deletion successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Freeze record not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/reconciliation": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get reconciliation data for a specified tenant",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Reconciliation",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Reconciliation Date",
+            "name": "date",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ReconciliationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/snapshots": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of all wallet snapshot records, sorted by snapshot date in descending order",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Wallet Snapshot List",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page Number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items Per Page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletSnapshotListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/tenants/{tenant_id}/apps/{app_id}/policy": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get wallet policy configuration for a specified application",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Query Wallet Policy",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "tenant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Application ID",
+            "name": "app_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletPolicyResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create or update wallet policy configuration for a specified application",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Update Wallet Policy",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "tenant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Application ID",
+            "name": "app_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Policy Configuration",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/domain.WalletPolicy"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_wallet-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete policy configuration for a specified tenant and application",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Delete Wallet Policy",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "tenant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Application ID",
+            "name": "app_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_wallet-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/tenants/{tenant_id}/apps/{app_id}/summary": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get wallet balance summary for a specified application under a tenant",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Application Wallet Overview",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "tenant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Application ID",
+            "name": "app_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.TenantBalanceSummaryResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/tenants/{tenant_id}/disputes": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get dispute list under a tenant",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Dispute List",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "tenant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Status",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page Number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items Per Page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.DisputeListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/tenants/{tenant_id}/disputes/{dispute_id}/resolve": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Process a specified dispute",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Dispute Processing",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "tenant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Dispute ID",
+            "name": "dispute_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Processing Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "remark": {
+                  "type": "string"
+                },
+                "resolution": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.ResolveDisputeResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/tenants/{tenant_id}/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get aggregated statistics of all wallets under a tenant",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Tenant-Level Statistics",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "tenant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "default": "30d",
+            "description": "Statistics Period",
+            "name": "period",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start Date",
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End Date",
+            "name": "end_date",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.StatsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/tenants/{tenant_id}/summary": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get balance summary of all wallets under a specified tenant",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Tenant Wallet Overview",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "tenant_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.TenantBalanceSummaryResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/tenants/{tenant_id}/transactions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get all transaction records under a tenant",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Tenant-Level Transaction Records",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "tenant_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Transaction Type",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Status",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start Date",
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End Date",
+            "name": "end_date",
+            "in": "query"
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page Number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items Per Page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.TransactionListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/webhook-payloads": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of webhook callback records, supports filtering by status",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Webhook Callback Record List",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment Gateway Filter",
+            "name": "gateway",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Status Filter (pending/processed/failed)",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page Number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items Per Page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Callback Record List",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-dto_WebhookPayloadResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/webhook-payloads/{wallet_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get details of a single webhook callback record",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Webhook Callback Record Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Callback Record ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Callback Record Details",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_WebhookPayloadResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Callback record not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/withdrawals": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "User views their withdrawal application list",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Withdrawal Application List",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Status Filter",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page Number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items Per Page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.WithdrawalRequestListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/withdrawals/{wallet_id}/approve": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Approve a withdrawal application",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Approve Withdrawal",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Withdrawal Application ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Approval Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ApproveWithdrawalRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.WithdrawalRequestResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/withdrawals/{wallet_id}/reject": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Reject a withdrawal application",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Reject Withdrawal",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Withdrawal Application ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Rejection Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RejectWithdrawalRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.WithdrawalRequestResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/{user_id}/adjust": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin manually adjusts user balance (requires audit)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Manual Adjustment",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Adjustment Parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "amount": {
+                  "type": "string"
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.AdjustBalanceResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/{wallet_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update wallet status",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Update Wallet",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Wallet ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateWalletRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified wallet",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Delete Wallet",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Wallet ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_wallet-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/wallets/{wallet_id}/integrity": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Verify the integrity of the event hash chain for a specified wallet, detect tampering or data corruption",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Verify Wallet Integrity",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Wallet ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Integrity Verification Result",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-domain_WalletIntegrityResult"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/exchange-rates": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the current exchange rate between two currencies, generate a quote ID valid for 60 seconds",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Query Exchange Rate",
+        "parameters": [
+          {
+            "type": "string",
+            "example": "USD",
+            "description": "Source Currency",
+            "name": "from",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "example": "CNY",
+            "description": "Target Currency",
+            "name": "to",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exchange Rate Information",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_ExchangeRateResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/exchange-rates/convert": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Execute currency exchange using a quote ID. Reference: GAAP/IFRS (Double-Entry Accounting Principles). The quote_id is valid for 60 seconds and becomes invalid after exchange to prevent replay.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Execute Exchange",
+        "parameters": [
+          {
+            "description": "Exchange Request",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExchangeConvertRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exchange Result",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_ExchangeConvertResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Quote expired or reused",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid exchange amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/runtime": {
+      "get": {
+        "description": "Get runtime status information of the service",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service - Internal Interface"
+        ],
+        "summary": "Runtime Information",
+        "responses": {
+          "200": {
+            "description": "Runtime status (dynamic JSON, generated by health service)",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid API key",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/wallet/balance": {
+      "get": {
+        "description": "Internal service call to query balance, returns available balance and frozen balance",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service - Internal Interface"
+        ],
+        "summary": "Internal Query Balance",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Balance Information",
+            "schema": {
+              "$ref": "#/definitions/dto.BalanceResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid API key",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/wallet/erase-user": {
+      "post": {
+        "description": "Internal service call: erase all PII data of a specified user in the wallet service",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service - Internal Interface"
+        ],
+        "summary": "Internal GDPR Erasure",
+        "parameters": [
+          {
+            "description": "{\\",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Erasure successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid API key",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/wallet/export-user-data": {
+      "post": {
+        "description": "Called by internal services such as identity-service, returns all wallet and transaction data of the user in wallet-service (for GDPR data portability)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service - Internal Interface"
+        ],
+        "summary": "Internal Export User Wallet Data",
+        "parameters": [
+          {
+            "description": "{\\",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Wallet Data Export",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_ExportUserDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid API key",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/wallet/refund": {
+      "post": {
+        "description": "Internal service call to refund, processes actuarial refund according to GAAP/IFRS double-entry accounting principles",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service - Internal Interface"
+        ],
+        "summary": "Internal Refund",
+        "parameters": [
+          {
+            "description": "Refund Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RefundRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Refund successful",
+            "schema": {
+              "$ref": "#/definitions/dto.RefundDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid API key",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query wallet list, supports filtering by status and pagination",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Wallet List",
+        "parameters": [
+          {
+            "enum": [
+              "active",
+              "frozen",
+              "closed"
+            ],
+            "type": "string",
+            "description": "Status Filter",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page Number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items Per Page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wallet List",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a wallet for the specified user, supports specifying currency. Reference: GAAP/IFRS (Double-Entry Accounting Principles).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Create Wallet",
+        "parameters": [
+          {
+            "description": "Create Wallet Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateWalletRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Wallet created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/coupons": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get coupon list",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Coupon List",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.CouponListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new coupon",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Create Coupon",
+        "parameters": [
+          {
+            "description": "Create Coupon Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateCouponRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.CouponCreateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/snapshot": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query wallet balance snapshot for a specified date",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Wallet Snapshot",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Snapshot Date (YYYY-MM-DD)",
+            "name": "date",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletSnapshotListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Generate wallet balance snapshot",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Balance Snapshot",
+        "parameters": [
+          {
+            "description": "Snapshot Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SnapshotRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.SnapshotCreateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/transactions/{wallet_id}/cancel": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Cancel a specified transaction",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Cancel Transaction",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Cancel Transaction Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CancelTransactionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.CancelTransactionDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/transactions/{wallet_id}/dispute": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Dispute a transaction",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Transaction Dispute",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Dispute Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.TransactionDisputeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.DisputeSubmitDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/transfer": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Transfer between users. Reference: GAAP/IFRS (Double-Entry Accounting Principles) to ensure debit-credit balance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Wallet Transfer",
+        "parameters": [
+          {
+            "description": "Transfer Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.TransferRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transfer successful",
+            "schema": {
+              "$ref": "#/definitions/dto.TransferDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get wallet details for a user, including balance, frozen amount, currency, and status.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Get Wallet Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wallet details",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/balance": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get wallet balance for a user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Query Balance",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.BalanceResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/balance-history": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get audit trail of wallet balance changes for a user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Balance Change History",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.BalanceHistoryListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/coupons": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get coupon list for a user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "User Coupons",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.CouponListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/coupons/{code}/redeem": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Redeem a coupon using a coupon code.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Redeem Coupon",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Coupon code",
+            "name": "code",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Wallet ID",
+            "name": "wallet_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.RedeemCouponResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/deposit": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Deposit to a user's wallet. Reference: GAAP/IFRS (Double-Entry Accounting Principles).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Wallet Deposit",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Deposit Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.DepositRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deposit successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DepositDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/disputes": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List disputes for the current user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Dispute List",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Filter by status",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.DisputeListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/freeze": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Freeze funds in a user's wallet.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Freeze Funds",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Freeze Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.FreezeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.FreezeDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/freezes": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get freeze records for a user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Freeze Records",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Status",
+            "name": "status",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.FreezeRecordListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/refund": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Refund to a user's wallet.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Wallet Refund",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Refund Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RefundRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.RefundDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get wallet statistics for a user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Wallet Statistics",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "default": "all",
+            "description": "Statistics period",
+            "name": "period",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start date",
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End date",
+            "name": "end_date",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.WalletStatsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/transactions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get transaction records for a user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Transaction Records",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Transaction type",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Status",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start date",
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End date",
+            "name": "end_date",
+            "in": "query"
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.TransactionListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/unfreeze": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Unfreeze funds in a user's wallet.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Unfreeze Funds",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Unfreeze Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UnfreezeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.UnfreezeDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/withdraw": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Withdraw from a user's wallet. Reference: GAAP/IFRS (Double-Entry Accounting Principles).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Wallet Withdrawal",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Withdrawal Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.WithdrawRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Withdrawal successful",
+            "schema": {
+              "$ref": "#/definitions/dto.WithdrawDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/withdraw/request": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Submit a withdrawal request.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Request Withdrawal",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Withdrawal Request Body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.WithdrawalRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dto.WithdrawalRequestResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/wallets/{user_id}/withdrawals": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List withdrawal requests for the current user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Wallet Service"
+        ],
+        "summary": "Withdrawal Request List",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Filter by status",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dto.WithdrawalRequestListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "domain.WalletIntegrityResult": {
+      "type": "object",
+      "properties": {
+        "broken_at": {
+          "type": "integer"
+        },
+        "last_hash": {
+          "type": "string"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "wallet_id": {
+          "type": "string"
+        }
+      }
+    },
+    "domain.WalletPolicy": {
+      "type": "object",
+      "properties": {
+        "application_id": {
+          "type": "string"
+        },
+        "auto_approve_limit": {
+          "type": "number"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "daily_withdraw_limit": {
+          "type": "number"
+        },
+        "default_list_page_size": {
+          "type": "integer"
+        },
+        "export_page_size": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "string"
+        },
+        "idempotency_ttl": {
+          "type": "integer"
+        },
+        "internal_client_timeout": {
+          "type": "integer"
+        },
+        "max_balance": {
+          "description": "0 = Unlimited",
+          "type": "number"
+        },
+        "min_withdraw_amount": {
+          "type": "number"
+        },
+        "monthly_withdraw_limit": {
+          "type": "number"
+        },
+        "quote_cache_ttl": {
+          "type": "integer"
+        },
+        "rate_limit_per_hour": {
+          "type": "integer"
+        },
+        "rate_limit_per_min": {
+          "type": "integer"
+        },
+        "supported_currencies": {
+          "description": "comma-separated",
+          "type": "string"
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "timezone": {
+          "description": "Tenant timezone for daily limit calculation",
+          "type": "string"
+        },
+        "transfer_enabled": {
+          "type": "boolean"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "withdrawal_require_review": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.AdjustBalanceResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ManualAdjustResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ApproveWithdrawalRequest": {
+      "type": "object",
+      "properties": {
+        "approved_by": {
+          "type": "string"
+        },
+        "remark": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BalanceHistoryEntry": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "100.50"
+        },
+        "balance_after": {
+          "type": "string",
+          "example": "1000.50"
+        },
+        "balance_before": {
+          "type": "string",
+          "example": "900.00"
+        },
+        "date": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "Account deposit"
+        },
+        "transaction_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "type": {
+          "type": "string",
+          "example": "deposit"
+        }
+      }
+    },
+    "dto.BalanceHistoryListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.BalanceHistoryEntry"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.BalanceResponse": {
+      "description": "Wallet balance info",
+      "type": "object",
+      "properties": {
+        "available_balance": {
+          "description": "Available",
+          "type": "string",
+          "example": "900.00"
+        },
+        "balance": {
+          "description": "Balance",
+          "type": "string",
+          "example": "1000.00"
+        },
+        "frozen_balance": {
+          "description": "Frozen",
+          "type": "string",
+          "example": "100.00"
+        },
+        "wallet_id": {
+          "description": "Wallet ID",
+          "type": "string",
+          "example": "wlt_abc123"
+        }
+      }
+    },
+    "dto.BatchFreezeRequest": {
+      "type": "object",
+      "required": [
+        "amount",
+        "user_ids"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "user_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.BatchFreezeResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BatchFreezeResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchFreezeResult": {
+      "type": "object",
+      "properties": {
+        "frozen_count": {
+          "type": "integer",
+          "example": 5
+        }
+      }
+    },
+    "dto.BatchUnfreezeRequest": {
+      "type": "object",
+      "required": [
+        "freeze_ids"
+      ],
+      "properties": {
+        "freeze_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchUnfreezeResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BatchUnfreezeResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchUnfreezeResult": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"frz_xyz: already released\"]"
+          ]
+        },
+        "failed": {
+          "type": "integer",
+          "example": 1
+        },
+        "succeeded": {
+          "type": "integer",
+          "example": 9
+        },
+        "total": {
+          "type": "integer",
+          "example": 10
+        }
+      }
+    },
+    "dto.CancelTransactionDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CancelTransactionResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CancelTransactionRequest": {
+      "description": "Cancel transaction request parameters",
+      "type": "object",
+      "properties": {
+        "reason": {
+          "description": "Reason",
+          "type": "string",
+          "example": "Duplicate order"
+        }
+      }
+    },
+    "dto.CancelTransactionResult": {
+      "type": "object",
+      "properties": {
+        "cancelled": {
+          "description": "Whether cancellation succeeded",
+          "type": "boolean"
+        },
+        "refund_amount": {
+          "description": "Refund amount",
+          "type": "string",
+          "example": "100.00"
+        }
+      }
+    },
+    "dto.CouponCreateDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CouponCreateResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CouponCreateResult": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Coupon code",
+          "type": "string",
+          "example": "SUMMER2026"
+        },
+        "coupon_id": {
+          "description": "Coupon ID",
+          "type": "string",
+          "example": "cpn_abc123"
+        },
+        "currency": {
+          "description": "Currency",
+          "type": "string",
+          "example": "CNY"
+        },
+        "expires_at": {
+          "description": "Expiration time",
+          "type": "string",
+          "example": "2026-12-31T23:59:59Z"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "active"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "discount"
+        },
+        "value": {
+          "description": "Value",
+          "type": "string",
+          "example": "10.00"
+        }
+      }
+    },
+    "dto.CouponListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.CouponResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.CouponResponse": {
+      "description": "Coupon info",
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code",
+          "type": "string",
+          "example": "DISCOUNT20"
+        },
+        "created_at": {
+          "description": "Created",
+          "type": "string",
+          "example": "2026-01-01T00:00:00Z"
+        },
+        "id": {
+          "description": "ID",
+          "type": "string",
+          "example": "cpn_abc123"
+        },
+        "min_amount": {
+          "description": "Minimum spend",
+          "type": "string",
+          "example": "100.00"
+        },
+        "name": {
+          "description": "Name",
+          "type": "string",
+          "example": "20 yuan coupon"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "unused"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "cash"
+        },
+        "used_at": {
+          "description": "Usage time",
+          "type": "string",
+          "example": ""
+        },
+        "used_order_id": {
+          "description": "Order ID",
+          "type": "string",
+          "example": ""
+        },
+        "valid_from": {
+          "description": "Active",
+          "type": "string",
+          "example": "2026-01-01T00:00:00Z"
+        },
+        "valid_until": {
+          "description": "Expired",
+          "type": "string",
+          "example": "2026-12-31T23:59:59Z"
+        },
+        "value": {
+          "description": "Value",
+          "type": "string",
+          "example": "20.00"
+        }
+      }
+    },
+    "dto.CouponUsageListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.CouponUsageResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.CouponUsageResponse": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-01-15T10:00:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "cu_001"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user_001"
+        },
+        "wallet_id": {
+          "type": "string",
+          "example": "wallet_001"
+        }
+      }
+    },
+    "dto.CreateCouponRequest": {
+      "description": "Create coupon request parameters",
+      "type": "object",
+      "required": [
+        "code",
+        "type",
+        "value"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "SUMMER2026"
+        },
+        "currency": {
+          "type": "string",
+          "example": "CNY"
+        },
+        "expires_at": {
+          "type": "string",
+          "example": "2026-12-31T23:59:59Z"
+        },
+        "min_spend": {
+          "type": "string",
+          "example": "50.00"
+        },
+        "name": {
+          "type": "string",
+          "example": "Summer coupon"
+        },
+        "type": {
+          "type": "string",
+          "example": "discount"
+        },
+        "value": {
+          "type": "string",
+          "example": "10.00"
+        }
+      }
+    },
+    "dto.CreateWalletRequest": {
+      "description": "Create new wallet request parameters",
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "currency": {
+          "description": "Currency",
+          "type": "string",
+          "example": "CNY"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.DataResponse-domain_WalletIntegrityResult": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/domain.WalletIntegrityResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_ExchangeConvertResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ExchangeConvertResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_ExchangeRateResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ExchangeRateResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_ExportUserDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ExportUserDataResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_WebhookPayloadResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.WebhookPayloadResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DepositDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.DepositResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DepositRequest": {
+      "description": "Wallet deposit request parameters",
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "description": "Amount",
+          "type": "string",
+          "example": "100.00"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string",
+          "example": "Account deposit"
+        },
+        "reference_id": {
+          "description": "External reference",
+          "type": "string",
+          "example": "order_123"
+        }
+      }
+    },
+    "dto.DepositResult": {
+      "type": "object",
+      "properties": {
+        "transaction": {
+          "description": "Transaction record",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.TransactionResponse"
+            }
+          ]
+        },
+        "wallet": {
+          "description": "Wallet info",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.WalletResponse"
+            }
+          ]
+        }
+      }
+    },
+    "dto.DisputeListItem": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "transaction_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DisputeListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.DisputeListItem"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.DisputeSubmitDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.DisputeSubmitResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DisputeSubmitResult": {
+      "type": "object",
+      "properties": {
+        "dispute_id": {
+          "description": "Dispute ID",
+          "type": "string",
+          "example": "dsp-001"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "submitted"
+        }
+      }
+    },
+    "dto.ExchangeConvertRequest": {
+      "type": "object",
+      "required": [
+        "amount",
+        "quote_id"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "100.00"
+        },
+        "quote_id": {
+          "type": "string",
+          "example": "qt_abc123def"
+        },
+        "remark": {
+          "type": "string",
+          "example": "USD to CNY conversion"
+        }
+      }
+    },
+    "dto.ExchangeConvertResponse": {
+      "type": "object",
+      "properties": {
+        "from_amount": {
+          "type": "string",
+          "example": "100.00"
+        },
+        "from_currency": {
+          "type": "string",
+          "example": "USD"
+        },
+        "message": {
+          "type": "string",
+          "example": "Redeemed successfully"
+        },
+        "quote_id": {
+          "type": "string",
+          "example": "qt_abc123def"
+        },
+        "rate": {
+          "type": "number",
+          "example": 7.24
+        },
+        "to_amount": {
+          "type": "string",
+          "example": "724.00"
+        },
+        "to_currency": {
+          "type": "string",
+          "example": "CNY"
+        },
+        "transaction_id": {
+          "type": "string",
+          "example": "txn_001"
+        }
+      }
+    },
+    "dto.ExchangeRateResponse": {
+      "type": "object",
+      "properties": {
+        "expires_at": {
+          "type": "string",
+          "example": "2026-05-12T10:01:00Z"
+        },
+        "from_currency": {
+          "type": "string",
+          "example": "USD"
+        },
+        "quote_id": {
+          "type": "string",
+          "example": "qt_abc123def"
+        },
+        "rate": {
+          "type": "number",
+          "example": 7.24
+        },
+        "to_currency": {
+          "type": "string",
+          "example": "CNY"
+        }
+      }
+    },
+    "dto.ExportUserDataResponse": {
+      "type": "object",
+      "properties": {
+        "transaction_count": {
+          "type": "integer",
+          "example": 42
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.TransactionResponse"
+          }
+        },
+        "wallet": {
+          "$ref": "#/definitions/dto.WalletResponse"
+        }
+      }
+    },
+    "dto.FraudRuleItem": {
+      "description": "Single fraud rule configuration",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enabled",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name",
+          "type": "string",
+          "example": "Single transaction limit"
+        },
+        "rule_id": {
+          "description": "Rule ID",
+          "type": "string",
+          "example": "rule-001"
+        },
+        "threshold": {
+          "description": "Threshold",
+          "type": "string",
+          "example": "10000"
+        }
+      }
+    },
+    "dto.FraudRuleListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FraudRuleResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.FraudRuleResponse": {
+      "description": "Fraud rule configuration",
+      "type": "object",
+      "properties": {
+        "action": {
+          "description": "Action",
+          "type": "string",
+          "example": "block"
+        },
+        "condition": {
+          "description": "Condition",
+          "type": "string",
+          "example": "Single transaction exceeds 5000"
+        },
+        "id": {
+          "description": "Rule ID",
+          "type": "string",
+          "example": "fraud_abc123"
+        },
+        "name": {
+          "description": "Name",
+          "type": "string",
+          "example": "Single transaction limit"
+        },
+        "priority": {
+          "description": "Priority",
+          "type": "integer",
+          "example": 1
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "enabled"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "amount_limit"
+        },
+        "updated_at": {
+          "description": "Updated time",
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        }
+      }
+    },
+    "dto.FreezeDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FreezeResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FreezeRecordListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FreezeRecordResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.FreezeRecordResponse": {
+      "description": "Fund freeze record",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "description": "Amount",
+          "type": "string",
+          "example": "100.00"
+        },
+        "created_at": {
+          "description": "Created",
+          "type": "string",
+          "example": "2026-04-10T00:00:00Z"
+        },
+        "id": {
+          "description": "Record ID",
+          "type": "string",
+          "example": "frz_abc123"
+        },
+        "reason": {
+          "description": "Reason",
+          "type": "string",
+          "example": "Dispute freeze"
+        },
+        "released_at": {
+          "description": "Unfrozen",
+          "type": "string",
+          "example": "2026-04-15T00:00:00Z"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "active"
+        },
+        "wallet_id": {
+          "description": "Wallet ID",
+          "type": "string",
+          "example": "wlt_abc123"
+        }
+      }
+    },
+    "dto.FreezeRequest": {
+      "description": "Freeze fund request parameters",
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "description": "Amount",
+          "type": "string",
+          "example": "100.00"
+        },
+        "reason": {
+          "description": "Reason",
+          "type": "string",
+          "example": "Dispute freeze"
+        }
+      }
+    },
+    "dto.FreezeResult": {
+      "type": "object",
+      "properties": {
+        "freeze": {
+          "description": "Freeze record",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.FreezeRecordResponse"
+            }
+          ]
+        },
+        "wallet": {
+          "description": "Wallet info",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.WalletResponse"
+            }
+          ]
+        }
+      }
+    },
+    "dto.ListResponse-dto_WebhookPayloadResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.WebhookPayloadResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ManualAdjustResult": {
+      "type": "object",
+      "properties": {
+        "transaction": {
+          "$ref": "#/definitions/dto.TransactionResponse"
+        },
+        "wallet": {
+          "$ref": "#/definitions/dto.WalletResponse"
+        }
+      }
+    },
+    "dto.ReconciliationDetail": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "description": "Reconciliation date",
+          "type": "string",
+          "example": "2026-04-14"
+        },
+        "records": {
+          "description": "Reconciliation records per wallet",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ReconciliationRecord"
+          }
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "wallet_count": {
+          "description": "Number of wallets",
+          "type": "integer",
+          "example": 100
+        }
+      }
+    },
+    "dto.ReconciliationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ReconciliationDetail"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ReconciliationRecord": {
+      "description": "Reconciliation record for a single wallet",
+      "type": "object",
+      "properties": {
+        "closing_balance": {
+          "description": "Ending balance",
+          "type": "string",
+          "example": "1200.00"
+        },
+        "opening_balance": {
+          "description": "Beginning balance",
+          "type": "string",
+          "example": "1000.00"
+        },
+        "total_deposit": {
+          "description": "Total deposits",
+          "type": "string",
+          "example": "500.00"
+        },
+        "total_refund": {
+          "description": "Total refunds",
+          "type": "string",
+          "example": "0.00"
+        },
+        "total_transfer_in": {
+          "description": "Total transfers in",
+          "type": "string",
+          "example": "100.00"
+        },
+        "total_transfer_out": {
+          "description": "Total transfers out",
+          "type": "string",
+          "example": "50.00"
+        },
+        "total_withdraw": {
+          "description": "Total withdrawals",
+          "type": "string",
+          "example": "200.00"
+        },
+        "transaction_count": {
+          "description": "Transaction count",
+          "type": "integer",
+          "example": 10
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "wallet_id": {
+          "description": "Wallet ID",
+          "type": "string",
+          "example": "wlt_abc123"
+        }
+      }
+    },
+    "dto.RedeemCouponResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CouponResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.RefundDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.RefundResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.RefundRequest": {
+      "description": "Refund request parameters",
+      "type": "object",
+      "required": [
+        "transaction_id"
+      ],
+      "properties": {
+        "amount": {
+          "description": "Amount",
+          "type": "string",
+          "example": "50.00"
+        },
+        "reason": {
+          "description": "Reason",
+          "type": "string",
+          "example": "Product return"
+        },
+        "reference_id": {
+          "description": "Reference",
+          "type": "string",
+          "example": "REF-001"
+        },
+        "transaction_id": {
+          "description": "Original transaction",
+          "type": "string",
+          "example": "txn_abc123"
+        }
+      }
+    },
+    "dto.RefundResult": {
+      "type": "object",
+      "properties": {
+        "transaction": {
+          "description": "Refund transaction record",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.TransactionResponse"
+            }
+          ]
+        },
+        "wallet": {
+          "description": "Wallet info",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.WalletResponse"
+            }
+          ]
+        }
+      }
+    },
+    "dto.RejectWithdrawalRequest": {
+      "type": "object",
+      "properties": {
+        "remark": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ResolveDisputeResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ResolveDisputeResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ResolveDisputeResult": {
+      "type": "object",
+      "properties": {
+        "dispute_id": {
+          "type": "string",
+          "example": "dsp_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "status": {
+          "type": "string",
+          "example": "resolved"
+        }
+      }
+    },
+    "dto.SnapshotCreateDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.SnapshotCreateResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.SnapshotCreateResult": {
+      "type": "object",
+      "properties": {
+        "snapshot_count": {
+          "description": "Snapshot record count",
+          "type": "integer",
+          "example": 100
+        },
+        "snapshot_date": {
+          "description": "Snapshot date",
+          "type": "string",
+          "example": "2026-04-14"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "wallets_total": {
+          "description": "Total wallets",
+          "type": "integer",
+          "example": 100
+        }
+      }
+    },
+    "dto.SnapshotRequest": {
+      "description": "Request parameters for generating wallet balance snapshot",
+      "type": "object",
+      "required": [
+        "snapshot_date"
+      ],
+      "properties": {
+        "snapshot_date": {
+          "description": "Snapshot date",
+          "type": "string",
+          "example": "2026-04-14"
+        }
+      }
+    },
+    "dto.StatsResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.WalletStatsDetail"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TenantBalanceSummaryResponse": {
+      "type": "object",
+      "properties": {
+        "active_wallet_count": {
+          "type": "integer",
+          "example": 38
+        },
+        "total_balance": {
+          "type": "string",
+          "example": "50000.00"
+        },
+        "total_frozen_balance": {
+          "type": "string",
+          "example": "5000.00"
+        },
+        "wallet_count": {
+          "type": "integer",
+          "example": 42
+        }
+      }
+    },
+    "dto.TransactionDisputeRequest": {
+      "description": "Request parameters for disputing a wallet transaction",
+      "type": "object",
+      "required": [
+        "reason"
+      ],
+      "properties": {
+        "contact": {
+          "description": "Contact info",
+          "type": "string",
+          "example": "user@example.com"
+        },
+        "evidence": {
+          "description": "Evidence",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reason": {
+          "description": "Reason",
+          "type": "string",
+          "example": "Unauthorized transaction"
+        }
+      }
+    },
+    "dto.TransactionListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.TransactionResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.TransactionResponse": {
+      "description": "Transaction record info",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "description": "Amount",
+          "type": "string",
+          "example": "100.00"
+        },
+        "balance_after": {
+          "description": "Balance after",
+          "type": "string",
+          "example": "1000.00"
+        },
+        "balance_before": {
+          "description": "Balance before",
+          "type": "string",
+          "example": "900.00"
+        },
+        "counterparty_id": {
+          "description": "Counterparty",
+          "type": "string",
+          "example": "usr_xyz456"
+        },
+        "created_at": {
+          "description": "Created time",
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "currency": {
+          "description": "Currency",
+          "type": "string",
+          "example": "CNY"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string",
+          "example": "Account deposit"
+        },
+        "id": {
+          "description": "Transaction ID",
+          "type": "string",
+          "example": "txn_abc123"
+        },
+        "reference_id": {
+          "description": "Reference",
+          "type": "string",
+          "example": "order_123"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "completed"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "deposit"
+        },
+        "wallet_id": {
+          "description": "Wallet ID",
+          "type": "string",
+          "example": "wlt_abc123"
+        }
+      }
+    },
+    "dto.TransferDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.TransferResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TransferRequest": {
+      "description": "Transfer request parameters",
+      "type": "object",
+      "required": [
+        "amount",
+        "from_user_id",
+        "to_user_id"
+      ],
+      "properties": {
+        "amount": {
+          "description": "Amount",
+          "type": "string",
+          "example": "100.00"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string",
+          "example": "Transfer to counterparty"
+        },
+        "from_user_id": {
+          "description": "Sender user",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "to_user_id": {
+          "description": "Recipient user",
+          "type": "string",
+          "example": "usr_xyz456"
+        }
+      }
+    },
+    "dto.TransferResult": {
+      "type": "object",
+      "properties": {
+        "from_transaction": {
+          "description": "Sender transaction record",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.TransactionResponse"
+            }
+          ]
+        },
+        "from_wallet": {
+          "description": "Sender wallet",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.WalletResponse"
+            }
+          ]
+        },
+        "to_transaction": {
+          "description": "Recipient transaction record",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.TransactionResponse"
+            }
+          ]
+        },
+        "to_wallet": {
+          "description": "Recipient wallet",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.WalletResponse"
+            }
+          ]
+        }
+      }
+    },
+    "dto.UnfreezeDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.UnfreezeResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UnfreezeRequest": {
+      "description": "Unfreeze fund request parameters",
+      "type": "object",
+      "required": [
+        "freeze_id"
+      ],
+      "properties": {
+        "freeze_id": {
+          "description": "Freeze record ID",
+          "type": "string",
+          "example": "frz_abc123"
+        }
+      }
+    },
+    "dto.UnfreezeResult": {
+      "type": "object",
+      "properties": {
+        "freeze": {
+          "description": "Freeze record",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.FreezeRecordResponse"
+            }
+          ]
+        },
+        "wallet": {
+          "description": "Wallet info",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.WalletResponse"
+            }
+          ]
+        }
+      }
+    },
+    "dto.UpdateCouponRequest": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "min_spend": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdateFraudRulesRequest": {
+      "description": "Request parameters for batch updating fraud rule configurations",
+      "type": "object",
+      "required": [
+        "rules"
+      ],
+      "properties": {
+        "rules": {
+          "description": "Rule list",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FraudRuleItem"
+          }
+        }
+      }
+    },
+    "dto.UpdateWalletRequest": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.WalletDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.WalletResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.WalletListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.WalletResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.WalletPolicyResponse": {
+      "type": "object",
+      "properties": {
+        "application_id": {
+          "type": "string",
+          "example": "app_example_001"
+        },
+        "auto_approve_limit": {
+          "type": "string",
+          "example": "1000.00"
+        },
+        "daily_withdraw_limit": {
+          "type": "string",
+          "example": "5000.00"
+        },
+        "max_balance": {
+          "type": "string",
+          "example": "100000.00"
+        },
+        "min_withdraw_amount": {
+          "type": "string",
+          "example": "10.00"
+        },
+        "monthly_withdraw_limit": {
+          "type": "string",
+          "example": "50000.00"
+        },
+        "supported_currencies": {
+          "type": "string",
+          "example": "CNY,USD"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_example_001"
+        },
+        "timezone": {
+          "type": "string",
+          "example": "Asia/Shanghai"
+        },
+        "transfer_enabled": {
+          "type": "boolean",
+          "example": true
+        },
+        "withdrawal_require_review": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "dto.WalletResponse": {
+      "description": "User wallet info",
+      "type": "object",
+      "properties": {
+        "application_id": {
+          "description": "App ID",
+          "type": "string",
+          "example": "app_abc123"
+        },
+        "balance": {
+          "description": "Balance",
+          "type": "string",
+          "example": "1000.00"
+        },
+        "created_at": {
+          "description": "Created time",
+          "type": "string",
+          "example": "2026-01-01T00:00:00Z"
+        },
+        "currency": {
+          "description": "Currency",
+          "type": "string",
+          "example": "CNY"
+        },
+        "frozen_balance": {
+          "description": "Frozen",
+          "type": "string",
+          "example": "100.00"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "active"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "updated_at": {
+          "description": "Updated time",
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "wallet_id": {
+          "description": "Wallet ID",
+          "type": "string",
+          "example": "wlt_abc123"
+        }
+      }
+    },
+    "dto.WalletSnapshotListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.WalletSnapshotResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.WalletSnapshotResponse": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "string",
+          "example": "100.0000"
+        },
+        "snapshot_at": {
+          "type": "string",
+          "example": "2026-06-04T00:00:00Z"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user_001"
+        },
+        "wallet_id": {
+          "type": "string",
+          "example": "wallet_abc123"
+        }
+      }
+    },
+    "dto.WalletStatsDetail": {
+      "type": "object",
+      "properties": {
+        "average_transaction": {
+          "description": "Average transaction amount",
+          "type": "string",
+          "example": "500.00"
+        },
+        "end_date": {
+          "description": "End date",
+          "type": "string",
+          "example": "2026-04-30"
+        },
+        "largest_transaction": {
+          "description": "Maximum single transaction",
+          "type": "string",
+          "example": "5000.00"
+        },
+        "period": {
+          "description": "Statistics period",
+          "type": "string",
+          "example": "month"
+        },
+        "start_date": {
+          "description": "Start date",
+          "type": "string",
+          "example": "2026-04-01"
+        },
+        "total_deposits": {
+          "description": "Total deposits",
+          "type": "string",
+          "example": "10000.00"
+        },
+        "total_transfers_in": {
+          "description": "Total transfers in",
+          "type": "string",
+          "example": "20000.00"
+        },
+        "total_transfers_out": {
+          "description": "Total transfers out",
+          "type": "string",
+          "example": "15000.00"
+        },
+        "total_withdrawals": {
+          "description": "Total withdrawals",
+          "type": "string",
+          "example": "5000.00"
+        },
+        "transaction_count": {
+          "description": "Transaction count",
+          "type": "integer",
+          "example": 150
+        }
+      }
+    },
+    "dto.WalletStatsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.WalletStatsDetail"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.WebhookPayloadResponse": {
+      "description": "Webhook callback record",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "description": "Created",
+          "type": "string",
+          "example": "2026-04-10T00:00:00Z"
+        },
+        "event_type": {
+          "description": "Event type",
+          "type": "string",
+          "example": "payment.success"
+        },
+        "gateway": {
+          "description": "Payment gateway",
+          "type": "string",
+          "example": "wechat"
+        },
+        "id": {
+          "description": "Record ID",
+          "type": "string",
+          "example": "wh_abc123"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "processed"
+        }
+      }
+    },
+    "dto.WithdrawDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.WithdrawResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.WithdrawRequest": {
+      "description": "Wallet withdrawal request parameters",
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "description": "Amount",
+          "type": "string",
+          "example": "50.00"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string",
+          "example": "Balance withdrawal"
+        },
+        "reference_id": {
+          "description": "Reference",
+          "type": "string",
+          "example": "withdraw_123"
+        }
+      }
+    },
+    "dto.WithdrawResult": {
+      "type": "object",
+      "properties": {
+        "transaction": {
+          "description": "Transaction record",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.TransactionResponse"
+            }
+          ]
+        },
+        "wallet": {
+          "description": "Wallet info",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.WalletResponse"
+            }
+          ]
+        }
+      }
+    },
+    "dto.WithdrawalRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string"
+        },
+        "remark": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.WithdrawalRequestListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.WithdrawalRequestResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat for direct access)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.WithdrawalRequestResponse": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "100.50"
+        },
+        "id": {
+          "type": "string",
+          "example": "wdr_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "status": {
+          "type": "string",
+          "example": "pending"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_example_001"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_wallet-service_internal_handler_dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Wallet management: balance, transactions, deposits, withdrawals",
+      "name": "Wallet Service"
+    },
+    {
+      "description": "Wallet management admin: global configuration, fees, approvals",
+      "name": "Wallet Service - Admin"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

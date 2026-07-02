@@ -1,0 +1,4353 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Session management service providing session creation, token generation and refresh, and session analysis.",
+    "title": "Session Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/session-service/api/v1",
+  "paths": {
+    "/admin/devices/{device_id}/risk": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator evaluates device risk score based on all session history associated with the device (login count, revocation count, active session count). References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Get Device Risk Score",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Device ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device risk score and risk factors",
+            "schema": {
+              "$ref": "#/definitions/dto.DeviceRiskResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator or security administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Device not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sessions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator queries all active sessions under the current tenant, supports filtering by user ID and session status, paginated. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "List Sessions (Admin)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID (optional, for filtering)",
+            "name": "user_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Session status (active/expired/revoked)",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session list and pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.SessionListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sessions/active-count": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator gets the count of active sessions under the current tenant. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Get Active Session Count",
+        "responses": {
+          "200": {
+            "description": "Active session count",
+            "schema": {
+              "$ref": "#/definitions/dto.ActiveCountResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator or security administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sessions/bulk": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator batch revokes sessions by a list of session IDs, up to 100, synchronous, returns success/failure statistics. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Batch Revoke Sessions",
+        "parameters": [
+          {
+            "description": "Batch revoke request containing session_ids and reason",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch revoke result statistics",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchRevokeResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters (session_ids empty or exceeds 100)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sessions/device-fingerprint": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator gets device fingerprint info for a specified session, including browser, OS, device model, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Get Session Device Fingerprint",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Session ID (optional)",
+            "name": "session_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device fingerprint info",
+            "schema": {
+              "$ref": "#/definitions/dto.DeviceFingerprintResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator or security administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sessions/expired": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator batch cleans up all expired session records under the current tenant. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Clean Expired Sessions",
+        "responses": {
+          "200": {
+            "description": "Expired sessions cleaned successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sessions/risk-score": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator evaluates session risk score based on multi-dimensional factors: IP address, device fingerprint, login time, geographic location, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Get Session Risk Score",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Session ID (optional, returns aggregate risk score for all current sessions if not provided)",
+            "name": "session_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Risk score result",
+            "schema": {
+              "$ref": "#/definitions/dto.RiskScoreResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator or security administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sessions/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator gets session and token statistics for the current tenant, including active count, revocation count, device type distribution, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Get Session Statistics",
+        "responses": {
+          "200": {
+            "description": "Session statistics data",
+            "schema": {
+              "$ref": "#/definitions/dto.SessionStatsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator or security administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/sessions/user/{user_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator revokes all active sessions of a specified user, forcing logout on all devices. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Revoke All User Sessions",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Target user ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Revocation reason (optional), includes reason field",
+            "name": "request",
+            "in": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All sessions revoked",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/tokens": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator queries the token list under the current tenant, supports filtering by user ID, token type, status, paginated. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "List Tokens",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "User ID (optional, for filtering)",
+            "name": "user_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Token type (access/refresh)",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Token status (active/revoked/expired)",
+            "name": "status",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token list and pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.TokenListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/tokens/blacklist": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator queries the blacklisted token list under the current tenant, supports filtering by user ID, paginated. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "List Blacklisted Tokens",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID (optional, for filtering)",
+            "name": "user_id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blacklisted token list",
+            "schema": {
+              "$ref": "#/definitions/dto.BlacklistedTokenListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/tokens/blacklist/{device_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator deletes a specified blacklisted token record by ID. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Delete Blacklisted Token",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Blacklisted token record ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deletion successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Blacklist record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/tokens/config": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator gets the custom JWT token configuration for the current tenant (Access Token TTL, Refresh Token TTL, clock skew tolerance). Returns system defaults if not configured. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Get Tenant JWT Configuration",
+        "responses": {
+          "200": {
+            "description": "JWT configuration info",
+            "schema": {
+              "$ref": "#/definitions/dto.TenantJWTConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator sets custom JWT token TTL and clock skew tolerance for the current tenant, supporting differentiated token validity policies per tenant. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Update Tenant JWT Configuration",
+        "parameters": [
+          {
+            "description": "JWT configuration parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateTenantJWTConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated JWT configuration",
+            "schema": {
+              "$ref": "#/definitions/dto.TenantJWTConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator deletes the custom JWT configuration for the current tenant, reverting to system defaults. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Reset Tenant JWT Configuration",
+        "responses": {
+          "200": {
+            "description": "JWT configuration reset to default",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/tokens/exchange": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "OAuth 2.0 token exchange (RFC 8693), exchanges an existing token for a new access token and refresh token. Response uses the standard envelope dto_base.DataResponse[T]. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Token Exchange",
+        "parameters": [
+          {
+            "description": "Token exchange request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExchangeTokenRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exchanged new token pair",
+            "schema": {
+              "$ref": "#/definitions/dto.TokenExchangeResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Token not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/tokens/introspect": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "OAuth 2.0 token introspection endpoint (RFC 7662), checks the current status of a token and returns metadata. Response uses the standard envelope dto_base.DataResponse[T]. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Token Introspection",
+        "parameters": [
+          {
+            "description": "Token introspection request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.IntrospectTokenRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token introspection result",
+            "schema": {
+              "$ref": "#/definitions/dto.TokenIntrospectionResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Token not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/tokens/revoke-all": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator revokes all tokens of a specified user (supports filtering by type access/refresh), forcing re-authentication. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Revoke All Tokens",
+        "parameters": [
+          {
+            "description": "Revocation request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RevokeAllTokensRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token revocation successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/tokens/{device_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Administrator gets detailed token information by token ID, including user ID, type, status, expiration time, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Get Token Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Token ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token details",
+            "schema": {
+              "$ref": "#/definitions/dto.TokenDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No administrator permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Token not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/trusted-devices": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin: list trusted devices for a given user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Admin APIs"
+        ],
+        "summary": "Admin list trusted devices",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Page size",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Trusted devices list",
+            "schema": {
+              "$ref": "#/definitions/dto.TrustedDeviceListResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/trusted-devices/{device_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin: revoke a trusted device by ID.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Admin APIs"
+        ],
+        "summary": "Admin revoke trusted device",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Device ID",
+            "name": "device_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device revoked",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/blacklist-token": {
+      "post": {
+        "description": "Internal API: Adds a specified token to the blacklist, making it immediately invalid. Passes tenant context via X-Tenant-ID header. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Blacklist Token (Internal)",
+        "parameters": [
+          {
+            "description": "Token blacklist request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BlacklistTokenRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token blacklisted",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing X-Tenant-ID",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Invalid internal API key",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/create": {
+      "post": {
+        "description": "Internal API for other services to create a session via InternalAPIKeyAuth + X-Tenant-ID. Shares the same handler as user-facing POST /sessions, differing only in authentication method.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Create Session (Internal)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Create session request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateSessionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creation successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_CreateSessionData"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "No valid X-API-Key provided",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/export-user-data": {
+      "post": {
+        "description": "Internal API: Exports full session data for a specified user, for compliance erasure Saga or GDPR data portability. Passes tenant context via X-Tenant-ID header. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Export User Session Data (Internal)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "{\\",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User session data export result",
+            "schema": {
+              "$ref": "#/definitions/dto.UserSessionsExportResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing X-Tenant-ID",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Invalid internal API key",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/generate-tokens": {
+      "post": {
+        "description": "Internal API: Generates a new access token and refresh token for a specified session. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Generate Token Pair (Internal)",
+        "parameters": [
+          {
+            "description": "Token generation request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.GenerateTokensRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Generated token pair",
+            "schema": {
+              "$ref": "#/definitions/dto.TokenPairResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing X-Tenant-ID",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Invalid internal API key",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/session/user/{user_id}": {
+      "delete": {
+        "description": "Internal API: Revokes all active sessions of a specified user, for GDPR compliance erasure Saga. Passes tenant context via X-Tenant-ID header, no JWT authentication required. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Revoke All User Sessions (Internal)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All user sessions revoked",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing X-Tenant-ID",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Invalid internal API key",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/sessions/{user_id}": {
+      "get": {
+        "description": "Internal API: Gets all active sessions of a specified user, passes tenant context via X-Tenant-ID header, no JWT authentication required. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Get User Active Sessions (Internal)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session list",
+            "schema": {
+              "$ref": "#/definitions/dto.SessionListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing X-Tenant-ID",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Invalid internal API key",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/sessions/{user_id}/active": {
+      "get": {
+        "description": "Internal API: Lightweight check if a specified user has active sessions, returns active status and session count. Passes tenant context via X-Tenant-ID header, no JWT authentication required. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Check User Active Sessions (Internal)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Active status and session count",
+            "schema": {
+              "$ref": "#/definitions/dto.ActiveSessionStatus"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing X-Tenant-ID",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Invalid internal API key",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/trusted-devices": {
+      "get": {
+        "description": "Internal API: list all trusted devices for a user per NIST SP 800-63B §5.2.3.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "List trusted devices",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Page size",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Trusted devices list",
+            "schema": {
+              "$ref": "#/definitions/dto.TrustedDeviceListResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Invalid internal API key",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Internal API: mark a device as trusted. Device bypasses re-auth during trust window per NIST SP 800-63B §5.2.3.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Create trusted device",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Create trusted device request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateTrustedDeviceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Trusted device created",
+            "schema": {
+              "$ref": "#/definitions/dto.TrustedDeviceResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Invalid internal API key",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/trusted-devices/{device_fingerprint}": {
+      "delete": {
+        "description": "Internal API: remove a device's trusted status. Device requires re-auth on next login per NIST SP 800-63B §5.2.3.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Revoke trusted device",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Device fingerprint",
+            "name": "device_fingerprint",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device trust revoked",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Invalid internal API key",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/validate-token": {
+      "post": {
+        "description": "Internal API: Validates an access token, parses and returns the user claims from the token. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Validate Access Token (Internal)",
+        "parameters": [
+          {
+            "description": "Access token validation request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ValidateAccessTokenRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token valid, returns user claims",
+            "schema": {
+              "$ref": "#/definitions/dto.TokenValidationResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Token invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/session/{session_id}/usage": {
+      "get": {
+        "description": "Internal endpoint: Gets daily usage statistics for a specified session.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Get Session Daily Usage Stats (Internal)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Internal API key",
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Session ID",
+            "name": "session_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usage statistics",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Internal endpoint: Records usage data for a specified session.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management - Internal APIs"
+        ],
+        "summary": "Track Session Usage (Internal)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Internal API key",
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Session ID",
+            "name": "session_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recording successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Queries the active session list of a specified user, supports tenant isolation and pagination. Non-administrators can only query their own sessions. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "List User Sessions",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Authenticated user ID",
+            "name": "auth_user_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session list and pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.SessionListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to query other users' sessions",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Creates a new session for the user, records device info, IP address, User-Agent, etc., returns access token and refresh token. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Create Session",
+        "parameters": [
+          {
+            "description": "Create session request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateSessionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Session created successfully, returns session info and token pair",
+            "schema": {
+              "$ref": "#/definitions/dto.CreateSessionData"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to create session for other users",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/sessions/refresh": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Uses a refresh token to obtain a new access token and a rotated refresh token. Supports refresh rate limiting to prevent token abuse. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Refresh Token",
+        "parameters": [
+          {
+            "description": "Refresh token request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RefreshTokensRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Refresh successful, returns new access token and refresh token",
+            "schema": {
+              "$ref": "#/definitions/dto.TokenPairResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Refresh token invalid or revoked",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/sessions/rotate-access": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Uses a refresh token only to obtain a new access token, without rotating the refresh token. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Rotate Access Token",
+        "parameters": [
+          {
+            "description": "Refresh token request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RefreshTokensRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rotation successful, returns new access token",
+            "schema": {
+              "$ref": "#/definitions/dto.AccessTokenResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Refresh token invalid or revoked",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/sessions/user/{user_id}/sessions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Queries all active sessions of the currently authenticated user; JWT user identity must match the path parameter user_id. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "List User Sessions",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID, must match the current JWT user",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session list and pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.SessionListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "JWT user does not match path parameter",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Gets detailed session info by session ID, including user info, device info, login time, MFA verification status, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Get Session Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Session ID",
+            "name": "session_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session details",
+            "schema": {
+              "$ref": "#/definitions/dto.GetSessionData"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to access other users' sessions",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Revokes a specified session by session ID, making it immediately invalid, optionally with a revocation reason. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Revoke Session",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Session ID",
+            "name": "session_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Revocation reason (optional), includes reason field",
+            "name": "request",
+            "in": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Session revoked successfully, no response body"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to revoke other users' sessions",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/activity": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Updates the last activity time of a specified session, for session keep-alive and idle timeout detection. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Update Session Activity Time",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Session ID",
+            "name": "session_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activity time updated successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate this session",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/upgrade-mfa": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Marks a specified session as MFA-verified after completing multi-factor authentication (MFA) step-up. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Upgrade Session MFA Status",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Session ID",
+            "name": "session_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "MFA status upgraded successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.UpgradeSessionMFAResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to upgrade this session",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/validate": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Validates the specified session and access token, returns the user claims from the token. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Validate Session",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Session ID",
+            "name": "session_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validation result and user claims",
+            "schema": {
+              "$ref": "#/definitions/dto.TokenValidationResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to access this session",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/tokens/blacklist": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Adds a specified access token or refresh token to the blacklist, making it immediately invalid. Common scenarios: user logout, password change, account abnormal freeze. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Blacklist Token",
+        "parameters": [
+          {
+            "description": "Token blacklist request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.AddToBlacklistRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token blacklisted",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate other users' tokens",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Token not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/tokens/blacklist/check": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Queries whether a specified token has been blacklisted, performs a real query against the blacklist repository. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Session Management"
+        ],
+        "summary": "Check Token Blacklist Status",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Token to Check",
+            "name": "token",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Blacklist Check Result",
+            "schema": {
+              "$ref": "#/definitions/dto.BlacklistCheckResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request Parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or Token Expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No Permission to Query",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/trusted-devices": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Lists trusted devices for the current user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Device Trust"
+        ],
+        "summary": "List my trusted devices",
+        "responses": {
+          "200": {
+            "description": "Trusted devices list",
+            "schema": {
+              "$ref": "#/definitions/dto.TrustedDeviceListResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Marks device as trusted for current user. Trust expires after DefaultTrustedDeviceTTLDays (30 days).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Device Trust"
+        ],
+        "summary": "Trust device",
+        "parameters": [
+          {
+            "description": "Device trust request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.TrustDeviceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device trusted",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/trusted-devices/{device_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Revokes a trusted device by ID. Device must belong to the authenticated user.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Device Trust"
+        ],
+        "summary": "Revoke my trusted device",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Device ID",
+            "name": "device_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device revoked",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dto.AccessTokenResponse": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ActiveCountResponse": {
+      "description": "Current Active Session Count",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "Count",
+          "type": "integer",
+          "example": 42
+        },
+        "timestamp": {
+          "description": "Time",
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        }
+      }
+    },
+    "dto.ActiveSessionStatus": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "example": true
+        },
+        "session_count": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    },
+    "dto.AddToBlacklistRequest": {
+      "description": "Add Token to Blacklist Request Parameters",
+      "type": "object",
+      "required": [
+        "token",
+        "token_type",
+        "user_id"
+      ],
+      "properties": {
+        "reason": {
+          "description": "Reason",
+          "type": "string"
+        },
+        "token": {
+          "description": "Token",
+          "type": "string"
+        },
+        "token_type": {
+          "description": "Type",
+          "type": "string",
+          "enum": [
+            "access",
+            "refresh"
+          ]
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchRevokeResponse": {
+      "type": "object",
+      "properties": {
+        "failed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "sess_xyz789"
+          ]
+        },
+        "succeeded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "sess_abc123",
+            "sess_def456"
+          ]
+        },
+        "total": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    },
+    "dto.BlacklistCheckResponse": {
+      "description": "Check if Token is Blacklisted",
+      "type": "object",
+      "properties": {
+        "blacklisted": {
+          "description": "Is Blacklisted",
+          "type": "boolean",
+          "example": false
+        },
+        "reason": {
+          "description": "Reason",
+          "type": "string",
+          "example": ""
+        },
+        "token": {
+          "description": "Token",
+          "type": "string",
+          "example": "abc123..."
+        }
+      }
+    },
+    "dto.BlacklistTokenRequest": {
+      "type": "object",
+      "required": [
+        "token",
+        "token_type",
+        "user_id"
+      ],
+      "properties": {
+        "app_id": {
+          "description": "Application ID",
+          "type": "string"
+        },
+        "expires_at": {
+          "description": "Expiration Time",
+          "type": "integer"
+        },
+        "reason": {
+          "description": "Reason",
+          "type": "string"
+        },
+        "token": {
+          "description": "Token",
+          "type": "string"
+        },
+        "token_type": {
+          "description": "Type",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      }
+    },
+    "dto.BlacklistedTokenListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.BlacklistedTokenResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination Information (Nested Object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total Count (Flattened for Direct Reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.BlacklistedTokenResponse": {
+      "description": "Blacklisted Token Information",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T08:00:00Z"
+        },
+        "expires_at": {
+          "type": "string",
+          "example": "2026-04-16T08:00:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "bl_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "reason": {
+          "type": "string",
+          "example": "manual_revoke"
+        },
+        "token_hash": {
+          "type": "string",
+          "example": "a1b2c3d4e5f6..."
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.CreateSessionData": {
+      "type": "object",
+      "properties": {
+        "session": {
+          "$ref": "#/definitions/dto.SessionResponse"
+        },
+        "tokens": {
+          "$ref": "#/definitions/dto.TokenPairResponse"
+        }
+      }
+    },
+    "dto.CreateSessionRequest": {
+      "description": "Create New Session Request Parameters",
+      "type": "object",
+      "required": [
+        "auth_user_id"
+      ],
+      "properties": {
+        "amr": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "password",
+            "totp"
+          ]
+        },
+        "app_id": {
+          "type": "string",
+          "example": "app_xyz"
+        },
+        "auth_user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "browser": {
+          "type": "string",
+          "example": "Chrome 123"
+        },
+        "device_fingerprint": {
+          "type": "string",
+          "example": "sha256:a1b2c3d4"
+        },
+        "device_id": {
+          "type": "string",
+          "example": "dev_abc123"
+        },
+        "device_type": {
+          "type": "string",
+          "example": "desktop"
+        },
+        "ip": {
+          "type": "string",
+          "example": "192.168.1.1"
+        },
+        "os": {
+          "type": "string",
+          "example": "Windows 11"
+        },
+        "role": {
+          "type": "string",
+          "example": "admin"
+        },
+        "user_agent": {
+          "type": "string",
+          "example": "Mozilla/5.0"
+        }
+      }
+    },
+    "dto.CreateTrustedDeviceRequest": {
+      "type": "object",
+      "required": [
+        "device_fingerprint",
+        "user_id"
+      ],
+      "properties": {
+        "browser": {
+          "type": "string"
+        },
+        "device_fingerprint": {
+          "type": "string"
+        },
+        "device_type": {
+          "type": "string"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_CreateSessionData": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CreateSessionData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DeviceFingerprintResponse": {
+      "description": "Device Fingerprint Information",
+      "type": "object",
+      "properties": {
+        "browser": {
+          "description": "Browser",
+          "type": "string",
+          "example": "Chrome 123"
+        },
+        "device_hash": {
+          "description": "Hash",
+          "type": "string",
+          "example": "a1b2c3d4e5f6..."
+        },
+        "device_type": {
+          "description": "Type",
+          "type": "string",
+          "example": "desktop"
+        },
+        "fingerprint_id": {
+          "description": "Fingerprint ID",
+          "type": "string",
+          "example": "fp_abc123"
+        },
+        "first_seen_at": {
+          "description": "First Seen",
+          "type": "string",
+          "example": "2026-01-01T00:00:00Z"
+        },
+        "ip": {
+          "description": "IP",
+          "type": "string",
+          "example": "192.168.1.1"
+        },
+        "is_trusted": {
+          "description": "Is Trusted",
+          "type": "boolean",
+          "example": true
+        },
+        "last_seen_at": {
+          "description": "Last Seen",
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "location": {
+          "description": "Location",
+          "type": "string",
+          "example": "Beijing"
+        },
+        "os": {
+          "description": "OS",
+          "type": "string",
+          "example": "Windows 11"
+        },
+        "screen_res": {
+          "description": "Resolution",
+          "type": "string",
+          "example": "1920x1080"
+        }
+      }
+    },
+    "dto.DeviceRiskResponse": {
+      "type": "object",
+      "properties": {
+        "active_sessions": {
+          "type": "integer",
+          "example": 3
+        },
+        "audit_failure_count": {
+          "type": "integer",
+          "example": 0
+        },
+        "device_id": {
+          "type": "string",
+          "example": "dev_01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "evaluated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "revoked_sessions": {
+          "type": "integer",
+          "example": 2
+        },
+        "risk_factors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"unusual_location\"",
+            "\"new_device\"]"
+          ]
+        },
+        "risk_level": {
+          "type": "string",
+          "example": "low"
+        },
+        "risk_score": {
+          "type": "integer",
+          "example": 35
+        },
+        "total_sessions": {
+          "type": "integer",
+          "example": 15
+        }
+      }
+    },
+    "dto.ExchangeTokenRequest": {
+      "type": "object",
+      "required": [
+        "grant_type",
+        "subject_token"
+      ],
+      "properties": {
+        "audience": {
+          "description": "Audience",
+          "type": "string",
+          "example": "api.example.com"
+        },
+        "grant_type": {
+          "description": "Grant Type",
+          "type": "string",
+          "example": "urn:ietf:params:oauth:grant-type:token-exchange"
+        },
+        "subject_token": {
+          "description": "Subject Token",
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIs..."
+        }
+      }
+    },
+    "dto.FieldViolation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is an error code (optional). Used by programs to identify error types, e.g., \"required\", \"format\", \"range\"",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is a human-readable error description. Should explain which rule was violated, e.g., \"Must be a valid email address\"",
+          "type": "string"
+        },
+        "field": {
+          "description": "Field is the path to the error field. Uses dot notation for nested fields, e.g., \"user.email\" or \"addresses[0].city\"",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value is the value that caused the error (optional, used in development mode). May not be returned in production to avoid leaking sensitive information"
+        }
+      }
+    },
+    "dto.GenerateTokensRequest": {
+      "type": "object",
+      "required": [
+        "auth_user_id",
+        "session_id",
+        "tenant_id"
+      ],
+      "properties": {
+        "app_id": {
+          "description": "Application ID",
+          "type": "string"
+        },
+        "auth_user_id": {
+          "description": "User ID",
+          "type": "string"
+        },
+        "session_id": {
+          "description": "Session ID",
+          "type": "string"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string"
+        }
+      }
+    },
+    "dto.GetSessionData": {
+      "type": "object",
+      "properties": {
+        "session": {
+          "$ref": "#/definitions/dto.SessionResponse"
+        }
+      }
+    },
+    "dto.IntrospectTokenRequest": {
+      "type": "object",
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "description": "Token",
+          "type": "string"
+        },
+        "type": {
+          "description": "access, refresh (optional hint)",
+          "type": "string"
+        }
+      }
+    },
+    "dto.Problem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is a business error code. Used by programs to handle specific error scenarios. Example: 30101001",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "Detail is a human-readable explanation for this specific error instance. May include specific error details, e.g., \"Field 'email' is required\"",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Errors is a list of field-level validation errors (extension field). Follows Web API standard practices, each error contains field name and error message",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FieldViolation"
+          }
+        },
+        "i18n_args": {
+          "description": "I18nArgs are internationalization parameters. Used to dynamically fill translation templates",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "i18n_key": {
+          "description": "I18nKey is an internationalization key. Used for client-side localization of error messages. Example: \"error.user_not_found\"",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Instance is a specific URI reference where the problem occurred. Usually the request URL, may include query parameters. Example: \"/api/v1/users?limit=invalid\"",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "RequestID is a unique request identifier. Used for log correlation and issue tracking. Example: \"req_550e8400-e29b-41d4-a716-446655440000\"",
+          "type": "string"
+        },
+        "retry_after": {
+          "description": "RetryAfter is used for 429 Too Many Requests responses. Indicates how many seconds the client should wait before retrying (RFC 6585)",
+          "type": "integer"
+        },
+        "service": {
+          "description": "Service is the service name. Used in microservice architecture to locate the error source. Example: \"auth-service\"",
+          "type": "string"
+        },
+        "span_id": {
+          "description": "SpanID is the current span identifier. Used to precisely locate the current node in a distributed trace",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status is the HTTP status code generated. Used by clients to distinguish problem types, does not change with Accept-Language. Example: 400, 401, 403, 404, 500",
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "Timestamp is the error occurrence time. ISO 8601 format. Example: \"2026-04-03T12:00:00Z\"",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title is a short, human-readable summary of the problem type. The same Type should always have the same Title (does not change per instance). Example: \"Invalid Request Parameters\"",
+          "type": "string"
+        },
+        "trace_id": {
+          "description": "TraceID is a distributed tracing identifier. Follows W3C Trace Context standard. Example: \"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01\"",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is a URI reference that identifies the problem type. When dereferenced, it should provide human-readable documentation. Example: \"https://api.example.com/errors/invalid-request\"",
+          "type": "string"
+        }
+      }
+    },
+    "dto.RefreshTokensRequest": {
+      "description": "Refresh Access Token Request Parameters",
+      "type": "object",
+      "required": [
+        "refresh_token"
+      ],
+      "properties": {
+        "refresh_token": {
+          "description": "Refresh Token",
+          "type": "string"
+        }
+      }
+    },
+    "dto.RevokeAllTokensRequest": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "description": "Reason",
+          "type": "string",
+          "example": "suspicious activity"
+        },
+        "type": {
+          "description": "If empty, revoke all types",
+          "type": "string",
+          "example": "access"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.RiskFactor": {
+      "description": "Risk Assessment Factor",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description",
+          "type": "string",
+          "example": "Abnormal Login Location"
+        },
+        "score": {
+          "description": "Score",
+          "type": "integer",
+          "example": 20
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "unusual_location"
+        },
+        "weight": {
+          "description": "Weight",
+          "type": "integer",
+          "example": 30
+        }
+      }
+    },
+    "dto.RiskScoreResponse": {
+      "description": "Session Risk Score Result",
+      "type": "object",
+      "properties": {
+        "evaluated_at": {
+          "description": "Assessment Time",
+          "type": "string",
+          "example": "2026-04-14T12:00:00Z"
+        },
+        "factors": {
+          "description": "Factors",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.RiskFactor"
+          }
+        },
+        "recommended_action": {
+          "description": "Suggestion",
+          "type": "string",
+          "example": "allow"
+        },
+        "risk_level": {
+          "description": "Level",
+          "type": "string",
+          "example": "low"
+        },
+        "risk_score": {
+          "description": "Score",
+          "type": "integer",
+          "example": 25
+        },
+        "session_id": {
+          "description": "Session ID",
+          "type": "string",
+          "example": "sess_abc123"
+        }
+      }
+    },
+    "dto.SessionListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.SessionResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination Information (Nested Object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total Count (Flattened for Direct Reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.SessionResponse": {
+      "description": "User Session Information",
+      "type": "object",
+      "properties": {
+        "amr": {
+          "description": "Authentication Method Reference",
+          "type": "string",
+          "example": "password,totp"
+        },
+        "authenticated_at": {
+          "description": "Authentication Time",
+          "type": "string",
+          "example": "2026-04-15T08:00:00Z"
+        },
+        "created_at": {
+          "description": "Creation Time",
+          "type": "string",
+          "example": "2026-04-15T08:00:00Z"
+        },
+        "device_id": {
+          "description": "Device ID",
+          "type": "string",
+          "example": "dev_abc123"
+        },
+        "device_type": {
+          "description": "Device Type",
+          "type": "string",
+          "example": "desktop"
+        },
+        "expires_at": {
+          "description": "Expiration Time",
+          "type": "string",
+          "example": "2026-04-16T08:00:00Z"
+        },
+        "geoip": {
+          "description": "GeoIP Location",
+          "type": "string",
+          "example": "Beijing, CN"
+        },
+        "id": {
+          "description": "Session ID",
+          "type": "string",
+          "example": "sess_abc123"
+        },
+        "idle_expires_at": {
+          "description": "Idle Timeout",
+          "type": "string",
+          "example": "2026-04-15T12:00:00Z"
+        },
+        "ip": {
+          "description": "IP",
+          "type": "string",
+          "example": "192.168.1.1"
+        },
+        "last_active_at": {
+          "description": "Last Activity",
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "active"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "user_agent": {
+          "description": "UA",
+          "type": "string",
+          "example": "Mozilla/5.0..."
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.SessionStatsResponse": {
+      "description": "User Session Statistics",
+      "type": "object",
+      "properties": {
+        "active_sessions": {
+          "description": "Active",
+          "type": "integer",
+          "example": 3
+        },
+        "device_breakdown": {
+          "description": "Device Distribution",
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "example": {
+            "desktop": 5,
+            "mobile": 10
+          }
+        },
+        "expired_sessions": {
+          "description": "Expired",
+          "type": "integer",
+          "example": 10
+        },
+        "revoked_sessions": {
+          "description": "Revoked",
+          "type": "integer",
+          "example": 2
+        },
+        "total_sessions": {
+          "description": "Total Sessions",
+          "type": "integer",
+          "example": 15
+        },
+        "updated_at": {
+          "description": "Statistics Time",
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.TenantJWTConfigResponse": {
+      "type": "object",
+      "properties": {
+        "access_expiry": {
+          "type": "string",
+          "example": "24h"
+        },
+        "leeway": {
+          "type": "string",
+          "example": "5s"
+        },
+        "refresh_expiry": {
+          "type": "string",
+          "example": "168h"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_example_001"
+        }
+      }
+    },
+    "dto.TokenDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.TokenInfoResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TokenExchangeResponse": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIs..."
+        },
+        "audience": {
+          "type": "string",
+          "example": "api.example.com"
+        },
+        "expires_in": {
+          "type": "integer",
+          "example": 3600
+        },
+        "grant_type": {
+          "type": "string",
+          "example": "urn:ietf:params:oauth:grant-type:token-exchange"
+        },
+        "refresh_token": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIs..."
+        },
+        "token_type": {
+          "type": "string",
+          "example": "Bearer"
+        }
+      }
+    },
+    "dto.TokenInfoResponse": {
+      "description": "Token Details",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "description": "Creation Time",
+          "type": "string",
+          "example": "2026-04-15T08:00:00Z"
+        },
+        "expires_at": {
+          "description": "Expiration Time",
+          "type": "string",
+          "example": "2026-04-15T09:00:00Z"
+        },
+        "id": {
+          "description": "Token ID",
+          "type": "string",
+          "example": "tok_abc123"
+        },
+        "ip": {
+          "description": "IP",
+          "type": "string",
+          "example": "192.168.1.1"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "active"
+        },
+        "token_type": {
+          "description": "Type",
+          "type": "string",
+          "example": "access"
+        },
+        "user_agent": {
+          "description": "UA",
+          "type": "string",
+          "example": "Mozilla/5.0..."
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.TokenIntrospectionResponse": {
+      "description": "Token Introspection Result",
+      "type": "object",
+      "properties": {
+        "active": {
+          "description": "Is Valid",
+          "type": "boolean",
+          "example": true
+        },
+        "client_id": {
+          "description": "Client",
+          "type": "string",
+          "example": "app_xyz"
+        },
+        "exp": {
+          "description": "Expiration",
+          "type": "integer",
+          "example": 1713175200
+        },
+        "iat": {
+          "description": "Issued At",
+          "type": "integer",
+          "example": 1713171600
+        },
+        "iss": {
+          "description": "Issuer",
+          "type": "string",
+          "example": "auth.example.com"
+        },
+        "scope": {
+          "description": "Scope",
+          "type": "string",
+          "example": "read write"
+        },
+        "sub": {
+          "description": "Subject",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "token_type": {
+          "description": "Type",
+          "type": "string",
+          "example": "access"
+        },
+        "username": {
+          "description": "Username",
+          "type": "string",
+          "example": "john.doe"
+        }
+      }
+    },
+    "dto.TokenListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.TokenInfoResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination Information (Nested Object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total Count (Flattened for Direct Reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.TokenPairResponse": {
+      "description": "Access Token and Refresh Token",
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "description": "Access Token",
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        },
+        "expires_in": {
+          "description": "Expires In (seconds)",
+          "type": "integer",
+          "example": 3600
+        },
+        "refresh_token": {
+          "description": "Refresh Token",
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        },
+        "token_type": {
+          "description": "Type",
+          "type": "string",
+          "example": "Bearer"
+        }
+      }
+    },
+    "dto.TokenValidationResponse": {
+      "type": "object",
+      "properties": {
+        "claims": {},
+        "error": {
+          "type": "string",
+          "example": ""
+        },
+        "valid": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "dto.TrustDeviceRequest": {
+      "type": "object",
+      "required": [
+        "device_fingerprint"
+      ],
+      "properties": {
+        "device_fingerprint": {
+          "type": "string"
+        },
+        "device_name": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TrustedDeviceListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.TrustedDeviceResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination Information (Nested Object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total Count (Flattened for Direct Reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.TrustedDeviceResponse": {
+      "type": "object",
+      "properties": {
+        "browser": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "device_fingerprint": {
+          "type": "string"
+        },
+        "device_name": {
+          "type": "string"
+        },
+        "device_type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "trusted_until": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdateTenantJWTConfigRequest": {
+      "type": "object",
+      "required": [
+        "access_expiry",
+        "refresh_expiry"
+      ],
+      "properties": {
+        "access_expiry": {
+          "type": "string"
+        },
+        "leeway": {
+          "type": "string"
+        },
+        "refresh_expiry": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpgradeSessionMFAResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "session MFA status upgraded"
+        },
+        "mfa_verified": {
+          "type": "boolean",
+          "example": true
+        },
+        "session_id": {
+          "type": "string",
+          "example": "sess_abc123"
+        }
+      }
+    },
+    "dto.UserSessionsExportResponse": {
+      "type": "object",
+      "properties": {
+        "sessions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.SessionResponse"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "example": 5
+        }
+      }
+    },
+    "dto.ValidateAccessTokenRequest": {
+      "type": "object",
+      "required": [
+        "access_token"
+      ],
+      "properties": {
+        "access_token": {
+          "description": "Access Token",
+          "type": "string"
+        },
+        "device_fingerprint": {
+          "description": "BindToDevice Check",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Session Management: Create, Validate, Revoke, Blacklist",
+      "name": "Session Service"
+    },
+    {
+      "description": "Session Token Management: Generate, Refresh, Validate",
+      "name": "Session Management"
+    },
+    {
+      "description": "Credential Management: Certificate, Credential Creation and Validation",
+      "name": "Credential Management"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

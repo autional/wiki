@@ -1,0 +1,3951 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Points service, providing points earning, spending, rule management, statistics and other functions",
+    "title": "Point Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/point-service/api/v1",
+  "paths": {
+    "/admin/point-rules": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Query the list of points rules under the tenant. By default, only enabled rules are returned. Set include_disabled=true to also return disabled rules.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "List points rules",
+        "parameters": [
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Include disabled rules",
+            "name": "include_disabled",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points rule list",
+            "schema": {
+              "$ref": "#/definitions/dto.PointRuleListResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Create a new points rule for the tenant. The rule automatically triggers points issuance when matching an event type.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Create points rule",
+        "parameters": [
+          {
+            "description": "Create rule request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreatePointRuleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Rule created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.PointRuleDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Rule name already exists",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/point-rules/test": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Dry-run to calculate the rule parameters and expected points for a given event type. Does not actually issue points or modify any data.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Dry-run rule",
+        "parameters": [
+          {
+            "description": "Dry-run request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.TestRuleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dry-run result (points/effective_rate/daily_remaining)",
+            "schema": {
+              "$ref": "#/definitions/dto.RuleTestResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "No matching points rule",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/point-rules/{id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Get rule details by rule ID.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Get points rule details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Rule ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rule details",
+            "schema": {
+              "$ref": "#/definitions/dto.PointRuleDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Rule not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Partially update points rule fields. Only updates fields provided in the request (name, event_type, points, multiplier, daily_limit, total_limit, enabled).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Update points rule",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Rule ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update rule request (all fields optional)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdatePointRuleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rule updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.PointRuleDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Rule not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Soft-delete a points rule (set enabled=false). Does not physically delete the record. Calling again on a disabled rule returns 404.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Delete points rule",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Rule ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Rule not found or already disabled",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/point/integrity/{account_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Verify the hash-chain integrity of a points account block by block. Detects tampering events.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Verify points account event chain integrity",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Points account ID",
+            "name": "account_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification completed",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-domain_PointIntegrityResult"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Event record not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of all points accounts under the tenant, filterable by status.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "List points accounts",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Page size",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "enum": [
+              "active",
+              "suspended",
+              "closed"
+            ],
+            "type": "string",
+            "description": "Status filter",
+            "name": "status",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of points accounts",
+            "schema": {
+              "$ref": "#/definitions/dto.PointAccountListResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a points account for the user under the current tenant. A user can only have one points account under the same tenant.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Create points account",
+        "parameters": [
+          {
+            "description": "Create points account request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreatePointAccountRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Points account created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.PointAccountDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Account already exists",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/apply-rule": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Match enabled points rules under the tenant by event type and automatically issue points. Calculation logic: base points × multiplier. If daily_limit is configured, check the amount already earned today.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Apply points rule",
+        "parameters": [
+          {
+            "description": "Apply rule request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ApplyPointRuleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rule applied, points issued",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "No matching points rule",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/batch-earn": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Issue points to multiple users in a single request. Each record is processed independently; failure of one does not affect others.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Batch issue points",
+        "parameters": [
+          {
+            "description": "Batch issue request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchEarnRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch issuance completed, returns success and failure counts",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchEarnResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/config": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Query the current tenant's points configuration, including points type, exchange rate, expiration policy, feature toggles, etc.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Get tenant points configuration",
+        "responses": {
+          "200": {
+            "description": "Tenant points configuration",
+            "schema": {
+              "$ref": "#/definitions/dto.TenantConfigDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Update the current tenant's points configuration parameters (points type, exchange rate, expiration policy, feature toggles, etc.). Only updates fields provided in the request.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Update tenant points configuration",
+        "parameters": [
+          {
+            "description": "Update configuration request (all fields optional)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateTenantConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuration updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.TenantConfigDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Delete the current tenant's points configuration.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Delete tenant points configuration",
+        "responses": {
+          "200": {
+            "description": "Configuration deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Get aggregated statistics for the current tenant: total accounts, active accounts, total balance, total earned/spent/expired, monthly data, total transactions.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Admin tenant-level points statistics",
+        "responses": {
+          "200": {
+            "description": "Tenant statistics",
+            "schema": {
+              "$ref": "#/definitions/dto.TenantPointStatsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/transactions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Paginated query of all users' points transaction records under the tenant, filterable by type and user, sorted by creation time in descending order.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Admin query transaction records",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Page size",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "enum": [
+              "earn",
+              "spend",
+              "expire",
+              "freeze",
+              "unfreeze",
+              "refund",
+              "adjust"
+            ],
+            "type": "string",
+            "description": "Transaction type",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "User ID filter",
+            "name": "user_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointTransactionListResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/{user_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Delete a user's points account (physical deletion).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Delete points account",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/{user_id}/adjust": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Adjust user points. Positive values increase points, negative values decrease points. It is recommended to provide a clear reason for audit traceability.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Adjust points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Adjust points request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.AdjustPointsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points adjustment successful, returns account and transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request or insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/{user_id}/expire": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Manually trigger points expiration, deducting the specified points from available balance and marking them as expired. If the requested amount exceeds the current available balance, it is settled proportionally. Idempotent via X-Idempotency-Key header.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Process points expiration",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Idempotency key, UUID recommended",
+            "name": "X-Idempotency-Key",
+            "in": "header"
+          },
+          {
+            "description": "Points expiration request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExpirePointsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points expiration processed",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/{user_id}/freeze": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Freeze user's available points, transferring the specified amount from available balance to frozen balance. Frozen points cannot be spent.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Freeze points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Freeze points request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.FreezePointsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points frozen successfully, returns account and transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request or insufficient available balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/{user_id}/status": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Update points account status. Suspended status prevents earn/spend operations; closed status is irreversible.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Update points account status",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Status update request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateAccountStatusRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status updated successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/points/{user_id}/unfreeze": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin operation. Unfreeze previously frozen points, restoring them to available balance. The unfreeze amount cannot exceed the current frozen balance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Unfreeze points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Unfreeze points request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UnfreezePointsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points unfrozen successfully, returns account and transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request or insufficient frozen balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/point/accounts/{user_id}": {
+      "get": {
+        "description": "Internal service call for other microservices to query points account information.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service - Internal"
+        ],
+        "summary": "Internal get points account",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points account information",
+            "schema": {
+              "$ref": "#/definitions/dto.PointAccountDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/point/delete-user-data": {
+      "post": {
+        "description": "Internal service call to anonymize all points data of a specified user for GDPR erasure compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service - Internal"
+        ],
+        "summary": "GDPR delete user data",
+        "parameters": [
+          {
+            "description": "Delete user data request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.DeleteUserDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User data deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/point/export-user-data": {
+      "post": {
+        "description": "Internal service call to export a user's points account and statistics data for GDPR data export compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service - Internal"
+        ],
+        "summary": "Export user points data",
+        "parameters": [
+          {
+            "description": "Export user data request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExportUserDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User points data",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_ExportUserDataResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/runtime": {
+      "get": {
+        "description": "Get runtime status information of the points service.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service - Internal"
+        ],
+        "summary": "Service runtime information",
+        "responses": {
+          "200": {
+            "description": "Runtime status",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "500": {
+            "description": "Service unavailable",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get points account information by user ID, including available balance, frozen balance, total earned, total spent, expired points, points type, exchange rate, etc.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Get points account details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points account details",
+            "schema": {
+              "$ref": "#/definitions/dto.PointAccountDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/confirm-deduction": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Confirm deduction of points from frozen balance. Suitable for scenarios where frozen points are actually deducted after order confirmation. Workflow: Freeze → ConfirmDeduction or Unfreeze.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Confirm deduction of frozen points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Confirm deduction request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ConfirmDeductionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deduction confirmed successfully, returns account and transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request or insufficient frozen balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/earn": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Add points to a user account. If the account does not exist, it is automatically created. Idempotent via X-Idempotency-Key header.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Earn points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Idempotency key, UUID recommended",
+            "name": "X-Idempotency-Key",
+            "in": "header"
+          },
+          {
+            "description": "Earn points request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.EarnPointsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points issued successfully, returns account and transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request or insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Concurrency conflict, please retry",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/exchange": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Redeem points for a specified type of item (e.g., coupon, discount). Requires the tenant to have ExchangeEnabled configuration enabled. Points are deducted upon redemption and are irreversible.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Redeem points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Idempotency key, UUID recommended",
+            "name": "X-Idempotency-Key",
+            "in": "header"
+          },
+          {
+            "description": "Redeem request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExchangePointsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points redeemed successfully, returns account and transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request or insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/expiring": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the details of points that will expire within the next N days in the user's account, including source, amount, expiration date, and remaining days for each entry.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Query expiring points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 30,
+            "description": "Query days range",
+            "name": "days",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Expiring points details",
+            "schema": {
+              "$ref": "#/definitions/dto.ExpiringPointDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/refund": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Refund spent points to the user for scenarios such as order refunds or transaction reversals. It is recommended to include related_tx_id to establish the refund chain.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Refund points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Refund points request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RefundPointsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points refunded successfully, returns account and transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/risk-score": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Perform anti-fraud/arbitrage risk assessment on a points account based on multi-dimensional factors (freeze count, spending ratio, recent earning frequency, negative balance, transaction activity).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Points account risk score",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Risk score (score>=70 high risk, 40-69 medium risk, <40 low risk)",
+            "schema": {
+              "$ref": "#/definitions/dto.PointRiskScoreDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/spend": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Deduct available points from a user account. The account must exist and have sufficient balance; frozen points cannot be spent.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Spend points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Idempotency key, UUID recommended",
+            "name": "X-Idempotency-Key",
+            "in": "header"
+          },
+          {
+            "description": "Spend points request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SpendPointsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points spent successfully, returns account and transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request or insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get comprehensive statistics for a user's points account: current balance, total earned/spent/expired, monthly data, points expiring within 30 days.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Points statistics",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points statistics data",
+            "schema": {
+              "$ref": "#/definitions/dto.PointStatsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/transactions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of a user's points transaction history, filterable by type, sorted by creation time in descending order.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Query transaction records",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Page size",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "enum": [
+              "earn",
+              "spend",
+              "expire",
+              "freeze",
+              "unfreeze",
+              "refund",
+              "adjust"
+            ],
+            "type": "string",
+            "description": "Transaction type",
+            "name": "type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointTransactionListResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/transactions/{tx_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query transaction details by transaction ID, including balance snapshots (balance_before / balance_after).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Get transaction details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Transaction ID",
+            "name": "tx_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction details",
+            "schema": {
+              "$ref": "#/definitions/dto.PointTransactionDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Transaction not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/transfer": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Transfer points from the current user's account to another user under the same tenant. Requires the tenant to have TransferEnabled configuration enabled. Idempotent via X-Idempotency-Key header to prevent duplicate transfers.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Transfer points",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Sender user ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Idempotency key, UUID recommended",
+            "name": "X-Idempotency-Key",
+            "in": "header"
+          },
+          {
+            "description": "Transfer request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.TransferPointsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points transferred successfully, returns account and transaction records",
+            "schema": {
+              "$ref": "#/definitions/dto.PointOperationResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request or insufficient balance",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/points/{user_id}/value": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Calculate the cash value of the current balance based on points type and exchange rate. cash_value = balance / exchange_rate. Only cash_equivalent type can be redeemed.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Points Service"
+        ],
+        "summary": "Points cash value",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points cash value",
+            "schema": {
+              "$ref": "#/definitions/dto.PointValueResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "domain.PointIntegrityResult": {
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "type": "string"
+        },
+        "broken_at": {
+          "type": "integer"
+        },
+        "last_hash": {
+          "type": "string"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "valid": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.AdjustPointsRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "description": "Positive to increase, negative to decrease",
+          "type": "integer"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ApplyPointRuleRequest": {
+      "type": "object",
+      "required": [
+        "event_type",
+        "user_id"
+      ],
+      "properties": {
+        "event_type": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchEarnItem": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "example": 100
+        },
+        "error": {
+          "type": "string"
+        },
+        "new_balance": {
+          "type": "integer",
+          "example": 1100
+        },
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user-001"
+        }
+      }
+    },
+    "dto.BatchEarnRequest": {
+      "type": "object",
+      "required": [
+        "users"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.BatchEarnUser"
+          }
+        }
+      }
+    },
+    "dto.BatchEarnResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BatchEarnResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchEarnResult": {
+      "type": "object",
+      "properties": {
+        "failed_count": {
+          "type": "integer",
+          "example": 1
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.BatchEarnItem"
+          }
+        },
+        "success_count": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    },
+    "dto.BatchEarnUser": {
+      "type": "object",
+      "required": [
+        "amount",
+        "user_id"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ConfirmDeductionRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreatePointAccountRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreatePointRuleRequest": {
+      "type": "object",
+      "required": [
+        "event_type",
+        "name",
+        "points"
+      ],
+      "properties": {
+        "daily_limit": {
+          "type": "integer"
+        },
+        "event_type": {
+          "type": "string"
+        },
+        "multiplier": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "points": {
+          "type": "integer"
+        },
+        "total_limit": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.DataResponse-domain_PointIntegrityResult": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/domain.PointIntegrityResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_ExportUserDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ExportUserDataResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DeleteUserDataRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.EarnPointsRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExchangePointsRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        },
+        "exchange_type": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExpirePointsRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExpiringPointDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ExpiringPointsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExpiringPointResponse": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "example": 500
+        },
+        "days_left": {
+          "type": "integer",
+          "example": 7
+        },
+        "expires_at": {
+          "type": "string",
+          "example": "2026-06-15T00:00:00Z"
+        },
+        "source": {
+          "type": "string",
+          "example": "signup_bonus"
+        },
+        "transaction_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        }
+      }
+    },
+    "dto.ExpiringPointsResponse": {
+      "type": "object",
+      "properties": {
+        "days_threshold": {
+          "type": "integer",
+          "example": 30
+        },
+        "expiring_points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ExpiringPointResponse"
+          }
+        },
+        "total_expiring": {
+          "type": "integer",
+          "example": 1500
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_example_001"
+        }
+      }
+    },
+    "dto.ExportUserDataRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExportUserDataResponse": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/dto.PointAccountResponse"
+        },
+        "stats": {
+          "$ref": "#/definitions/dto.PointStatsResponse"
+        }
+      }
+    },
+    "dto.FreezePointsRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PointAccountDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PointAccountResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PointAccountListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.PointAccountResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.PointAccountResponse": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "integer",
+          "example": 1500
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-01-15T10:30:00Z"
+        },
+        "exchange_rate": {
+          "type": "integer",
+          "example": 100
+        },
+        "expired_points": {
+          "type": "integer",
+          "example": 100
+        },
+        "frozen_balance": {
+          "type": "integer",
+          "example": 200
+        },
+        "id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "points_type": {
+          "type": "string",
+          "example": "cash_equivalent"
+        },
+        "status": {
+          "type": "string",
+          "example": "active"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_example_001"
+        },
+        "total_earned": {
+          "type": "integer",
+          "example": 5000
+        },
+        "total_spent": {
+          "type": "integer",
+          "example": 3500
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-10T14:20:00Z"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_example_001"
+        },
+        "version": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    },
+    "dto.PointOperationData": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/dto.PointAccountResponse"
+        },
+        "points_earned": {
+          "type": "integer",
+          "example": 100
+        },
+        "transaction": {
+          "$ref": "#/definitions/dto.PointTransactionResponse"
+        }
+      }
+    },
+    "dto.PointOperationResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PointOperationData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PointRiskScoreDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PointRiskScoreResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PointRiskScoreResponse": {
+      "type": "object",
+      "properties": {
+        "factors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"normal_behavior\"",
+            "\"trusted_device\"]"
+          ]
+        },
+        "risk_level": {
+          "type": "string",
+          "example": "low"
+        },
+        "risk_score": {
+          "type": "integer",
+          "example": 10
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_example_001"
+        }
+      }
+    },
+    "dto.PointRuleDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PointRuleResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PointRuleListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.PointRuleResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PointRuleResponse": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-01-15T10:30:00Z"
+        },
+        "daily_limit": {
+          "type": "integer",
+          "example": 3
+        },
+        "enabled": {
+          "type": "boolean",
+          "example": true
+        },
+        "event_type": {
+          "type": "string",
+          "example": "daily_checkin"
+        },
+        "expiry_days": {
+          "type": "integer",
+          "example": 365
+        },
+        "id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "multiplier": {
+          "type": "number",
+          "example": 1.5
+        },
+        "name": {
+          "type": "string",
+          "example": "Daily check-in"
+        },
+        "points": {
+          "type": "integer",
+          "example": 10
+        },
+        "priority": {
+          "type": "integer",
+          "example": 1
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_example_001"
+        },
+        "total_limit": {
+          "type": "integer",
+          "example": 100
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-10T14:20:00Z"
+        }
+      }
+    },
+    "dto.PointStatsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PointStatsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PointStatsResponse": {
+      "type": "object",
+      "properties": {
+        "current_balance": {
+          "type": "integer",
+          "example": 1500
+        },
+        "earned_this_month": {
+          "type": "integer",
+          "example": 200
+        },
+        "expiring_soon": {
+          "type": "integer",
+          "example": 500
+        },
+        "spent_this_month": {
+          "type": "integer",
+          "example": 150
+        },
+        "total_earned": {
+          "type": "integer",
+          "example": 5000
+        },
+        "total_expired": {
+          "type": "integer",
+          "example": 100
+        },
+        "total_spent": {
+          "type": "integer",
+          "example": 3500
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_example_001"
+        }
+      }
+    },
+    "dto.PointTransactionDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PointTransactionResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PointTransactionListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.PointTransactionResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.PointTransactionResponse": {
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "amount": {
+          "type": "integer",
+          "example": 100
+        },
+        "balance_after": {
+          "type": "integer",
+          "example": 1500
+        },
+        "balance_before": {
+          "type": "integer",
+          "example": 1400
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "Daily check-in reward"
+        },
+        "expires_at": {
+          "type": "string",
+          "example": "2027-01-15T10:30:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "example": "ik_abc123"
+        },
+        "reason": {
+          "type": "string",
+          "example": "Check-in reward"
+        },
+        "related_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "source": {
+          "type": "string",
+          "example": "daily_checkin"
+        },
+        "status": {
+          "type": "string",
+          "example": "completed"
+        },
+        "type": {
+          "type": "string",
+          "example": "earn"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_example_001"
+        }
+      }
+    },
+    "dto.PointValueResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PointValueResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PointValueResult": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "integer",
+          "example": 5000
+        },
+        "cash_value": {
+          "type": "string",
+          "example": "50"
+        },
+        "exchange_rate": {
+          "type": "integer",
+          "example": 100
+        },
+        "points_type": {
+          "type": "string",
+          "example": "cash_equivalent"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user-001"
+        }
+      }
+    },
+    "dto.RefundPointsRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        },
+        "related_tx_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.RuleTestResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "example": 0
+        },
+        "data": {
+          "$ref": "#/definitions/dto.RuleTestResult"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "dto.RuleTestResult": {
+      "type": "object",
+      "properties": {
+        "daily_remaining": {
+          "type": "integer",
+          "example": 3
+        },
+        "effective_rate": {
+          "type": "number",
+          "example": 2
+        },
+        "points": {
+          "type": "integer",
+          "example": 100
+        }
+      }
+    },
+    "dto.SpendPointsRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TenantConfigDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.TenantConfigResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TenantConfigResponse": {
+      "type": "object",
+      "properties": {
+        "default_expiry_days": {
+          "type": "integer",
+          "example": 365
+        },
+        "earn_enabled": {
+          "type": "boolean",
+          "example": true
+        },
+        "exchange_enabled": {
+          "type": "boolean",
+          "example": true
+        },
+        "exchange_rate": {
+          "type": "integer",
+          "example": 100
+        },
+        "expire_enabled": {
+          "type": "boolean",
+          "example": true
+        },
+        "expiry_mode": {
+          "type": "string",
+          "example": "rolling"
+        },
+        "max_balance": {
+          "type": "integer",
+          "example": 100000
+        },
+        "min_spend_points": {
+          "type": "integer",
+          "example": 10
+        },
+        "points_type": {
+          "type": "string",
+          "example": "cash_equivalent"
+        },
+        "spend_enabled": {
+          "type": "boolean",
+          "example": true
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_example_001"
+        },
+        "transfer_enabled": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "dto.TenantPointStatsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.TenantPointStatsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TenantPointStatsResponse": {
+      "type": "object",
+      "properties": {
+        "active_accounts": {
+          "type": "integer",
+          "example": 38
+        },
+        "earned_this_month": {
+          "type": "integer",
+          "example": 20000
+        },
+        "spent_this_month": {
+          "type": "integer",
+          "example": 15000
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_example_001"
+        },
+        "total_accounts": {
+          "type": "integer",
+          "example": 42
+        },
+        "total_balance": {
+          "type": "integer",
+          "example": 150000
+        },
+        "total_earned": {
+          "type": "integer",
+          "example": 500000
+        },
+        "total_expired": {
+          "type": "integer",
+          "example": 10000
+        },
+        "total_frozen": {
+          "type": "integer",
+          "example": 5000
+        },
+        "total_spent": {
+          "type": "integer",
+          "example": 350000
+        },
+        "total_transactions": {
+          "type": "integer",
+          "example": 1234
+        }
+      }
+    },
+    "dto.TestRuleRequest": {
+      "type": "object",
+      "required": [
+        "event_type"
+      ],
+      "properties": {
+        "event_type": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TransferPointsRequest": {
+      "type": "object",
+      "required": [
+        "amount",
+        "to_user_id"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "source": {
+          "type": "string"
+        },
+        "to_user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UnfreezePointsRequest": {
+      "type": "object",
+      "required": [
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "integer"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdateAccountStatusRequest": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdatePointRuleRequest": {
+      "type": "object",
+      "properties": {
+        "daily_limit": {
+          "type": "integer"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "event_type": {
+          "type": "string"
+        },
+        "multiplier": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "points": {
+          "type": "integer"
+        },
+        "total_limit": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.UpdateTenantConfigRequest": {
+      "type": "object",
+      "properties": {
+        "default_expiry_days": {
+          "type": "integer"
+        },
+        "earn_enabled": {
+          "type": "boolean"
+        },
+        "exchange_enabled": {
+          "type": "boolean"
+        },
+        "exchange_rate": {
+          "type": "integer"
+        },
+        "expire_enabled": {
+          "type": "boolean"
+        },
+        "expiry_mode": {
+          "type": "string"
+        },
+        "max_balance": {
+          "type": "integer"
+        },
+        "min_spend_points": {
+          "type": "integer"
+        },
+        "points_type": {
+          "type": "string"
+        },
+        "spend_enabled": {
+          "type": "boolean"
+        },
+        "transfer_enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Points account management: create, query, freeze",
+      "name": "Points Account"
+    },
+    {
+      "description": "Points Operations: Get, Spend, Transfer, Expire",
+      "name": "Points Operations"
+    },
+    {
+      "description": "Points Query: Balance, Details, Statistics",
+      "name": "Points Query"
+    },
+    {
+      "description": "Points Rule Management: Create, Edit, Activate",
+      "name": "Points Rules"
+    },
+    {
+      "description": "Points Management Backend: Global Configuration, Audit",
+      "name": "Points Management"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

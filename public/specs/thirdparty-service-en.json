@@ -1,0 +1,441 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Third-party integration service, providing CAPTCHA and external provider integrations",
+    "title": "Thirdparty Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/thirdparty-service/api/v1",
+  "paths": {
+    "/internal/thirdparty/captcha/challenge": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Generate CAPTCHA challenge data based on the specified provider type. PoW returns a random challenge code and difficulty value; Turnstile returns a Site Key for frontend initialization of the verification component and starting the human verification process.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Third-party Verification"
+        ],
+        "summary": "Get CAPTCHA Challenge",
+        "parameters": [
+          {
+            "enum": [
+              "pow",
+              "turnstile"
+            ],
+            "type": "string",
+            "default": "pow",
+            "description": "Verification provider type (pow / turnstile)",
+            "name": "provider",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "default": "default",
+            "description": "Application scope identifier, used to distinguish challenges for different business pages or scenarios",
+            "name": "scope",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "PoW challenge difficulty value; higher values increase computational difficulty (only valid for pow type)",
+            "name": "difficulty",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Challenge generated successfully, returns challenge ID, type, challenge data, and expiration time",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-captcha_Challenge"
+            }
+          },
+          "400": {
+            "description": "Request parameter error (unsupported verification provider type)",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "429": {
+            "description": "CAPTCHA challenge request too frequent, please retry later",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Challenge generation service unavailable",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/thirdparty/captcha/verify": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Receive the CAPTCHA token submitted by the user (PoW proof-of-work result or Turnstile verification token), call the corresponding verification provider for server-side validation, and return the verification result (pass/fail, score, and error code)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Third-party Verification"
+        ],
+        "summary": "Verify CAPTCHA Token",
+        "parameters": [
+          {
+            "description": "CAPTCHA verification request: provider type, token, challenge ID, operation type, and client IP",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.CaptchaVerifyRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification completed, returns pass/fail, score, and error code",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_CaptchaVerifyResponse"
+            }
+          },
+          "400": {
+            "description": "Request parameter error (missing required fields or unsupported verification provider)",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "429": {
+            "description": "CAPTCHA verification request too frequent, please retry later",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Verification service unavailable",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/thirdparty/export-user-data": {
+      "post": {
+        "description": "Internal service call to export all data associated with the specified user in third-party services (CAPTCHA verification records, SMS records, payment records) for GDPR data export compliance. The current thirdparty-service is a stateless proxy service with no persistent user data; all logs are empty.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Third-party Verification"
+        ],
+        "summary": "GDPR Export User Associated Data",
+        "parameters": [
+          {
+            "description": "Export user data request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.ExportUserDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User data export result",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_ExportUserDataResponse"
+            }
+          },
+          "400": {
+            "description": "Request parameter error (missing required fields such as user_id)",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/thirdparty/health": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Check the health status of all registered CAPTCHA providers (PoW, Turnstile, etc.), call each provider's health check endpoint in sequence, and return the operational status of each provider",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Third-party Verification"
+        ],
+        "summary": "Third-party Verification Service Health Check",
+        "responses": {
+          "200": {
+            "description": "Health status of each provider: healthy indicates normal, unhealthy is followed by specific error information",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-map_string_string"
+            }
+          },
+          "400": {
+            "description": "Request parameter error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "captcha.Challenge": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/captcha.ChallengeData"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "site_key": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "captcha.ChallengeData": {
+      "type": "object",
+      "properties": {
+        "challenge": {
+          "type": "string"
+        },
+        "difficulty": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.DataResponse-captcha_Challenge": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/captcha.Challenge"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_CaptchaVerifyResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.CaptchaVerifyResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_ExportUserDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.ExportUserDataResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-map_string_string": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/map_string_string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.CaptchaVerifyRequest": {
+      "type": "object",
+      "required": [
+        "provider",
+        "token"
+      ],
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "challenge_id": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "remote_ip": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.CaptchaVerifyResponse": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "error_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provider": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.ExportUserDataRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.ExportUserDataResponse": {
+      "type": "object",
+      "properties": {
+        "captcha_logs": {
+          "type": "array",
+          "items": {}
+        },
+        "payment_logs": {
+          "type": "array",
+          "items": {}
+        },
+        "sms_logs": {
+          "type": "array",
+          "items": {}
+        }
+      }
+    },
+    "map_string_string": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Third-party Verification: CAPTCHA, Human Verification",
+      "name": "Third-party Verification"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

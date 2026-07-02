@@ -1,0 +1,158 @@
+---
+import WikiLayout from '../layouts/WikiLayout.astro';
+
+export async function getStaticPaths() {
+  const svcs = ["identity-service","profile-service","tenant-service","session-service","mfa-service","oauth-service","wallet-service","point-service","audit-service","notification-service","communication-service","storage-service","billing-service","compliance-service","status-service","secret-service","saml-service","pay-service","thirdparty-service","verification-service","rbac-service","gateway-service"];
+  return svcs.map(n => ({ params: { service: n } }));
+}
+const { service } = Astro.params;
+---
+
+<WikiLayout title={`${service} Wiki — Aucial`}>
+  <!-- CENTER: Endpoint Table -->
+  <div class="w-[420px] shrink-0 border-r border-neutral-100 overflow-y-auto bg-white" id="endpoint-panel">
+    <div class="sticky top-0 bg-white border-b border-neutral-100 px-4 py-2.5 z-10">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-semibold text-neutral-800 truncate">{service}</span>
+        <span class="text-[11px] font-mono text-neutral-400" id="ep-count">loading...</span>
+      </div>
+    </div>
+    <div id="endpoint-list" class="divide-y divide-neutral-50">
+      <div class="px-4 py-12 text-center text-sm text-neutral-400">Loading endpoints...</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Detail Panel -->
+  <div class="flex-1 overflow-y-auto bg-white" id="detail-panel">
+    <div class="sticky top-0 bg-white border-b border-neutral-100 px-6 py-2.5 z-10 flex items-center justify-between">
+      <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400" id="detail-title">Detail</span>
+      <span class="text-[10px] font-mono text-neutral-400" id="detail-method"></span>
+    </div>
+    <div id="detail-content" class="wiki-detail p-6">
+      <div class="text-sm text-neutral-400 text-center py-20">← Select an endpoint to view details</div>
+    </div>
+  </div>
+
+  <div id="wiki-config" data-service={Astro.params.service} style="display:none"></div>
+  <script is:inline>
+    var service = document.getElementById('wiki-config').getAttribute('data-service');
+    var wikiBase = '/wiki/api/' + service + '/';
+    
+    // Load endpoint list
+    fetch(wikiBase + 'index.html')
+      .then(function(r) { return r.text(); })
+      .then(function(html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var body = doc.querySelector('.wiki-body') || doc.body;
+        var sections = body.querySelectorAll('h2');
+        var tables = body.querySelectorAll('table');
+        var list = document.getElementById('endpoint-list');
+        var total = 0;
+        var html2 = '';
+
+        // Parse endpoint table from wiki HTML
+        var allRows = body.querySelectorAll('tr');
+        var endpoints = [];
+        var currentCategory = '';
+        for (var i = 0; i < allRows.length; i++) {
+          var prev = allRows[i].previousElementSibling;
+          // Check if previous element is an h2 (category header)
+          var h2 = allRows[i].parentElement.parentElement.querySelector('h2') ||
+                   (allRows[i].closest('div') ? allRows[i].closest('div').previousElementSibling : null);
+          if (h2 && h2.tagName === 'H2') {
+            currentCategory = h2.textContent.trim();
+          }
+          var cells = allRows[i].querySelectorAll('td');
+          if (cells.length >= 3) {
+            var method = cells[0].textContent.trim();
+            var path = cells[1].textContent.trim();
+            var summary = cells[2].textContent.trim();
+            var detailLink = cells[2].querySelector('a');
+            var detailHref = detailLink ? detailLink.getAttribute('href') : '';
+            if (method && path && (method === 'GET' || method === 'POST' || method === 'PUT' || method === 'DELETE' || method === 'PATCH')) {
+              endpoints.push({ method: method, path: path, summary: summary, cat: currentCategory, href: detailHref });
+              total++;
+            }
+          }
+        }
+
+        // Render
+        var lastCat = '';
+        for (var j = 0; j < endpoints.length; j++) {
+          var ep = endpoints[j];
+          if (ep.cat !== lastCat) {
+            lastCat = ep.cat;
+            html2 += '<div class="px-4 py-2 bg-neutral-50 text-[11px] font-semibold uppercase tracking-wider text-neutral-500">' + ep.cat + '</div>';
+          }
+          var methodColor = ep.method === 'GET' ? 'text-emerald-600' : ep.method === 'POST' ? 'text-blue-600' : ep.method === 'DELETE' ? 'text-red-500' : 'text-amber-600';
+          html2 += '<div class="flex flex-col px-4 py-2.5 hover:bg-primary-50 cursor-pointer border-b border-neutral-50 transition" onclick="loadDetail(\'' + ep.href.replace(/\/$/, '') + '\',\'' + ep.method + ' ' + ep.path + '\')">';
+          html2 += '<div class="flex items-center gap-3">';
+          html2 += '<span class="text-[10px] font-bold font-mono w-14 shrink-0 ' + methodColor + '">' + ep.method + '</span>';
+          html2 += '<span class="text-[11px] font-mono text-neutral-600 flex-1">' + ep.path + '</span>';
+          html2 += '</div>';
+          if (ep.summary) {
+            html2 += '<div class="text-[11px] text-neutral-400 ml-[72px] mt-0.5 leading-relaxed">' + ep.summary.replace(/detail →$/,'').trim() + '</div>';
+          }
+          html2 += '</div>';
+        }
+        list.innerHTML = html2;
+        document.getElementById('ep-count').textContent = total + ' endpoints';
+      })
+      .catch(function(e) {
+        document.getElementById('endpoint-list').innerHTML = '<div class="px-4 py-8 text-center text-sm text-red-500">Failed to load endpoints</div>';
+      });
+
+    // Load endpoint detail
+    function loadDetail(url, title) {
+      var detail = document.getElementById('detail-content');
+      detail.innerHTML = '<div class="wiki-loading">Loading...</div>';
+      document.getElementById('detail-title').textContent = title || 'Detail';
+      
+      // Parse method+path for header
+      if (title && title.indexOf(' ') > 0) {
+        var parts = title.split(' ');
+        document.getElementById('detail-method').textContent = parts[0];
+        document.getElementById('detail-title').textContent = parts[1];
+      }
+
+      fetch(wikiBase + url + '/index.html')
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(html, 'text/html');
+          var body = doc.body;
+          
+          // Remove all nav, header, footer elements
+          var toRemove = body.querySelectorAll('nav, header, footer, .docs-prose-breadcrumb, script, style, .sidebar, .nav, [role=navigation]');
+          toRemove.forEach(function(el) { el.remove(); });
+          
+          // Find main content - look for the endpoint detail area
+          var main = body.querySelector('main, article, .content, .main-content');
+          if (!main) {
+            // Fallback: get everything and clean it up
+            main = body.cloneNode(true);
+            // Remove navigation links
+            main.querySelectorAll('a[href]').forEach(function(a) {
+              // Remove "Back to top" and navigation links
+              var txt = a.textContent.trim();
+              if (txt === '↑' || txt === 'Docs' || txt.indexOf('API Reference') >= 0) {
+                a.remove();
+              }
+              // Remove duplicate "detail" links within the content
+              if (a.textContent.trim().indexOf('detail') >= 0) {
+                a.removeAttribute('href');
+                a.style.color = 'inherit';
+                a.style.textDecoration = 'none';
+                a.style.pointerEvents = 'none';
+              }
+            });
+          }
+          detail.innerHTML = '<div class=\"wiki-detail-content\">' + (main ? main.innerHTML : body.innerHTML) + '</div>';
+        })
+        .catch(function(e) {
+          detail.innerHTML = '<div class="text-sm text-red-500 py-4">Failed to load detail</div>';
+        });
+    }
+  </script>
+</WikiLayout>

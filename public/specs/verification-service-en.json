@@ -1,0 +1,3114 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Real-name authentication and liveness detection service, providing OCR recognition, identity verification, liveness detection, provider configuration management, etc.",
+    "title": "Identity Verification Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/verification-service/api/v1",
+  "paths": {
+    "/admin/verifications": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin queries all real-name authentication records under the tenant, supports filtering by authentication status and date range with pagination, returns a list of masked authentication information.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "List authentication records",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Filter by authentication status: verified/pending/rejected/expired",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start date (YYYY-MM-DD)",
+            "name": "date_from",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End date (YYYY-MM-DD)",
+            "name": "date_to",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number, default 1",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page, default 20",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authentication list with masked information",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_VerificationListItem"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/export": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Export authentication records as CSV file, including fields: ID, User ID, Status, Method, Provider, Age Group, Liveness Score, Verification Time, Rejection Reason, Expiration Time, Retry Count, Creation Time. Supports filtering by status and date range, max 1000 records.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/csv"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Export authentication records",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Filter by authentication status: verified/pending/rejected/expired",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start date (YYYY-MM-DD)",
+            "name": "date_from",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End date (YYYY-MM-DD)",
+            "name": "date_to",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV file, Content-Type: text/csv; charset=utf-8",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/guardians": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin queries guardian relationships by guardian ID or minor user ID, at least one query parameter required.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Admin query guardian relationships",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Guardian user ID",
+            "name": "guardian_user_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Minor user ID",
+            "name": "minor_user_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of guardian relationships",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_GuardianRelationshipResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Guardian relationship not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin manually removes a specified guardian relationship; after removal, the guardian no longer has authority over the minor.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Admin remove guardian relationship",
+        "parameters": [
+          {
+            "description": "Remove guardian relationship request: includes guardian ID and minor ID",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.RemoveGuardianRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removal successful",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Guardian relationship not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/providers": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of provider configuration list, supports filtering by channel type and enabled status, sorted by priority.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "List provider configurations",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Filter by channel type: ocr/verify/liveness",
+            "name": "channel",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Query only enabled configurations",
+            "name": "is_active",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number, default 1",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page, default 20",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider configuration list",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_ProviderConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create an identity verification provider configuration for a specified verification channel (OCR/Verify/Liveness), including priority and JSON configuration. After configuration, it can be used by the service to select a verification service provider.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Create provider configuration",
+        "parameters": [
+          {
+            "description": "Provider configuration: includes channel type, provider name, JSON configuration, and priority",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.CreateProviderConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Configuration created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_ProviderConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/providers/{verification_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get detailed information of a single provider configuration by configuration ID, including JSON configuration content and enabled status.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Get provider configuration details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider configuration ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Provider configuration details",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_ProviderConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the JSON configuration content, enabled status, or priority of a provider configuration.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Update provider configuration",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider configuration ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update request: includes configuration content, enabled status, priority",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.UpdateProviderConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated configuration information",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_ProviderConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified provider configuration; after deletion, it will no longer be used for verification service provider selection.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Delete provider configuration",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider configuration ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deletion successful",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get statistical summary of authentication records under the tenant: total authentications, verified, pending, rejected, expired, unauthenticated, and minor user count.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Get authentication statistics",
+        "responses": {
+          "200": {
+            "description": "Authentication statistics summary",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_StatsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/{verification_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin views detailed information of a specified authentication record, including masked name, ID hint, liveness score, manual override records, etc.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Get authentication details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Authentication ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authentication details with masked information and override records",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_AdminVerificationDetail"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Authentication record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/{verification_id}/manual-review": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin moves an authentication record to manual review status, must provide a review reason. This operation requires step-up re-authentication.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Move to manual review",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Authentication ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Manual review request: includes reason for moving",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.ManualReviewRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Moved to manual review successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_AdminVerificationDetail"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Authentication record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/{verification_id}/override": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin manually overrides authentication status (e.g., from failed to passed), must provide target status value and reason. This operation requires step-up re-authentication; the operation record is written to audit log.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Manual override authentication status",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Authentication ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Override request: includes target status and override reason",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.OverrideRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authentication details after override",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_AdminVerificationDetail"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Authentication record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/{verification_id}/reset": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin resets the retry count of a specified authentication record to zero, allowing the user to resubmit authentication. This operation requires step-up re-authentication.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Reset retry count",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Authentication ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authentication status after reset",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_VerificationStatusResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Authentication record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/verifications/{verification_id}/resolve-review": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin resolves manual review: approve or reject. Only records with manual_review status can be operated. This operation requires step-up re-authentication.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Resolve manual review",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Authentication ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Review resolution request: includes resolution (approved/rejected) and reason",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.ResolveReviewRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review resolved successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_AdminVerificationDetail"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Authentication record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/verification/check": {
+      "get": {
+        "description": "Internal service call interface, queries authentication status and age group by user ID, for other services to determine real-name authentication and minor identity. Requires Internal API Key authentication.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Internal check authentication status",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authentication status and age group information",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_VerificationStatusResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid API Key",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/verification/erase-user": {
+      "post": {
+        "description": "Clears PII fields (name, id_number), resets verification status, publishes erased event.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Identity Verification - Internal Interface"
+        ],
+        "summary": "GDPR erasure - erase user verification data",
+        "parameters": [
+          {
+            "description": "Erasure request",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.EraseUserInternalRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "user data erased",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "invalid request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "internal error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/verification/consent": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "User authorizes collection and processing of real-name authentication data, must provide consent item list (e.g., data collection, facial information processing, etc.).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Authorize consent",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Authentication ID",
+            "name": "verification_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "description": "Authorization request: includes consent item list",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.GrantConsentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorization successful",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/guardians": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a guardian relationship for a minor user. The guardian must be a verified adult user; guardian consent is required after creation.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Create guardian relationship",
+        "parameters": [
+          {
+            "description": "Create guardian relationship request: includes guardian ID, minor ID, and relationship type",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.CreateGuardianRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guardian relationship created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_GuardianRelationshipResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified guardian relationship; after deletion, the guardian no longer has authority over the minor.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Remove guardian relationship",
+        "parameters": [
+          {
+            "description": "Remove guardian relationship request: includes guardian ID and minor ID",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.RemoveGuardianRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removal successful",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/guardians/:id": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update guardian relationship type or consent scope; only the guardian can perform this operation.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Update guardian relationship",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Guardian relationship ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update guardian relationship request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.UpdateGuardianRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_GuardianRelationshipResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Guardian relationship not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/guardians/:id/consent": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "A verified guardian gives consent to authorize the minor for real-name authentication. Optionally specify consent scope.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Guardian consent authorization",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Guardian relationship ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Consent request: optionally specify consent scope",
+            "name": "request",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.GuardianConsentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guardian consent successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_GuardianRelationshipResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Guardian relationship not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/guardians/:id/verify": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Guardian confirms identity via JWT, completes identity verification for the specified guardian relationship; after verification, can authorize the minor.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Guardian identity verification",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Guardian relationship ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guardian identity verification successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_GuardianRelationshipResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Guardian relationship not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/guardians/minors": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the list of all wards for the current user as guardian, including protection settings information for minor users.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Get my wards list",
+        "responses": {
+          "200": {
+            "description": "Wards list with protection settings information",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_MinorProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/liveness/begin": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Initiate a liveness detection session, returns session token and action sequence (e.g., blink, open mouth, shake head, etc.); detection must be completed before session expiration.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Start liveness detection",
+        "parameters": [
+          {
+            "description": "Liveness detection request: includes authentication ID",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.BeginLivenessRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liveness detection session token and action sequence",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_BeginLivenessResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/liveness/verify": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Submit liveness detection video Base64 data to verify user liveness actions; returns liveness score and pass status.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Complete liveness detection",
+        "parameters": [
+          {
+            "description": "Liveness detection completion request: includes session token and video Base64 data",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.CompleteLivenessRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liveness detection result with score and pass status",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_LivenessResultResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/me": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the current user's latest real-name authentication status, including authentication status, verification method, age group, expiration time, etc. Returns unauthenticated status if no authentication has been submitted.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Get my authentication status",
+        "responses": {
+          "200": {
+            "description": "Authentication status information",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_VerificationStatusResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/me/detail": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the current user's full authentication details, including status, method, provider, liveness score, rejection reason, etc.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Get my authentication details",
+        "responses": {
+          "200": {
+            "description": "Authentication details with liveness score and rejection reason",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_VerificationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/minors/guardians": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query all guardians of a minor user by minor user ID, including relationship type and authorization status.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Get guardians of a minor user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Minor user ID",
+            "name": "minor_user_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Guardian list with relationship type and authorization status",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_GuardianRelationshipResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/minors/protection": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Guardian sets protection restrictions for a minor: daily usage duration, nighttime mode period, feature restriction list. Consent authorization must be completed first.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Minor Protection"
+        ],
+        "summary": "Set minor protection configuration",
+        "parameters": [
+          {
+            "description": "Protection configuration: includes daily limit minutes, nighttime period, restriction list",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.SetMinorProtectionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Protection configuration set successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_GuardianRelationshipResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Guardian relationship not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/ocr": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Upload front and back Base64 images of ID card for OCR recognition to extract name and ID number. Reference: GB/T 35273-2020 (Personal Information Security Specification).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Submit OCR recognition",
+        "parameters": [
+          {
+            "description": "OCR recognition request: includes front and back Base64 encoded images of ID card",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.SubmitOCRRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recognition successful, returns name, ID number, and authentication status",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_SubmitOCRResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/verification/verify": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Submit identity verification request, can specify verification method (e.g., auto, NFC, manual review) and confirmation information. After verification, updates authentication status and age group.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Verification Service"
+        ],
+        "summary": "Submit identity verification",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Authentication ID",
+            "name": "verification_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "description": "Verification request: includes verification method and confirmation information",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.SubmitVerificationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification result with authentication status, method, age group, and expiration time",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_VerificationStatusResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_AdminVerificationDetail": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.AdminVerificationDetail"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_BeginLivenessResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.BeginLivenessResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_GuardianRelationshipResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.GuardianRelationshipResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_LivenessResultResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.LivenessResultResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_ProviderConfigResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.ProviderConfigResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_StatsResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.StatsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_SubmitOCRResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.SubmitOCRResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_VerificationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.VerificationDetailResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_VerificationStatusResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.VerificationStatusResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FieldViolation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the error code (optional) used for programmatic identification of error types, e.g., \"required\", \"format\", \"range\".",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is a human-readable error description that should explain which rule was violated, e.g., \"Must be a valid email address\".",
+          "type": "string"
+        },
+        "field": {
+          "description": "Field is the path to the error field, using dot notation for nested fields, e.g., \"user.email\" or \"addresses[0].city\".",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value is the value that caused the error (optional, used in development mode); may not be returned in production to avoid leaking sensitive information."
+        }
+      }
+    },
+    "dto.ListResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_GuardianRelationshipResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Uniformly use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.GuardianRelationshipResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ListResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_MinorProfileResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Uniformly use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.MinorProfileResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ListResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_ProviderConfigResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Uniformly use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.ProviderConfigResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ListResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_VerificationListItem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Uniformly use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.VerificationListItem"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.Problem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the business error code used for programmatic handling of specific error scenarios. Example: 30101001",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "Detail is a human-readable explanation for this specific error instance, can include specific error details, e.g., \"Field 'email' is required\".",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Errors is a list of field-level validation errors (extension field), following Web API standard practices, each error contains field name and error message.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FieldViolation"
+          }
+        },
+        "i18n_args": {
+          "description": "I18nArgs are internationalization parameters used for dynamically filling translation templates.",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "i18n_key": {
+          "description": "I18nKey is the internationalization key used for client-side localization of error messages. Example: \"error.user_not_found\".",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Instance is the specific URI reference where the problem occurred, usually the request URL, may include query parameters. Example: \"/api/v1/users?limit=invalid\".",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "RequestID is the unique request identifier used for log correlation and issue tracking. Example: \"req_550e8400-e29b-41d4-a716-446655440000\".",
+          "type": "string"
+        },
+        "retry_after": {
+          "description": "RetryAfter is used for 429 Too Many Requests responses, indicating the number of seconds the client should wait before retrying (RFC 6585).",
+          "type": "integer"
+        },
+        "service": {
+          "description": "Service is the service name used in microservice architecture to locate the error source. Example: \"auth-service\".",
+          "type": "string"
+        },
+        "span_id": {
+          "description": "SpanID is the current span identifier used for precise location of the current node in distributed tracing.",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status is the HTTP status code generated, used by clients to distinguish problem types, does not change with Accept-Language. Example: 400, 401, 403, 404, 500.",
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "Timestamp is the error occurrence time in ISO 8601 format. Example: \"2026-04-03T12:00:00Z\".",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title is a short, human-readable summary of the problem type; the same Type should always have the same Title (does not vary per instance). Example: \"Invalid Request Parameters\".",
+          "type": "string"
+        },
+        "trace_id": {
+          "description": "TraceID is the distributed tracing identifier following the W3C Trace Context standard. Example: \"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01\".",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is a URI reference identifying the problem type; when dereferenced, it should provide human-readable documentation. Example: \"https://api.example.com/errors/invalid-request\".",
+          "type": "string"
+        }
+      }
+    },
+    "dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.AdminVerificationDetail": {
+      "type": "object",
+      "properties": {
+        "age_group": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "date_of_birth": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "id_number_hint": {
+          "type": "string"
+        },
+        "liveness_score": {
+          "type": "string"
+        },
+        "masked_name": {
+          "type": "string"
+        },
+        "max_retries": {
+          "type": "integer"
+        },
+        "method": {
+          "type": "string"
+        },
+        "override_by": {
+          "type": "string"
+        },
+        "override_reason": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "provider_resp_id": {
+          "type": "string"
+        },
+        "rejected_at": {
+          "type": "string"
+        },
+        "rejected_reason": {
+          "type": "string"
+        },
+        "retry_count": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string"
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "verified_at": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.BeginLivenessRequest": {
+      "type": "object",
+      "required": [
+        "verification_id"
+      ],
+      "properties": {
+        "verification_id": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.BeginLivenessResponse": {
+      "type": "object",
+      "properties": {
+        "action_sequence": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "integer"
+        },
+        "session_token": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.CompleteLivenessRequest": {
+      "type": "object",
+      "required": [
+        "session_token"
+      ],
+      "properties": {
+        "session_token": {
+          "type": "string"
+        },
+        "video_data": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.CreateGuardianRequest": {
+      "type": "object",
+      "required": [
+        "guardian_user_id",
+        "minor_user_id",
+        "relation_type"
+      ],
+      "properties": {
+        "guardian_user_id": {
+          "type": "string"
+        },
+        "minor_user_id": {
+          "type": "string"
+        },
+        "relation_type": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.CreateProviderConfigRequest": {
+      "type": "object",
+      "required": [
+        "channel",
+        "config",
+        "provider"
+      ],
+      "properties": {
+        "channel": {
+          "type": "string",
+          "enum": [
+            "ocr",
+            "verification",
+            "liveness"
+          ]
+        },
+        "config": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "provider": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.EraseUserInternalRequest": {
+      "type": "object",
+      "required": [
+        "tenant_id",
+        "user_id"
+      ],
+      "properties": {
+        "tenant_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.GrantConsentRequest": {
+      "type": "object",
+      "required": [
+        "consent_items"
+      ],
+      "properties": {
+        "consent_items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.GuardianConsentRequest": {
+      "type": "object",
+      "properties": {
+        "consent_scope": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.GuardianRelationshipResponse": {
+      "type": "object",
+      "properties": {
+        "consent_at": {
+          "type": "string"
+        },
+        "consent_given": {
+          "type": "boolean"
+        },
+        "consent_scope": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "guardian_user_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "minor_user_id": {
+          "type": "string"
+        },
+        "relation_type": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "verified_at": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.LivenessResultResponse": {
+      "type": "object",
+      "properties": {
+        "passed": {
+          "type": "boolean"
+        },
+        "score": {
+          "type": "number"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.ManualReviewRequest": {
+      "type": "object",
+      "required": [
+        "reason"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.MinorProfileResponse": {
+      "type": "object",
+      "properties": {
+        "age_group": {
+          "type": "string"
+        },
+        "consent_granted": {
+          "type": "boolean"
+        },
+        "daily_limit_minutes": {
+          "type": "integer"
+        },
+        "guardian_user_id": {
+          "type": "string"
+        },
+        "is_minor": {
+          "type": "boolean"
+        },
+        "night_mode_end": {
+          "type": "string"
+        },
+        "night_mode_start": {
+          "type": "string"
+        },
+        "restrictions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.OverrideRequest": {
+      "type": "object",
+      "required": [
+        "reason",
+        "status"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.ProviderConfigResponse": {
+      "type": "object",
+      "properties": {
+        "app_id": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.RemoveGuardianRequest": {
+      "type": "object",
+      "required": [
+        "guardian_user_id",
+        "minor_user_id"
+      ],
+      "properties": {
+        "guardian_user_id": {
+          "type": "string"
+        },
+        "minor_user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.ResolveReviewRequest": {
+      "type": "object",
+      "required": [
+        "reason",
+        "resolution"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string"
+        },
+        "resolution": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "rejected"
+          ]
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.SetMinorProtectionRequest": {
+      "type": "object",
+      "required": [
+        "minor_user_id"
+      ],
+      "properties": {
+        "daily_limit_minutes": {
+          "type": "integer"
+        },
+        "minor_user_id": {
+          "type": "string"
+        },
+        "night_mode_end": {
+          "type": "string"
+        },
+        "night_mode_start": {
+          "type": "string"
+        },
+        "restrictions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.StatsResponse": {
+      "type": "object",
+      "properties": {
+        "expired": {
+          "type": "integer"
+        },
+        "minor_count": {
+          "type": "integer"
+        },
+        "pending": {
+          "type": "integer"
+        },
+        "rejected": {
+          "type": "integer"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "unverified": {
+          "type": "integer"
+        },
+        "verified": {
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.SubmitOCRRequest": {
+      "type": "object",
+      "required": [
+        "back_image",
+        "front_image"
+      ],
+      "properties": {
+        "back_image": {
+          "type": "string"
+        },
+        "front_image": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.SubmitOCRResponse": {
+      "type": "object",
+      "properties": {
+        "ocr_confidence": {
+          "type": "number"
+        },
+        "ocr_id_number": {
+          "type": "string"
+        },
+        "ocr_name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "verification_id": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.SubmitVerificationRequest": {
+      "type": "object",
+      "required": [
+        "method"
+      ],
+      "properties": {
+        "confirmed_id_number": {
+          "type": "string"
+        },
+        "confirmed_name": {
+          "type": "string"
+        },
+        "method": {
+          "$ref": "#/definitions/verification.VerificationMethod"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.UpdateGuardianRequest": {
+      "type": "object",
+      "properties": {
+        "consent_scope": {
+          "type": "string"
+        },
+        "relation_type": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.UpdateProviderConfigRequest": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "priority": {
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.VerificationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "age_group": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "liveness_score": {
+          "type": "string"
+        },
+        "max_retries": {
+          "type": "integer"
+        },
+        "method": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "provider_resp_id": {
+          "type": "string"
+        },
+        "rejected_reason": {
+          "type": "string"
+        },
+        "retry_count": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string"
+        },
+        "verification_id": {
+          "type": "string"
+        },
+        "verified_at": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.VerificationListItem": {
+      "type": "object",
+      "properties": {
+        "age_group": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "liveness_score": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "rejected_reason": {
+          "type": "string"
+        },
+        "retry_count": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "verified_at": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.VerificationStatusResponse": {
+      "type": "object",
+      "properties": {
+        "age_group": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "max_retries": {
+          "type": "integer"
+        },
+        "method": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "retry_count": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string"
+        },
+        "verification_id": {
+          "type": "string"
+        },
+        "verified_at": {
+          "type": "string"
+        }
+      }
+    },
+    "verification.VerificationMethod": {
+      "type": "string",
+      "enum": [
+        "ocr",
+        "two_element",
+        "three_element",
+        "four_element",
+        "manual"
+      ],
+      "x-enum-varnames": [
+        "MethodOCR",
+        "MethodTwoElement",
+        "MethodThreeElement",
+        "MethodFourElement",
+        "MethodManual"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Real-name authentication: OCR, liveness detection, manual review",
+      "name": "Identity Verification"
+    },
+    {
+      "description": "Minor Protection: age verification, parental controls",
+      "name": "Minor Protection"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

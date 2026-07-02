@@ -1,0 +1,2487 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Status service providing system event management, maintenance calendar, status subscriptions, and metric query functions",
+    "title": "Status Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/status-service/api/v1",
+  "paths": {
+    "/internal/schedulers": {
+      "get": {
+        "description": "Return the running status of all background schedulers in the current service",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "internal"
+        ],
+        "summary": "List scheduler statuses",
+        "responses": {
+          "200": {
+            "description": "Query successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-any"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/status/subscriptions/erase": {
+      "post": {
+        "description": "Internal API protected by InternalAPIKeyMulti. Find subscriber by email and anonymize PII data (replace email hash, clear token and preferences).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page - Internal API"
+        ],
+        "summary": "GDPR erase subscriber data",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Request body (including email)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Erase successful",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "No valid X-API-Key provided",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal service error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/status/badge/{service}": {
+      "get": {
+        "description": "Return SVG status badge for the specified service, embeddable in README, dashboards, etc.",
+        "produces": [
+          "image/svg+xml"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "SVG service status badge",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Service ID",
+            "name": "service",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SVG badge image",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/incidents": {
+      "get": {
+        "description": "List system events/incidents, filterable by severity, status, and affected services",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "List events",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Severity: critical/major/minor/maintenance",
+            "name": "severity",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Event status: investigating/identified/monitoring/resolved",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Affected service ID",
+            "name": "service",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event list",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new system event (admin API, requires admin privileges)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Create event",
+        "parameters": [
+          {
+            "description": "Event creation information",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.CreateIncidentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Event created successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, please login first",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires admin role",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/incidents/{incident_id}": {
+      "get": {
+        "description": "Get full details of a single event by event ID (including progress updates)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Get event details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Event ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event details",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update event information (admin API, requires admin privileges)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Update event",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Event ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Updated event information",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UpdateIncidentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event updated successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, please login first",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires admin role",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified event (admin API, requires admin privileges)",
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Delete event",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Event ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MessageResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, please login first",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires admin role",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/incidents/{incident_id}/updates": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Add a progress update record to a specified event (admin API, requires admin privileges)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Add event progress update",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Event ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Progress update content",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.AddIncidentUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Progress update added successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentUpdateDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, please login first",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires admin role",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/json": {
+      "get": {
+        "description": "Return health status JSON of all registered services (based on service registry) for external monitoring and service discovery",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Machine-readable system status",
+        "responses": {
+          "200": {
+            "description": "System status data",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.JSONStatusDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/maintenances": {
+      "get": {
+        "description": "List planned maintenance calendar, filterable by status",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "List planned maintenances",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Maintenance status: scheduled/in_progress/completed/cancelled",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Maintenance list",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MaintenanceListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new planned maintenance notice (admin API, requires admin privileges)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Create maintenance notice",
+        "parameters": [
+          {
+            "description": "Maintenance notice information",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.CreateMaintenanceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Maintenance created successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MaintenanceDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, please login first",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires admin role",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/maintenances/{id}": {
+      "get": {
+        "description": "Get full details of a single planned maintenance by maintenance ID",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Get maintenance details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Maintenance ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Maintenance details",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MaintenanceDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update maintenance notice information or status (admin API, requires admin privileges)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Update maintenance notice",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Maintenance ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Updated maintenance information",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UpdateMaintenanceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Maintenance updated successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MaintenanceDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, please login first",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires admin role",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Maintenance not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified planned maintenance notice (admin API, requires admin privileges)",
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Delete maintenance notice",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Maintenance ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Maintenance deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MessageResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, please login first",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires admin role",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Maintenance not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/metrics/latency": {
+      "get": {
+        "description": "Query historical latency trend of a specified service (P95 latency, data from Prometheus)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Get service latency trend",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Service ID",
+            "name": "service",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "default": "24h",
+            "description": "Time range: 1h/24h/7d/30d",
+            "name": "range",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Latency trend data",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.LatencyDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/metrics/uptime": {
+      "get": {
+        "description": "Query historical availability trend of a specified service (from Prometheus up metric)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Get service availability trend",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Service ID",
+            "name": "service",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "default": "24h",
+            "description": "Time range: 1h/24h/7d/30d",
+            "name": "range",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Availability trend data",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UptimeDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/overview": {
+      "get": {
+        "description": "Get overall system status overview, including service health count, active events count, etc.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "System status overview",
+        "responses": {
+          "200": {
+            "description": "System overview data",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.OverviewDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/rss": {
+      "get": {
+        "description": "Generate RSS 2.0 feed of recent events and upcoming maintenance notices for RSS readers",
+        "produces": [
+          "text/xml"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "RSS event and maintenance feed",
+        "responses": {
+          "200": {
+            "description": "RSS 2.0 XML",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/services": {
+      "get": {
+        "description": "Return all registered services and their metadata, grouped by business",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Get service catalog",
+        "responses": {
+          "200": {
+            "description": "Service catalog data",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceCatalogDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/subscriptions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List all subscribers (admin API, requires admin privileges)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "List subscribers",
+        "parameters": [
+          {
+            "type": "boolean",
+            "description": "Verified",
+            "name": "verified",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscriber list",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, please login first",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires admin role",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Subscribe to system status change notifications via email; verification required to activate",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Subscribe to status notifications",
+        "parameters": [
+          {
+            "description": "Subscription information (email required)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscribeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Subscription successful, please check your verification email",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscribeDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Unsubscribe from status notifications using unsubscribe token",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Unsubscribe",
+        "parameters": [
+          {
+            "description": "Unsubscribe token",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UnsubscribeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unsubscribed successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MessageResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or token",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/subscriptions/preferences": {
+      "get": {
+        "description": "Get notification preference settings of a subscriber by email",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Get subscription notification preferences",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Subscriber email address",
+            "name": "email",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription preference data",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionPreferencesDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update subscriber's notification preference settings (notification types, digest frequency, focus categories, etc.)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Update subscription notification preferences",
+        "parameters": [
+          {
+            "description": "Preference settings",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionPreferencesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preferences updated successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionPreferencesDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/status/subscriptions/verify": {
+      "post": {
+        "description": "Activate subscription via verification token from email",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Status page"
+        ],
+        "summary": "Verify subscription email",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Verification token from email",
+            "name": "token",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verified successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MessageResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or token",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dto.DataResponse-any": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {},
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FieldViolation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the error code (optional). Used for programmatic identification of error types, e.g., \"required\", \"format\", \"range\"",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is a human-readable error description. Should explain which rule was violated, e.g., \"Must be a valid email address\"",
+          "type": "string"
+        },
+        "field": {
+          "description": "Field is the path to the error field. Use dot notation for nested fields, e.g., \"user.email\" or \"addresses[0].city\"",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value is the value that caused the error (optional, used in development mode). May not be returned in production to avoid leaking sensitive information"
+        }
+      }
+    },
+    "dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.Problem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the business error code. Used for programmatic handling of specific error scenarios. Example: 30101001",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "Detail is a human-readable explanation for this specific error instance. May include specific error details, e.g., \"Field 'email' is required\"",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Errors is a list of field-level validation errors (extended field). Follows Web API standard practices, each error contains field name and error message",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FieldViolation"
+          }
+        },
+        "i18n_args": {
+          "description": "I18nArgs are internationalization arguments. Used to dynamically populate translation templates",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "i18n_key": {
+          "description": "I18nKey is the internationalization key. Used for client-side localization of error messages. Example: \"error.user_not_found\"",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Instance is the specific URI reference where the problem occurred. Usually the request URL, may include query parameters. Example: \"/api/v1/users?limit=invalid\"",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "RequestID is the unique request identifier. Used for log correlation and issue tracking. Example: \"req_550e8400-e29b-41d4-a716-446655440000\"",
+          "type": "string"
+        },
+        "retry_after": {
+          "description": "RetryAfter is used for 429 Too Many Requests responses. Indicates how many seconds the client should wait before retrying (RFC 6585)",
+          "type": "integer"
+        },
+        "service": {
+          "description": "Service is the service name. Used in microservice architecture to locate the error source. Example: \"auth-service\"",
+          "type": "string"
+        },
+        "span_id": {
+          "description": "SpanID is the current span identifier. Used to precisely locate the current node in a distributed trace",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status is the HTTP status code generated. Used by clients to distinguish problem types, does not change with Accept-Language. Example: 400, 401, 403, 404, 500",
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "Timestamp is the time the error occurred. ISO 8601 format. Example: \"2026-04-03T12:00:00Z\"",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title is a short, human-readable summary of the problem type. The same Type should always have the same Title (does not vary per instance). Example: \"Invalid Request Parameters\"",
+          "type": "string"
+        },
+        "trace_id": {
+          "description": "TraceID is the distributed trace identifier. Follows W3C Trace Context standard. Example: \"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01\"",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is a URI reference that identifies the problem type. When dereferenced, should provide human-readable documentation. Example: \"https://api.example.com/errors/invalid-request\"",
+          "type": "string"
+        }
+      }
+    },
+    "dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentSeverity": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "major",
+        "minor",
+        "maintenance"
+      ],
+      "x-enum-varnames": [
+        "IncidentSeverityCritical",
+        "IncidentSeverityMajor",
+        "IncidentSeverityMinor",
+        "IncidentSeverityMaintenance"
+      ]
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentStatus": {
+      "type": "string",
+      "enum": [
+        "investigating",
+        "identified",
+        "monitoring",
+        "resolved",
+        "draft"
+      ],
+      "x-enum-varnames": [
+        "IncidentStatusInvestigating",
+        "IncidentStatusIdentified",
+        "IncidentStatusMonitoring",
+        "IncidentStatusResolved",
+        "IncidentStatusDraft"
+      ]
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_domain.MaintenanceStatus": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "x-enum-varnames": [
+        "MaintenanceStatusScheduled",
+        "MaintenanceStatusInProgress",
+        "MaintenanceStatusCompleted",
+        "MaintenanceStatusCancelled"
+      ]
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.AddIncidentUpdateRequest": {
+      "type": "object",
+      "required": [
+        "message",
+        "status"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Confirmed issue: database connection pool exhausted"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentStatus"
+            }
+          ],
+          "example": "identified"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.CreateIncidentRequest": {
+      "type": "object",
+      "required": [
+        "severity",
+        "status",
+        "title"
+      ],
+      "properties": {
+        "affected_services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"identity-service\"",
+            "\"session-service\"]"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "example": "Some users report slow login endpoint response"
+        },
+        "severity": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentSeverity"
+            }
+          ],
+          "example": "major"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentStatus"
+            }
+          ],
+          "example": "investigating"
+        },
+        "title": {
+          "type": "string",
+          "example": "Authentication service response latency increased"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.CreateMaintenanceRequest": {
+      "type": "object",
+      "required": [
+        "scheduled_end_at",
+        "scheduled_start_at",
+        "title"
+      ],
+      "properties": {
+        "affected_services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"audit-service\"]"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "example": "Audit service will undergo database index optimization upgrade"
+        },
+        "scheduled_end_at": {
+          "type": "string",
+          "example": "2026-05-20T04:00:00Z"
+        },
+        "scheduled_start_at": {
+          "type": "string",
+          "example": "2026-05-20T02:00:00Z"
+        },
+        "title": {
+          "type": "string",
+          "example": "Audit service database upgrade"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat, for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentResponse": {
+      "type": "object",
+      "properties": {
+        "affected_services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"identity-service\"]"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-05-20T10:00:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "Users experiencing slow login responses"
+        },
+        "id": {
+          "type": "string",
+          "example": "01HX5J8K9M2N"
+        },
+        "resolved_at": {
+          "type": "string"
+        },
+        "severity": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentSeverity"
+            }
+          ],
+          "example": "major"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentStatus"
+            }
+          ],
+          "example": "investigating"
+        },
+        "title": {
+          "type": "string",
+          "example": "Login Service Latency Increased"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-05-20T10:30:00Z"
+        },
+        "updates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentUpdateResponse"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentUpdateDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentUpdateResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.IncidentUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-05-20T10:15:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "01HX5J9K0A3B"
+        },
+        "message": {
+          "type": "string",
+          "example": "Identified database connection pool exhaustion as root cause"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentStatus"
+            }
+          ],
+          "example": "identified"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.JSONStatusDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.JSONStatusResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.JSONStatusResponse": {
+      "type": "object",
+      "properties": {
+        "active_incidents": {
+          "type": "integer"
+        },
+        "last_updated": {
+          "type": "string"
+        },
+        "overall_status": {
+          "type": "string"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceStatusItem"
+          }
+        },
+        "uptime": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.LatencyDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.LatencyMetricsResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.LatencyMetricsResponse": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MetricsDataPoint"
+          }
+        },
+        "range": {
+          "type": "string",
+          "example": "24h"
+        },
+        "service": {
+          "type": "string",
+          "example": "identity-service"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MaintenanceDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MaintenanceResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MaintenanceListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MaintenanceResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat, for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MaintenanceResponse": {
+      "type": "object",
+      "properties": {
+        "affected_services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"audit-service\"]"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-05-20T10:00:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "Scheduled database index optimization for audit-service"
+        },
+        "id": {
+          "type": "string",
+          "example": "01HX5KA1B2C3"
+        },
+        "scheduled_end_at": {
+          "type": "string",
+          "example": "2026-05-22T04:00:00Z"
+        },
+        "scheduled_start_at": {
+          "type": "string",
+          "example": "2026-05-22T02:00:00Z"
+        },
+        "status": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.MaintenanceStatus"
+            }
+          ],
+          "example": "scheduled"
+        },
+        "title": {
+          "type": "string",
+          "example": "Database Index Optimization"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-05-20T10:00:00Z"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MessageResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MetricsDataPoint": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "example": "2026-05-20T10:00:00Z"
+        },
+        "value": {
+          "type": "number",
+          "example": 99.95
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.OverviewDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.OverviewResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.OverviewResponse": {
+      "type": "object",
+      "properties": {
+        "active_incidents": {
+          "type": "integer",
+          "example": 0
+        },
+        "last_updated": {
+          "type": "string",
+          "example": "2026-05-09T10:00:00Z"
+        },
+        "overall_status": {
+          "type": "string",
+          "example": "healthy"
+        },
+        "services_healthy": {
+          "type": "integer",
+          "example": 15
+        },
+        "services_total": {
+          "type": "integer",
+          "example": 15
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceCatalogDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceCatalogResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceCatalogItem": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceCatalogResponse": {
+      "type": "object",
+      "properties": {
+        "all_services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceCatalogItem"
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceGroupItem"
+          }
+        },
+        "last_updated": {
+          "type": "string"
+        },
+        "total_count": {
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceGroupItem": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceCatalogItem"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.ServiceStatusItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "latency": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "uptime_7d": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscribeDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscribeResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscribeRequest": {
+      "type": "object",
+      "required": [
+        "email"
+      ],
+      "properties": {
+        "company": {
+          "type": "string",
+          "example": "Acme Corp"
+        },
+        "email": {
+          "type": "string",
+          "example": "user@example.com"
+        },
+        "message": {
+          "type": "string",
+          "example": "I would like to learn about your company's security certification solutions"
+        },
+        "name": {
+          "type": "string",
+          "example": "Zhang San"
+        },
+        "phone": {
+          "type": "string",
+          "example": "+86 13800138000"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscribeResponse": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "user@example.com"
+        },
+        "id": {
+          "type": "string",
+          "example": "01HX5KB3C4D5"
+        },
+        "message": {
+          "type": "string",
+          "example": "Successfully subscribed to status notifications"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionListItem": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "digest_frequency": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_verified": {
+          "type": "boolean"
+        },
+        "notify_incidents": {
+          "type": "boolean"
+        },
+        "notify_maintenance": {
+          "type": "boolean"
+        },
+        "notify_recovery": {
+          "type": "boolean"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionListItem"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat, for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionPreferencesDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionPreferencesResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionPreferencesRequest": {
+      "type": "object",
+      "required": [
+        "email",
+        "token"
+      ],
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "digest_frequency": {
+          "description": "immediate, daily, weekly",
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "notify_incidents": {
+          "type": "boolean"
+        },
+        "notify_maintenance": {
+          "type": "boolean"
+        },
+        "notify_recovery": {
+          "type": "boolean"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.SubscriptionPreferencesResponse": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "digest_frequency": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "notify_incidents": {
+          "type": "boolean"
+        },
+        "notify_maintenance": {
+          "type": "boolean"
+        },
+        "notify_recovery": {
+          "type": "boolean"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UnsubscribeRequest": {
+      "type": "object",
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UpdateIncidentRequest": {
+      "type": "object",
+      "properties": {
+        "affected_services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "resolved_at": {
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentSeverity"
+        },
+        "status": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.IncidentStatus"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UpdateMaintenanceRequest": {
+      "type": "object",
+      "properties": {
+        "affected_services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "scheduled_end_at": {
+          "type": "string"
+        },
+        "scheduled_start_at": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_domain.MaintenanceStatus"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UptimeDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UptimeMetricsResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.UptimeMetricsResponse": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_status-service_internal_handler_dto.MetricsDataPoint"
+          }
+        },
+        "range": {
+          "type": "string",
+          "example": "24h"
+        },
+        "service": {
+          "type": "string",
+          "example": "identity-service"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Service status event management",
+      "name": "Status page - Events"
+    },
+    {
+      "description": "Planned maintenance management",
+      "name": "Status page - Maintenance"
+    },
+    {
+      "description": "Service status overview",
+      "name": "Status page - Overview"
+    },
+    {
+      "description": "Status subscription management: Email, Webhook, RSS",
+      "name": "Status page - Subscriptions"
+    },
+    {
+      "description": "Status page JSON API: Real-time status data",
+      "name": "Status page - JSON"
+    },
+    {
+      "description": "Status badge generation: Embeddable in third-party pages",
+      "name": "Status page - Badge"
+    },
+    {
+      "description": "Service metric queries: Availability, latency, event statistics",
+      "name": "Status page - Metrics"
+    },
+    {
+      "description": "Status page RSS Feed",
+      "name": "Status page - RSS"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

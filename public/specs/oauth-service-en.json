@@ -1,0 +1,5423 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "OAuth service providing third-party login, authorization codes, token management, etc.",
+    "title": "OAuth Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/api/v1",
+  "paths": {
+    "/admin/oauth/clients": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns a paginated list of OAuth clients in the current tenant, filterable by name and status.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "List OAuth Clients",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Number of items per page",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Search by name",
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Filter by status (active/suspended)",
+            "name": "status",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client list",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthClientListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Creates a new OAuth client and returns credentials (client_secret returned once). Supports configuring redirect_uris, scopes, grant_types, JWKS, FAPI profile, etc.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Create OAuth Client",
+        "parameters": [
+          {
+            "description": "Create client request (includes name, redirect_uris, scopes, grant_types, etc.)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateClientRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully (includes client_id and client_secret)",
+            "schema": {
+              "$ref": "#/definitions/dto.CreateClientDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/clients/{client_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Retrieves full details of a specific client by client_id.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Get OAuth Client Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client details",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthClientItemDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Updates configuration of a specified OAuth client (redirect_uris, scopes, grant_types, name, status, JWKS, etc.).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Update OAuth Client Configuration",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateClientRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successful",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthClientItemDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Soft-deletes a specified OAuth client and its associated tokens.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Delete OAuth Client",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted successfully (no response body)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found or does not belong to the current tenant",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/clients/{client_id}/audit-logs": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns audit logs for a specified client (operator, operation time, operation type, change details, etc.).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Get OAuth Client Audit Logs",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Number of items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audit log list",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthAuditLogListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found or does not belong to the current tenant",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/clients/{client_id}/clone": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Clones a specified client and returns new credentials (client_secret returned once). Retains the original client's redirect_uris, scopes, grant_types, JWKS, etc.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Clone OAuth Client",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Source client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "New client (includes client_id and client_secret)",
+            "schema": {
+              "$ref": "#/definitions/dto.CloneClientDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found or does not belong to the current tenant",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/clients/{client_id}/rotate-secret": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Generates a new secret for a specified client; the old secret is immediately invalidated (moved to history table, still verifiable for 4 hours).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Rotate OAuth Client Secret",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "New secret (includes new_secret, returned once)",
+            "schema": {
+              "$ref": "#/definitions/dto.RotateSecretDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found or does not belong to the current tenant",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/clients/{client_id}/secrets": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns metadata for all secrets of a specified client (without secret values).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "List All Secrets for OAuth Client",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Secret list (includes secret_id, status, created_at, last_used_at, etc.)",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthClientSecretListDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found or does not belong to the current tenant",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Creates a new secret for a specified client (secret_value returned once). Supports up to 2 active secrets.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Create OAuth Client Secret",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "New secret (includes secret_value, returned once)",
+            "schema": {
+              "$ref": "#/definitions/dto.CreateClientSecretDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found or does not belong to the current tenant",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Conflict: maximum number of secrets reached (max 2)",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/clients/{client_id}/secrets/{secret_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Hard-deletes a specified secret (at least one secret must remain).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Delete OAuth Client Secret",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Secret ID",
+            "name": "secret_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted successfully (no response body)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters: cannot delete the last secret",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client or secret not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/clients/{client_id}/secrets/{secret_id}/deactivate": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Sets a specified secret's status to inactive (existing tokens still verifiable, but new tokens not accepted).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Deactivate OAuth Client Secret",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Secret ID",
+            "name": "secret_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated secret information (status=inactive)",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthClientSecretDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client or secret not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/clients/{client_id}/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns token usage statistics for a specified client (active token count, last request time, etc.).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Get OAuth Client Statistics",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statistics data",
+            "schema": {
+              "$ref": "#/definitions/dto.ClientStatsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found or does not belong to the current tenant",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/clients/{client_id}/tokens": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns a list of active access tokens and refresh tokens for a specified client.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "List Active Tokens for OAuth Client",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Number of items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token list",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthTokenListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found or does not belong to the current tenant",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Revokes all active tokens for a specified client, with an optional grace period (in seconds).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Revoke All Tokens for OAuth Client",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Grace period (seconds)",
+            "name": "grace_period",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revocation result (includes revoked_access_tokens, revoked_refresh_tokens counts)",
+            "schema": {
+              "$ref": "#/definitions/dto.RevokeClientTokensDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Client not found or does not belong to the current tenant",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/devices": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated list of all device authorization code sessions in the current tenant, filterable by status and client ID. Admin only.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "List Device Authorization Sessions",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Number of items per page",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Filter by status (pending/authorized/denied/expired)",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Filter by client ID",
+            "name": "client_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device authorization list",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-dto_DeviceAuthorizationListItem"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/devices/{device_code}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Revokes a specified device authorization session, marking it as expired. Admin only.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Revoke Device Authorization",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Device code",
+            "name": "device_code",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revocation successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Device authorization not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/providers": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Retrieves a list of all OAuth providers in the current tenant, including name, ID, enabled status, etc. Admin only.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "List OAuth Providers",
+        "responses": {
+          "200": {
+            "description": "Provider list",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthProviderListDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Creates a new OAuth provider configuration, including name, Client ID, Client Secret, authorization/token/userinfo endpoint URLs, etc. Admin only.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Create OAuth Provider",
+        "parameters": [
+          {
+            "description": "Create provider request (includes name, display_name, client_id, client_secret, redirect_url, auth_url, token_url, userinfo_url, etc.)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.AdminCreateProviderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created provider information",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_OAuthProviderItem"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Conflict: provider name already exists",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/providers/{name}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Updates configuration of a specified OAuth provider, supports partial update (only submit fields to modify). Admin only.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Update OAuth Provider",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider name",
+            "name": "name",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update provider request (all fields optional)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.AdminUpdateProviderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated provider information",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_OAuthProviderItem"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Provider not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Deletes a specified OAuth provider configuration. Admin only.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Delete OAuth Provider",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider name",
+            "name": "name",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deletion successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Provider not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/providers/{name}/toggle": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Enables or disables a specified OAuth provider. Admin only.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Enable/Disable OAuth Provider",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider name",
+            "name": "name",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Enable/disable request (includes enabled field)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.AdminToggleProviderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Provider not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/oauth/tokens/user/{user_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Batch revokes all access tokens and refresh tokens for a specified user. JWT authentication required, admin only.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth Client Management"
+        ],
+        "summary": "Batch Revoke User Tokens",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revocation result (includes revoked_access_tokens, revoked_refresh_tokens counts)",
+            "schema": {
+              "$ref": "#/definitions/handler.swaggerBatchRevokeDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters: missing user_id",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions: administrator role required",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/oauth/clients": {
+      "post": {
+        "description": "Internal API, called by tenant-service when creating a new tenant, to register a default OAuth client for the tenant. Protected by InternalAPIKeyAuth + ExtractTenantFromHeaderStrict.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth - Internal"
+        ],
+        "summary": "Internal Create OAuth Client",
+        "parameters": [
+          {
+            "description": "Create client request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateClientRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_CreateClientResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "No valid X-API-Key provided",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/oauth/introspect": {
+      "post": {
+        "description": "Internal token introspection endpoint, no JWT authentication, only for inter-service calls. Uses system standard envelope dto_base.DataResponse[T]. Differs from standard Introspect endpoint: accepts only JSON body (not form-encoded), response uses system standard envelope instead of OAuth flat format, not exposed to external OAuth clients.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth - Internal"
+        ],
+        "summary": "Internal Token Introspection",
+        "parameters": [
+          {
+            "description": "Request body (includes token)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Introspection result (includes active, client_id, user_id, scope, exp)",
+            "schema": {
+              "$ref": "#/definitions/handler.swaggerInternalIntrospectDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters: missing token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/oauth/revoke-user-tokens": {
+      "post": {
+        "description": "Internal API endpoint, called by identity-service to cascade revoke OAuth tokens, hard-delete OAuth connections and authorization consents on password change/account lockout/GDPR erasure. Protected by InternalAPIKeyAuth + ExtractTenantFromHeaderStrict middleware.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth - Internal"
+        ],
+        "summary": "Internal Revoke User Tokens (GDPR erasure cascade)",
+        "parameters": [
+          {
+            "description": "Request body (includes user_id)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revocation result (includes revoked_access_tokens, revoked_refresh_tokens counts)",
+            "schema": {
+              "$ref": "#/definitions/handler.swaggerBatchRevokeDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters: missing user_id",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/authorize": {
+      "get": {
+        "description": "OAuth 2.0 authorization endpoint. Returns 302 redirect when redirect_uri is provided; returns JSON authorization code otherwise. Supports PKCE and PAR (via request_uri). References: RFC 6749 §4.1.1-4.1.2.1 (Authorization Code Grant), RFC 7636 (PKCE), RFC 9126 (PAR), OAuth 2.1 optional iss parameter.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "OAuth 2.0 Authorization Endpoint",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Response type (only code supported)",
+            "name": "response_type",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Redirect URI",
+            "name": "redirect_uri",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Requested scope",
+            "name": "scope",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Anti-CSRF state parameter",
+            "name": "state",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Issuer URL（OAuth 2.1）",
+            "name": "iss",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "OIDC nonce parameter",
+            "name": "nonce",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "PKCE Code Challenge（RFC 7636）",
+            "name": "code_challenge",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "PKCE method (S256)",
+            "name": "code_challenge_method",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Authorization Details（RFC 9396）",
+            "name": "authorization_details",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "PAR Request URI（RFC 9126）",
+            "name": "request_uri",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorization code (when no redirect_uri)",
+            "schema": {
+              "$ref": "#/definitions/handler.authorizeCodeResponse"
+            }
+          },
+          "302": {
+            "description": "Redirect to callback URL with OAuth error (invalid_request/invalid_client/unsupported_response_type)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "invalid_request_uri: PAR request invalid/expired/already used. Reference: RFC 9126.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: authorization server internal error. Reference: RFC 6749 §5.2.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "OAuth 2.0 authorization endpoint (POST method). After user confirms authorization, returns 302 redirect when redirect_uri is provided; returns JSON authorization code otherwise. Supports PKCE, PAR, and automatic consent saving. References: RFC 6749 §4.1.1-4.1.2.1 (Authorization Code Grant), RFC 7636 (PKCE), RFC 9126 (PAR).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "OAuth 2.0 Authorization Endpoint (POST)",
+        "parameters": [
+          {
+            "description": "Authorization request body (includes response_type, client_id, redirect_uri, scope, state, user_id, approved, etc.)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorization code (when no redirect_uri)",
+            "schema": {
+              "$ref": "#/definitions/handler.authorizeCodeResponse"
+            }
+          },
+          "302": {
+            "description": "Redirect to callback URL with OAuth error (invalid_request/invalid_client/access_denied)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "invalid_request_uri: PAR request invalid/expired/already used. Reference: RFC 9126.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "403": {
+            "description": "access_denied: user_id does not match authenticated user",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: authorization server internal error. Reference: RFC 6749 §5.2.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/bind": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Binds the current user's AuthMS account to a third-party OAuth provider account. Requires JWT authentication; user_id in request body must match JWT subject.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Bind OAuth Account",
+        "parameters": [
+          {
+            "description": "Bind request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BindOAuthRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Binding successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_OAuthBindData"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "user_id does not match JWT",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Already bound to this provider",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/client/{client_id}": {
+      "get": {
+        "description": "Returns non-sensitive public information (name, logo, scopes, tenant ID) for a client by client_id. Used for consent authorization page display.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Get Client Public Information",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "OAuth client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client public information",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_PublicClientInfo"
+            }
+          },
+          "404": {
+            "description": "Client not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/connections/{user_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns all third-party OAuth connections for a specified user. Requires JWT authentication; user_id in path must match JWT subject.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Get OAuth Connection List",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OAuth connection list",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_OAuthConnectionListData"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "No permission to access this user's connections",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/consents": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Retrieves all authorized OAuth client consent records for the current user, including client ID, authorized scopes, and authorization time.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Get Authorization Consent List",
+        "responses": {
+          "200": {
+            "description": "Authorization consent list",
+            "schema": {
+              "$ref": "#/definitions/dto.ConsentListResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/consents/{id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Revokes an authorization consent record for a specific OAuth client for the current user. After revocation, the client's access tokens become invalid.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Revoke Authorization Consent",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Consent record ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revocation successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Consent record not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/device/authorize": {
+      "post": {
+        "description": "OAuth 2.0 device authorization endpoint. Device initiates authorization request, obtains device_code and user_code; user then enters user_code in browser to complete authorization. Public endpoint, no authentication required. Reference: RFC 8628 §3.1 (Device Authorization Grant).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Device Authorization Request",
+        "parameters": [
+          {
+            "description": "Device authorization request (includes client_id, scope, etc.)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.DeviceAuthorizationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device authorization response (includes device_code, user_code, verification_uri, expires_in, interval)",
+            "schema": {
+              "$ref": "#/definitions/dto.DeviceAuthorizationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "invalid_client: client not found or not active. Reference: RFC 8628 §3.1.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: failed to create device authorization. Reference: RFC 8628 §3.1.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/device/verify": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "User enters user_code in browser and approves/denies device authorization. Requires JWT authentication. Reference: RFC 8628 §3.3 (User Interaction).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Device Authorization Verification (User Side)",
+        "parameters": [
+          {
+            "description": "Verification request (includes user_code, approve, etc.)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.DeviceAuthorizationVerifyRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorization result (device authorized or device authorization denied)",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters: user_code invalid/expired/already processed",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "user_code not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error: failed to update device authorization status",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/dpop/nonce": {
+      "get": {
+        "description": "DPoP (Demonstration of Proof-of-Possession) Nonce endpoint. Clients call this before initiating a DPoP-bound request; returns nonce via DPoP-Nonce response header.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Get DPoP Nonce",
+        "responses": {
+          "200": {
+            "description": "Success (DPoP-Nonce in response header)",
+            "schema": {
+              "type": "string"
+            },
+            "headers": {
+              "DPoP-Nonce": {
+                "type": "string",
+                "description": "Newly generated DPoP nonce"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/introspect": {
+      "post": {
+        "description": "OAuth 2.0 token introspection endpoint. Checks token active status, returns token metadata (sub, client_id, scope, exp, etc.). Returns flat JSON (no code/message envelope). Reference: RFC 7662 (Token Introspection).",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Token Introspection",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Token to inspect (access_token or refresh_token)",
+            "name": "token",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Introspection result (active=true includes full token metadata; active=false returns only active field)",
+            "schema": {
+              "$ref": "#/definitions/dto.TokenIntrospectionResponse"
+            }
+          },
+          "400": {
+            "description": "invalid_request: missing token parameter. Reference: RFC 7662 §2.1.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: introspection service internal error",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/providers": {
+      "get": {
+        "description": "Returns a list of all enabled OAuth providers in the current tenant.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Get OAuth Provider List",
+        "responses": {
+          "200": {
+            "description": "Provider list",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_OAuthProviderListData"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/pushed-authorization": {
+      "post": {
+        "description": "OAuth 2.0 Pushed Authorization Request endpoint (PAR). Client pushes authorization parameters to authorization server in advance, obtains request_uri to use in authorization request. Returns flat JSON (no code/message envelope). Reference: RFC 9126 (Pushed Authorization Requests).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Push Authorization Request (PAR)",
+        "parameters": [
+          {
+            "description": "PAR request body (includes client_id, response_type, scope, state, redirect_uri, client_secret, etc.)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.PushedAuthorizationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "PAR response (includes request_uri and expires_in)",
+            "schema": {
+              "$ref": "#/definitions/dto.PushedAuthorizationResponse"
+            }
+          },
+          "400": {
+            "description": "invalid_request: request parameters missing or invalid. Reference: RFC 9126.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "401": {
+            "description": "invalid_client: client authentication failed. Reference: RFC 9126.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: failed to store authorization request. Reference: RFC 9126.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/refresh": {
+      "post": {
+        "description": "OAuth 2.0 refresh token endpoint. Uses refresh_token to obtain a new access_token and refresh_token (rotation). Returns flat JSON (no code/message envelope). Reference: RFC 6749 §6 (Refreshing an Access Token).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Refresh Access Token",
+        "parameters": [
+          {
+            "description": "Request body (includes refresh_token, client_id)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Refreshed tokens (includes new access_token and refresh_token)",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthTokenResponse"
+            }
+          },
+          "400": {
+            "description": "invalid_request: request parameters missing or invalid. Reference: RFC 6749 §5.2.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "401": {
+            "description": "invalid_grant: refresh_token invalid or expired. Reference: RFC 6749 §5.2.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/register": {
+      "post": {
+        "description": "OAuth 2.0 dynamic client registration endpoint. Clients self-register and obtain client_id, client_secret, and registration_access_token. Rate limit: max 10 registrations per hour per IP. Reference: RFC 7591 §2 (Dynamic Client Registration Protocol).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Dynamic Client Registration",
+        "parameters": [
+          {
+            "description": "Client registration request (includes client_name, redirect_uris, grant_types, scope, etc.)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ClientRegistrationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Registration successful (includes client_id, client_secret, registration_access_token). Reference: RFC 7591 §2.1.",
+            "schema": {
+              "$ref": "#/definitions/dto.ClientRegistrationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "invalid_client_metadata: request metadata invalid (missing redirect_uris, etc.). Reference: RFC 7591 §2.3.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "429": {
+            "description": "rate_limit_exceeded: registration rate limit exceeded, please retry later",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: failed to register client",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/register/{client_id}": {
+      "get": {
+        "description": "OAuth 2.0 dynamic client registration read endpoint. Uses Registration Access Token to read current client metadata. Reference: RFC 7591 §3 (Client Read Request).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Read Client Registration",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Bearer <registration_access_token>",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Client metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.ClientRegistrationDetailResponse"
+            }
+          },
+          "401": {
+            "description": "invalid_token: missing or invalid Registration Access Token. Reference: RFC 7591 §3.2.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "OAuth 2.0 dynamic client registration update endpoint. Uses Registration Access Token to update client metadata (redirect_uris, grant_types, scope, JWKS, etc.). Reference: RFC 7591 §2.2 (Client Update Request).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Update Client Registration",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Bearer <registration_access_token>",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Updated client metadata",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ClientRegistrationUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated client metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.ClientRegistrationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "invalid_client_metadata: request metadata invalid",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "401": {
+            "description": "invalid_token: missing or invalid Registration Access Token. Reference: RFC 7591 §2.3.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: failed to update client registration",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "OAuth 2.0 dynamic client registration delete endpoint. Uses Registration Access Token to soft-delete client registration. Reference: RFC 7591 §2.3 (Client Delete Request).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Delete Client Registration",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Bearer <registration_access_token>",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted successfully (no response body)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "401": {
+            "description": "invalid_token: missing or invalid Registration Access Token. Reference: RFC 7591 §2.3.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: failed to delete client registration",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/revoke": {
+      "post": {
+        "description": "OAuth 2.0 token revocation endpoint. Returns 200 OK on success (no response body). Supports revocation of access_token and refresh_token. Reference: RFC 7009 (Token Revocation).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Revoke Token",
+        "parameters": [
+          {
+            "description": "Request body (includes token, token_type_hint)",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token revoked (no response body)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "invalid_request: request parameters missing or invalid. Reference: RFC 7009 §2.2.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/risk-assessment": {
+      "get": {
+        "description": "Queries risk assessment logs for an OAuth client by client_id, returning risk score, risk level, and recommended actions.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Get OAuth Client Risk Assessment",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "OAuth client ID",
+            "name": "client_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Risk assessment result (includes risk_score, risk_level, recommended_actions)",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_RiskAssessmentResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters: missing client_id",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated: provide a valid Bearer Token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/token": {
+      "post": {
+        "description": "OAuth 2.0 token endpoint. Supports authorization_code, refresh_token, client_credentials, and urn:ietf:params:oauth:grant-type:device_code grant types. Supports private_key_jwt client authentication and DPoP. Returns flat JSON (no code/message envelope). References: RFC 6749 §4.1.3 (Authorization Code Grant), §4.3 (Resource Owner Password), §4.4 (Client Credentials), RFC 6749 §5.1-5.2, RFC 7636 (PKCE), RFC 8628 §3.4 (Device Code).",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "OAuth 2.0 Token Endpoint",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Grant type (authorization_code/refresh_token/client_credentials/urn:ietf:params:oauth:grant-type:device_code)",
+            "name": "grant_type",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Authorization code (required for authorization_code)",
+            "name": "code",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Redirect URI (required for authorization_code)",
+            "name": "redirect_uri",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Client secret",
+            "name": "client_secret",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Refresh token (required for refresh_token)",
+            "name": "refresh_token",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "PKCE Code Verifier (required for public client)",
+            "name": "code_verifier",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Device code (required for device_code)",
+            "name": "device_code",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Client assertion type (private_key_jwt)",
+            "name": "client_assertion_type",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Client assertion JWT (private_key_jwt)",
+            "name": "client_assertion",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token response (contains access_token, refresh_token, id_token, etc.)",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthTokenResponse"
+            }
+          },
+          "400": {
+            "description": "unsupported_grant_type: Unsupported grant type. See RFC 6749 §5.2.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "401": {
+            "description": "invalid_client: Client authentication failed. See RFC 6749 §5.2.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "429": {
+            "description": "rate_limit_exceeded: Request rate too high, please retry later",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: Internal error in authorization server. See RFC 6749 §5.2.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/token-exchange": {
+      "post": {
+        "description": "Implements RFC 8693 token exchange standard, supporting delegation chains with subject_token and actor_token, exchanging original JWT for a restricted access token for downstream services. Used for NHI Workload identity delegation scenarios. See RFC 8693 (OAuth 2.0 Token Exchange).",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Token Exchange",
+        "parameters": [
+          {
+            "enum": [
+              "urn:ietf:params:oauth:grant-type:token-exchange"
+            ],
+            "type": "string",
+            "description": "Grant type",
+            "name": "grant_type",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Subject token (JWT)",
+            "name": "subject_token",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Actor token (JWT)",
+            "name": "actor_token",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Requested scope",
+            "name": "scope",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Client ID",
+            "name": "client_id",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exchanged access token (contains access_token, token_type, expires_in, scope)",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthTokenResponse"
+            }
+          },
+          "400": {
+            "description": "invalid_scope: Requested scope is invalid or out of range. See RFC 8693.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "401": {
+            "description": "invalid_token: subject_token is invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          },
+          "500": {
+            "description": "server_error: Internal error in token exchange service",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/unbind/{connection_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete the specified OAuth connection, unbinding the AuthMS user from the third-party OAuth provider. Requires JWT authentication.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Unbind OAuth account",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "OAuth connection ID",
+            "name": "connection_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unbind successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Connection not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/userinfo": {
+      "get": {
+        "description": "OpenID Connect UserInfo endpoint. Uses Bearer Token authentication, returns flat UserInfo JSON (no code/message envelope). When scope includes \"profile\", queries user profile from profile-service and merges into response. When verification-service is configured, additionally queries age group/minor status. See OpenID Connect Core 1.0 §5.3 (UserInfo Endpoint).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Get user info",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Bearer <access_token>",
+            "name": "Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "UserInfo response (contains OIDC standard claims such as sub, name, email, picture)",
+            "schema": {
+              "$ref": "#/definitions/dto.OIDCUserInfoResponse"
+            }
+          },
+          "401": {
+            "description": "invalid_token: Token is invalid or expired. See OIDC Core §5.3.",
+            "schema": {
+              "$ref": "#/definitions/dto.OAuthErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/{provider}/authorize": {
+      "get": {
+        "description": "Generate a third-party OAuth authorization redirect URL based on the provider name. The state parameter is optional; if not provided, it will be auto-generated and signed.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Get OAuth authorization URL",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider name",
+            "name": "provider",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "OAuth state parameter",
+            "name": "state",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorization URL",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_AuthorizeURLResponse"
+            }
+          },
+          "404": {
+            "description": "Unsupported provider",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/oauth/{provider}/callback": {
+      "get": {
+        "description": "Callback endpoint after third-party OAuth provider authorization. Exchanges the authorization code for an access token and fetches user info.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "OAuth authorization callback",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider name",
+            "name": "provider",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Authorization code returned by third party",
+            "name": "code",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Signed state parameter",
+            "name": "state",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Callback processing result (contains masked token and user info)",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_OAuthCallbackResponse"
+            }
+          },
+          "400": {
+            "description": "Missing code or invalid state",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Unsupported provider",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Failed to exchange authorization code or fetch user info",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dto.AdminCreateProviderRequest": {
+      "type": "object",
+      "required": [
+        "client_id",
+        "client_secret",
+        "name"
+      ],
+      "properties": {
+        "auth_url": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "redirect_url": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "string"
+        },
+        "token_url": {
+          "type": "string"
+        },
+        "user_info_url": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.AdminToggleProviderRequest": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.AdminUpdateProviderRequest": {
+      "type": "object",
+      "properties": {
+        "auth_url": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "redirect_url": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "string"
+        },
+        "token_url": {
+          "type": "string"
+        },
+        "user_info_url": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.AuthorizationDetailDTO": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "description": "Operation",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"list_accounts\"",
+            "\"read_balances\"]"
+          ]
+        },
+        "constraints": {
+          "description": "Extension constraints",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "data_types": {
+          "description": "Data type",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"account_details\"",
+            "\"balances\"]"
+          ]
+        },
+        "identifier": {
+          "description": "Identifier",
+          "type": "string",
+          "example": "account-12345"
+        },
+        "locations": {
+          "description": "Location",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"https://example.com/accounts\"]"
+          ]
+        },
+        "type": {
+          "description": "Grant type",
+          "type": "string",
+          "example": "account_information"
+        }
+      }
+    },
+    "dto.AuthorizeURLResponse": {
+      "description": "OAuth authorization URL response",
+      "type": "object",
+      "properties": {
+        "auth_url": {
+          "description": "Authorization URL",
+          "type": "string",
+          "example": "https://provider.com/authorize?client_id=..."
+        },
+        "state": {
+          "description": "Status",
+          "type": "string",
+          "example": "random-state-string"
+        }
+      }
+    },
+    "dto.BatchRevokeUserTokensResponse": {
+      "type": "object",
+      "properties": {
+        "revoked_access_tokens": {
+          "type": "integer"
+        },
+        "revoked_refresh_tokens": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.BindOAuthRequest": {
+      "type": "object",
+      "required": [
+        "access_token",
+        "provider",
+        "provider_user_id",
+        "user_id"
+      ],
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "profile_data": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "provider": {
+          "type": "string"
+        },
+        "provider_user_id": {
+          "type": "string"
+        },
+        "refresh_token": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ClientRegistrationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ClientRegistrationResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ClientRegistrationRequest": {
+      "description": "OAuth 2.0 Dynamic Client Registration request (RFC 7591 §2)",
+      "type": "object",
+      "required": [
+        "redirect_uris"
+      ],
+      "properties": {
+        "application_type": {
+          "description": "Application type",
+          "type": "string",
+          "example": "web"
+        },
+        "client_name": {
+          "description": "Client name",
+          "type": "string",
+          "example": "My Application"
+        },
+        "client_uri": {
+          "description": "Client home page URL",
+          "type": "string",
+          "example": "https://app.example.com"
+        },
+        "contacts": {
+          "description": "Contacts",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"admin@example.com\"]"
+          ]
+        },
+        "grant_types": {
+          "description": "Grant types",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"authorization_code\"",
+            "\"refresh_token\"]"
+          ]
+        },
+        "jwks": {
+          "description": "JWKS document",
+          "type": "string"
+        },
+        "jwks_uri": {
+          "description": "JWKS URI",
+          "type": "string",
+          "example": "https://app.example.com/jwks.json"
+        },
+        "logo_uri": {
+          "description": "Logo URL",
+          "type": "string",
+          "example": "https://app.example.com/logo.png"
+        },
+        "policy_uri": {
+          "description": "Privacy policy URL",
+          "type": "string",
+          "example": "https://app.example.com/privacy"
+        },
+        "redirect_uris": {
+          "description": "Redirect URIs",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"https://app.example.com/callback\"]"
+          ]
+        },
+        "scope": {
+          "description": "Scopes",
+          "type": "string",
+          "example": "openid profile email"
+        },
+        "software_id": {
+          "description": "Software ID",
+          "type": "string",
+          "example": "my-app-v1"
+        },
+        "software_version": {
+          "description": "Software version",
+          "type": "string",
+          "example": "1.0.0"
+        },
+        "token_endpoint_auth_method": {
+          "description": "Token endpoint authentication method",
+          "type": "string",
+          "example": "client_secret_basic"
+        },
+        "tos_uri": {
+          "description": "Terms of service URL",
+          "type": "string",
+          "example": "https://app.example.com/tos"
+        }
+      }
+    },
+    "dto.ClientRegistrationResponse": {
+      "description": "OAuth 2.0 Dynamic Client Registration response (RFC 7591 §2.1)",
+      "type": "object",
+      "properties": {
+        "application_type": {
+          "description": "Application type",
+          "type": "string",
+          "example": "web"
+        },
+        "client_id": {
+          "description": "Client ID",
+          "type": "string",
+          "example": "01JNXXXXX..."
+        },
+        "client_id_issued_at": {
+          "description": "Client ID issued at",
+          "type": "integer",
+          "example": 1715692800
+        },
+        "client_name": {
+          "description": "Client name",
+          "type": "string",
+          "example": "My Application"
+        },
+        "client_secret": {
+          "description": "Client secret",
+          "type": "string",
+          "example": "sec_abc123..."
+        },
+        "client_secret_expires_at": {
+          "description": "Client secret expiration time (0 = never expires)",
+          "type": "integer",
+          "example": 0
+        },
+        "client_uri": {
+          "description": "Client home page URL",
+          "type": "string",
+          "example": "https://app.example.com"
+        },
+        "contacts": {
+          "description": "Contacts",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"admin@example.com\"]"
+          ]
+        },
+        "grant_types": {
+          "description": "Grant types",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"authorization_code\"",
+            "\"refresh_token\"]"
+          ]
+        },
+        "logo_uri": {
+          "description": "Logo URL",
+          "type": "string",
+          "example": "https://app.example.com/logo.png"
+        },
+        "policy_uri": {
+          "description": "Privacy policy URL",
+          "type": "string",
+          "example": "https://app.example.com/privacy"
+        },
+        "redirect_uris": {
+          "description": "Redirect URIs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"https://app.example.com/callback\"]"
+          ]
+        },
+        "registration_access_token": {
+          "description": "Registration access token",
+          "type": "string",
+          "example": "reg_abc123..."
+        },
+        "registration_client_uri": {
+          "description": "Registration management URI",
+          "type": "string",
+          "example": "https://authms.example.com/api/v1/oauth/register/app-123"
+        },
+        "scope": {
+          "description": "Scopes",
+          "type": "string",
+          "example": "openid profile email"
+        },
+        "token_endpoint_auth_method": {
+          "description": "Authentication method",
+          "type": "string",
+          "example": "client_secret_basic"
+        },
+        "tos_uri": {
+          "description": "Terms of service URL",
+          "type": "string",
+          "example": "https://app.example.com/tos"
+        }
+      }
+    },
+    "dto.ClientRegistrationUpdateRequest": {
+      "description": "OAuth 2.0 Dynamic Client Registration update request (RFC 7591 §2.2)",
+      "type": "object",
+      "properties": {
+        "application_type": {
+          "type": "string"
+        },
+        "client_name": {
+          "type": "string"
+        },
+        "client_uri": {
+          "type": "string"
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "grant_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "jwks": {
+          "type": "string"
+        },
+        "jwks_uri": {
+          "type": "string"
+        },
+        "logo_uri": {
+          "type": "string"
+        },
+        "policy_uri": {
+          "type": "string"
+        },
+        "redirect_uris": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scope": {
+          "type": "string"
+        },
+        "software_id": {
+          "type": "string"
+        },
+        "software_version": {
+          "type": "string"
+        },
+        "token_endpoint_auth_method": {
+          "type": "string"
+        },
+        "tos_uri": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ClientStatsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ClientStatsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ClientStatsResponse": {
+      "description": "OAuth client token statistics",
+      "type": "object",
+      "properties": {
+        "active_refresh_tokens": {
+          "type": "integer",
+          "example": 5
+        },
+        "active_tokens": {
+          "type": "integer",
+          "example": 10
+        },
+        "client_id": {
+          "type": "string",
+          "example": "client-001"
+        },
+        "last_request_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        }
+      }
+    },
+    "dto.CloneClientDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CloneClientResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CloneClientResponse": {
+      "description": "Result of cloning a client, contains the new client's secret (returned only once)",
+      "type": "object",
+      "properties": {
+        "client_auth_methods": {
+          "type": "string",
+          "example": "[\"client_secret_basic\",\"private_key_jwt\"]"
+        },
+        "client_id": {
+          "type": "string",
+          "example": "app-456"
+        },
+        "client_secret": {
+          "type": "string",
+          "example": "secret_xyz789"
+        },
+        "cors_origins": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"https://app.example.com\"]"
+          ]
+        },
+        "fapi_profile": {
+          "type": "string",
+          "example": "fapi1"
+        },
+        "grant_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"authorization_code\"",
+            "\"refresh_token\"]"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "example": "01JNXXXXX..."
+        },
+        "jwks_uri": {
+          "type": "string",
+          "example": "https://client.example.com/.well-known/jwks.json"
+        },
+        "name": {
+          "type": "string",
+          "example": "My Application (clone)"
+        },
+        "redirect_uris": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"https://app.example.com/callback\"]"
+          ]
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"openid\"",
+            "\"profile\"",
+            "\"email\"]"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "example": "active"
+        }
+      }
+    },
+    "dto.ConsentListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ConsentResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ConsentResponse": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "example": "app-123"
+        },
+        "granted_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "scopes": {
+          "type": "string",
+          "example": "openid profile email"
+        }
+      }
+    },
+    "dto.CreateClientDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CreateClientResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateClientRequest": {
+      "type": "object",
+      "required": [
+        "name",
+        "redirect_uris"
+      ],
+      "properties": {
+        "client_auth_methods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fapi_profile": {
+          "type": "string"
+        },
+        "grant_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_confidential": {
+          "type": "boolean"
+        },
+        "jwks": {
+          "type": "string"
+        },
+        "jwks_uri": {
+          "type": "string"
+        },
+        "logo_url": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "privacy_policy": {
+          "type": "string"
+        },
+        "redirect_uris": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "terms_url": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateClientResponse": {
+      "description": "OAuth client creation result",
+      "type": "object",
+      "properties": {
+        "client_auth_methods": {
+          "type": "string",
+          "example": "[\"client_secret_basic\",\"private_key_jwt\"]"
+        },
+        "client_id": {
+          "type": "string",
+          "example": "app-123"
+        },
+        "client_secret": {
+          "type": "string",
+          "example": "secret_abc123"
+        },
+        "cors_origins": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"https://app.example.com\"]"
+          ]
+        },
+        "fapi_profile": {
+          "type": "string",
+          "example": "fapi1"
+        },
+        "grant_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"authorization_code\"",
+            "\"refresh_token\"]"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "example": "01JNXXXXX..."
+        },
+        "is_confidential": {
+          "type": "boolean",
+          "example": true
+        },
+        "jwks": {
+          "type": "string"
+        },
+        "jwks_uri": {
+          "type": "string",
+          "example": "https://client.example.com/.well-known/jwks.json"
+        },
+        "logo_url": {
+          "type": "string",
+          "example": "https://app.example.com/logo.png"
+        },
+        "name": {
+          "type": "string",
+          "example": "My Application"
+        },
+        "privacy_policy": {
+          "type": "string",
+          "example": "https://app.example.com/privacy"
+        },
+        "redirect_uris": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"https://app.example.com/callback\"]"
+          ]
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"openid\"",
+            "\"profile\"",
+            "\"email\"]"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "example": "active"
+        },
+        "terms_url": {
+          "type": "string",
+          "example": "https://app.example.com/terms"
+        },
+        "website": {
+          "type": "string",
+          "example": "https://app.example.com"
+        }
+      }
+    },
+    "dto.CreateClientSecretDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CreateClientSecretResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateClientSecretResponse": {
+      "description": "OAuth client secret creation result, secret_value is returned only once in this response",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "secret_id": {
+          "type": "string",
+          "example": "secret-abc123"
+        },
+        "secret_value": {
+          "type": "string",
+          "example": "sec_xyz789..."
+        },
+        "status": {
+          "type": "string",
+          "example": "active"
+        }
+      }
+    },
+    "dto.DataResponse-dto_AuthorizeURLResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.AuthorizeURLResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_CreateClientResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CreateClientResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_OAuthBindData": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.OAuthBindData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_OAuthCallbackResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.OAuthCallbackResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_OAuthConnectionListData": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.OAuthConnectionListData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_OAuthProviderItem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.OAuthProviderItem"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_OAuthProviderListData": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.OAuthProviderListData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_PublicClientInfo": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PublicClientInfo"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_RiskAssessmentResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.RiskAssessmentResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DeviceAuthorizationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.DeviceAuthorizationResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DeviceAuthorizationListItem": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "example": "app-123"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-01-15T10:20:00Z"
+        },
+        "device_code": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "expires_at": {
+          "type": "string",
+          "example": "2026-01-15T10:30:00Z"
+        },
+        "interval": {
+          "type": "integer",
+          "example": 5
+        },
+        "poll_count": {
+          "type": "integer",
+          "example": 3
+        },
+        "scope": {
+          "type": "string",
+          "example": "openid profile"
+        },
+        "status": {
+          "type": "string",
+          "example": "pending"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-01-15T10:22:00Z"
+        },
+        "user_code": {
+          "type": "string",
+          "example": "BDJW-DSXQ"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user-abc"
+        }
+      }
+    },
+    "dto.DeviceAuthorizationRequest": {
+      "description": "Device code authorization request (RFC 8628 §3.1)",
+      "type": "object",
+      "required": [
+        "client_id"
+      ],
+      "properties": {
+        "client_id": {
+          "type": "string",
+          "example": "app-123"
+        },
+        "scope": {
+          "type": "string",
+          "example": "openid profile"
+        }
+      }
+    },
+    "dto.DeviceAuthorizationResponse": {
+      "description": "Device code authorization response (RFC 8628 §3.2)",
+      "type": "object",
+      "properties": {
+        "device_code": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "expires_in": {
+          "type": "integer",
+          "example": 600
+        },
+        "interval": {
+          "type": "integer",
+          "example": 5
+        },
+        "user_code": {
+          "type": "string",
+          "example": "BDJW-DSXQ"
+        },
+        "verification_uri": {
+          "type": "string",
+          "example": "https://authms.example.com/device"
+        }
+      }
+    },
+    "dto.DeviceAuthorizationVerifyRequest": {
+      "description": "User authorizes device in browser (RFC 8628 §3.3)",
+      "type": "object",
+      "required": [
+        "user_code"
+      ],
+      "properties": {
+        "approve": {
+          "type": "boolean",
+          "example": true
+        },
+        "user_code": {
+          "type": "string",
+          "example": "BDJW-DSXQ"
+        }
+      }
+    },
+    "dto.InternalIntrospectResponse": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "exp": {
+          "type": "integer"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ListResponse-dto_DeviceAuthorizationListItem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.DeviceAuthorizationListItem"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.OAuthAuditLogItem": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "operator_id": {
+          "type": "string"
+        },
+        "operator_type": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer"
+        },
+        "target_id": {
+          "type": "string"
+        },
+        "target_type": {
+          "type": "string"
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.OAuthAuditLogListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.OAuthAuditLogItem"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.OAuthBindData": {
+      "type": "object",
+      "properties": {
+        "connection": {
+          "$ref": "#/definitions/dto.OAuthConnectionItem"
+        }
+      }
+    },
+    "dto.OAuthCallbackResponse": {
+      "description": "OAuth authorization callback result",
+      "type": "object",
+      "properties": {
+        "provider": {
+          "description": "Provider",
+          "type": "string",
+          "example": "github"
+        },
+        "state": {
+          "description": "Status",
+          "type": "string",
+          "example": "state-123"
+        },
+        "token": {
+          "description": "Token (masked)",
+          "type": "string",
+          "example": "gho_abc1..."
+        },
+        "user_info": {
+          "description": "User info",
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "dto.OAuthClientItem": {
+      "type": "object",
+      "properties": {
+        "client_auth_methods": {
+          "type": "string",
+          "example": "[\"client_secret_basic\",\"private_key_jwt\"]"
+        },
+        "client_id": {
+          "type": "string",
+          "example": "app-123"
+        },
+        "cors_origins": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"https://app.example.com\"]"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "deleted_at": {
+          "type": "string"
+        },
+        "fapi_profile": {
+          "type": "string",
+          "example": "fapi1"
+        },
+        "grant_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"authorization_code\"]"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "example": "client_abc123"
+        },
+        "is_confidential": {
+          "type": "boolean",
+          "example": true
+        },
+        "jwks_uri": {
+          "type": "string",
+          "example": "https://client.example.com/.well-known/jwks.json"
+        },
+        "logo_url": {
+          "type": "string",
+          "example": "https://app.example.com/logo.png"
+        },
+        "name": {
+          "type": "string",
+          "example": "My App"
+        },
+        "privacy_policy": {
+          "type": "string",
+          "example": "https://app.example.com/privacy"
+        },
+        "redirect_uris": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"https://app.example.com/callback\"]"
+          ]
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"openid\"",
+            "\"profile\"]"
+          ]
+        },
+        "secret_last_four": {
+          "type": "string",
+          "example": "bcde"
+        },
+        "status": {
+          "type": "string",
+          "example": "active"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tenant_abc123"
+        },
+        "terms_url": {
+          "type": "string",
+          "example": "https://app.example.com/terms"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "website": {
+          "type": "string",
+          "example": "https://app.example.com"
+        }
+      }
+    },
+    "dto.OAuthClientItemDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.OAuthClientItem"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.OAuthClientListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.OAuthClientItem"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.OAuthClientSecretDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.OAuthClientSecretResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.OAuthClientSecretListData": {
+      "description": "OAuth client secret list",
+      "type": "object",
+      "properties": {
+        "secrets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.OAuthClientSecretResponse"
+          }
+        }
+      }
+    },
+    "dto.OAuthClientSecretListDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.OAuthClientSecretListData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.OAuthClientSecretResponse": {
+      "description": "OAuth client secret info, without actual secret value",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "Secondary client secret"
+        },
+        "expires_at": {
+          "type": "string",
+          "example": "2026-05-15T10:30:00Z"
+        },
+        "last_used_at": {
+          "type": "string",
+          "example": "2026-04-15T12:00:00Z"
+        },
+        "secret_id": {
+          "type": "string",
+          "example": "secret-abc123"
+        },
+        "status": {
+          "type": "string",
+          "example": "active"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        }
+      }
+    },
+    "dto.OAuthConnectionItem": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "conn_abc123"
+        },
+        "profile_data": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "github"
+        },
+        "provider_user_id": {
+          "type": "string",
+          "example": "12345678"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tenant_abc123"
+        },
+        "token_expiry": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.OAuthConnectionListData": {
+      "type": "object",
+      "properties": {
+        "connections": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.OAuthConnectionItem"
+          }
+        }
+      }
+    },
+    "dto.OAuthErrorResponse": {
+      "description": "OAuth standard error response",
+      "type": "object",
+      "properties": {
+        "error": {
+          "description": "Error code",
+          "type": "string",
+          "example": "invalid_request"
+        },
+        "error_description": {
+          "description": "Error description",
+          "type": "string",
+          "example": "Missing required parameter"
+        },
+        "error_uri": {
+          "description": "Error URI",
+          "type": "string",
+          "example": "https://docs.example.com/errors"
+        },
+        "state": {
+          "description": "Status",
+          "type": "string",
+          "example": "state-123"
+        }
+      }
+    },
+    "dto.OAuthProviderItem": {
+      "type": "object",
+      "properties": {
+        "auth_url": {
+          "type": "string",
+          "example": "https://github.com/login/oauth/authorize"
+        },
+        "client_id": {
+          "type": "string",
+          "example": "client-id"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "display_name": {
+          "type": "string",
+          "example": "GitHub"
+        },
+        "enabled": {
+          "type": "boolean",
+          "example": true
+        },
+        "id": {
+          "type": "string",
+          "example": "prov_abc123"
+        },
+        "name": {
+          "type": "string",
+          "example": "github"
+        },
+        "redirect_url": {
+          "type": "string",
+          "example": "https://app.example.com/callback"
+        },
+        "scopes": {
+          "type": "string",
+          "example": "[\"read:user\",\"user:email\"]"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tenant_abc123"
+        },
+        "token_url": {
+          "type": "string",
+          "example": "https://github.com/login/oauth/access_token"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "user_info_url": {
+          "type": "string",
+          "example": "https://api.github.com/user"
+        }
+      }
+    },
+    "dto.OAuthProviderListData": {
+      "type": "object",
+      "properties": {
+        "providers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.OAuthProviderItem"
+          }
+        }
+      }
+    },
+    "dto.OAuthProviderListDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.OAuthProviderListData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.OAuthTokenItem": {
+      "description": "OAuth token info, without token text",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "expires_at": {
+          "type": "string",
+          "example": "2026-04-15T10:45:00Z"
+        },
+        "scope": {
+          "type": "string",
+          "example": "openid profile email"
+        },
+        "token_type": {
+          "type": "string",
+          "example": "access_token"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.OAuthTokenListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.OAuthTokenItem"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.OAuthTokenResponse": {
+      "description": "OAuth token response",
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "description": "Access token",
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        },
+        "authorization_details": {
+          "description": "RAR authorization details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.AuthorizationDetailDTO"
+          }
+        },
+        "dpop_access_token_bound": {
+          "description": "Access token DPoP binding confirmation (RFC 9449)",
+          "type": "boolean"
+        },
+        "dpop_signing_alg": {
+          "description": "DPoP signing algorithm (RFC 9449)",
+          "type": "string"
+        },
+        "expires_in": {
+          "description": "Expires in seconds",
+          "type": "integer",
+          "example": 3600
+        },
+        "id_token": {
+          "description": "OIDC ID token",
+          "type": "string",
+          "example": "eyJhbGci..."
+        },
+        "refresh_token": {
+          "description": "Refresh token",
+          "type": "string",
+          "example": "rt_abc123"
+        },
+        "scope": {
+          "description": "Scope",
+          "type": "string",
+          "example": "openid profile email"
+        },
+        "token_type": {
+          "description": "Token type",
+          "type": "string",
+          "example": "Bearer"
+        }
+      }
+    },
+    "dto.OIDCUserInfoResponse": {
+      "type": "object",
+      "properties": {
+        "age_group": {
+          "type": "string"
+        },
+        "birthdate": {
+          "type": "string",
+          "example": "1990-01-15"
+        },
+        "client_id": {
+          "description": "Internal",
+          "type": "string",
+          "example": "app-123"
+        },
+        "family_name": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "gender": {
+          "type": "string",
+          "example": "male"
+        },
+        "given_name": {
+          "type": "string",
+          "example": "John"
+        },
+        "is_minor": {
+          "description": "Verification (age/minor status)",
+          "type": "boolean"
+        },
+        "locale": {
+          "type": "string",
+          "example": "en-US"
+        },
+        "name": {
+          "description": "OIDC Standard Claims (optional, filled when scope=profile)",
+          "type": "string",
+          "example": "John Doe"
+        },
+        "nickname": {
+          "type": "string",
+          "example": "Johnny"
+        },
+        "picture": {
+          "type": "string",
+          "example": "https://cdn.example.com/avatars/usr_abc123.jpg"
+        },
+        "preferred_username": {
+          "type": "string",
+          "example": "john"
+        },
+        "scope": {
+          "type": "string",
+          "example": "openid profile"
+        },
+        "sub": {
+          "description": "User ID (required)",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "updated_at": {
+          "type": "integer",
+          "example": 1743728400
+        },
+        "website": {
+          "type": "string",
+          "example": "https://johndoe.com"
+        },
+        "zoneinfo": {
+          "type": "string",
+          "example": "America/Los_Angeles"
+        }
+      }
+    },
+    "dto.PublicClientInfo": {
+      "type": "object",
+      "properties": {
+        "client_name": {
+          "type": "string"
+        },
+        "logo_uri": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tenant_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PushedAuthorizationRequest": {
+      "description": "PAR request parameters",
+      "type": "object",
+      "required": [
+        "client_id",
+        "redirect_uri",
+        "response_type",
+        "scope"
+      ],
+      "properties": {
+        "authorization_details": {
+          "description": "RAR authorization details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.AuthorizationDetailDTO"
+          }
+        },
+        "client_id": {
+          "description": "Client ID",
+          "type": "string",
+          "example": "app-123"
+        },
+        "client_secret": {
+          "description": "Client secret",
+          "type": "string",
+          "example": "secret_abc123"
+        },
+        "code_challenge": {
+          "description": "Code challenge",
+          "type": "string",
+          "example": "E9Melhoa2Ow..."
+        },
+        "code_challenge_method": {
+          "description": "Challenge method",
+          "type": "string",
+          "example": "S256"
+        },
+        "nonce": {
+          "description": "Nonce",
+          "type": "string",
+          "example": "nonce-123"
+        },
+        "redirect_uri": {
+          "description": "Redirect URI",
+          "type": "string",
+          "example": "https://app.example.com/callback"
+        },
+        "resources": {
+          "description": "Resource",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "response_type": {
+          "description": "Response type",
+          "type": "string",
+          "example": "code"
+        },
+        "scope": {
+          "description": "Scope",
+          "type": "string",
+          "example": "openid profile"
+        },
+        "state": {
+          "description": "State",
+          "type": "string",
+          "example": "state-123"
+        }
+      }
+    },
+    "dto.PushedAuthorizationResponse": {
+      "description": "PAR response",
+      "type": "object",
+      "properties": {
+        "expires_in": {
+          "description": "Expires in seconds",
+          "type": "integer",
+          "example": 90
+        },
+        "request_uri": {
+          "description": "Request URI",
+          "type": "string",
+          "example": "urn:example:request_uri:xxx"
+        }
+      }
+    },
+    "dto.RevokeClientTokensDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.RevokeClientTokensResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.RevokeClientTokensResponse": {
+      "description": "Result of revoking all tokens for a client",
+      "type": "object",
+      "properties": {
+        "grace_period": {
+          "type": "integer",
+          "example": 3600
+        },
+        "revoked_access_tokens": {
+          "type": "integer",
+          "example": 10
+        },
+        "revoked_refresh_tokens": {
+          "type": "integer",
+          "example": 5
+        }
+      }
+    },
+    "dto.RiskAssessmentResponse": {
+      "description": "OAuth risk assessment result",
+      "type": "object",
+      "properties": {
+        "assessment_id": {
+          "description": "Assessment ID",
+          "type": "string",
+          "example": "risk_abc123"
+        },
+        "recommended_actions": {
+          "description": "Suggested action",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requires_step_up": {
+          "description": "Requires enhancement",
+          "type": "boolean",
+          "example": false
+        },
+        "risk_indicators": {
+          "description": "Risk indicators",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "risk_level": {
+          "description": "Risk level",
+          "type": "string",
+          "example": "medium"
+        },
+        "risk_score": {
+          "description": "Risk score",
+          "type": "integer",
+          "example": 45
+        }
+      }
+    },
+    "dto.RotateSecretDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.RotateSecretResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.RotateSecretResponse": {
+      "type": "object",
+      "properties": {
+        "client_id": {
+          "type": "string"
+        },
+        "new_secret": {
+          "type": "string"
+        },
+        "rotated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TokenIntrospectionResponse": {
+      "description": "Token introspection result",
+      "type": "object",
+      "properties": {
+        "active": {
+          "description": "Is active",
+          "type": "boolean",
+          "example": true
+        },
+        "aud": {
+          "description": "Audience",
+          "type": "string",
+          "example": "auth-ms"
+        },
+        "client_id": {
+          "description": "Client ID",
+          "type": "string",
+          "example": "app-123"
+        },
+        "exp": {
+          "description": "Expiration time",
+          "type": "integer",
+          "example": 1713187200
+        },
+        "iat": {
+          "description": "Issued at",
+          "type": "integer",
+          "example": 1713183600
+        },
+        "scope": {
+          "description": "Scope",
+          "type": "string",
+          "example": "openid profile"
+        },
+        "sub": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "token_type": {
+          "description": "Token type",
+          "type": "string",
+          "example": "Bearer"
+        },
+        "username": {
+          "description": "Username",
+          "type": "string",
+          "example": "user@example.com"
+        }
+      }
+    },
+    "dto.UpdateClientRequest": {
+      "type": "object",
+      "properties": {
+        "client_auth_methods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fapi_profile": {
+          "type": "string"
+        },
+        "grant_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_confidential": {
+          "type": "boolean"
+        },
+        "jwks": {
+          "type": "string"
+        },
+        "jwks_uri": {
+          "type": "string"
+        },
+        "logo_url": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "privacy_policy": {
+          "type": "string"
+        },
+        "redirect_uris": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string"
+        },
+        "terms_url": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "handler.authorizeCodeResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        }
+      }
+    },
+    "handler.swaggerBatchRevokeDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BatchRevokeUserTokensResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "handler.swaggerInternalIntrospectDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.InternalIntrospectResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "OAuth 2.0 / OIDC standard interfaces: authorization code, token, introspection, revocation",
+      "name": "OAuth"
+    },
+    {
+      "description": "OAuth client registration, configuration, secret rotation",
+      "name": "OAuth Client Management"
+    },
+    {
+      "description": "OpenID Connect related interfaces: discovery, user info, session management",
+      "name": "OIDC"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

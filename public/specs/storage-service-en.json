@@ -1,0 +1,5976 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Storage Service API, providing file upload, download, management, and batch operations.",
+    "title": "Storage Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/storage-service/api/v1",
+  "paths": {
+    "/admin/storage/buckets": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Retrieve a list of all storage buckets for the current tenant, with pagination support. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin List Buckets",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Page number (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bucket list with pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.BucketListResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new storage bucket (logical record + MinIO physical bucket) for the current tenant, with visibility (private/public/temp) and description. Default bucket cannot be deleted. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Create Bucket",
+        "parameters": [
+          {
+            "description": "Create bucket request — name: bucket name, visibility: visibility (private/public/temp), description: description",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateBucketRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully, returns bucket details",
+            "schema": {
+              "$ref": "#/definitions/dto.BucketDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or bucket name already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error (MinIO operation failed, etc.)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/buckets/{name}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get detailed information of a specific bucket by bucket name, including visibility, default flag, and description. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Get Bucket Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Bucket name",
+            "name": "name",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bucket details",
+            "schema": {
+              "$ref": "#/definitions/dto.BucketDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Bucket not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the visibility, description, or default flag of a specified bucket. Default bucket cannot be unset as default. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Update Bucket",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Bucket name",
+            "name": "name",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update bucket request — visibility: visibility (private/public/temp), description: description, is_default: whether it is the default bucket",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateBucketRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successful, returns bucket details",
+            "schema": {
+              "$ref": "#/definitions/dto.BucketDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Bucket not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified bucket and its corresponding physical bucket in MinIO. Default bucket cannot be deleted. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Delete Bucket",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Bucket name",
+            "name": "name",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted successfully, no response body"
+          },
+          "400": {
+            "description": "Default bucket cannot be deleted or bucket is not empty",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Bucket not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/clean-stale-uploads": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Clean up pending upload file records and their MinIO objects older than the specified time. Only processes files with metadata.status=pending, hard deletes records and removes storage objects. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Clean Expired Pending Uploads",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Expiration hours (default 24, minimum 1)",
+            "name": "older_than_hours",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cleanup result, returns the number of cleaned items",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_storage-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/data-retention-policy": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the data retention policy configuration for the current tenant, including retention days, auto-delete, and archive-before-delete flags. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Get Data Retention Policy",
+        "responses": {
+          "200": {
+            "description": "Data retention policy details",
+            "schema": {
+              "$ref": "#/definitions/dto.DataRetentionPolicyDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Retention policy not configured",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Configure the data retention policy for the current tenant (retention days, auto-delete toggle, archive-before-delete toggle). First call creates the policy, subsequent calls update it. Queries the oldest file to assess policy impact. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Configure Data Retention Policy",
+        "parameters": [
+          {
+            "description": "Data retention policy — retention_days: retention days, auto_delete: whether to auto-delete, archive_before_delete: whether to archive before deletion",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.DataRetentionPolicyRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Policy applied, returns retention policy details and effective time",
+            "schema": {
+              "$ref": "#/definitions/dto.DataRetentionPolicyDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant data not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/encryption-status": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return the transport encryption status (UseSSL) of the storage service based on MinIO's actual SSL/TLS configuration, for admin compliance audit and security assessment. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Query Storage Encryption Status",
+        "responses": {
+          "200": {
+            "description": "Encryption status (at-rest encryption, in-transit encryption, algorithm, key management)",
+            "schema": {
+              "$ref": "#/definitions/dto.EncryptionStatusDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant data not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/quota": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the storage quota and usage for the current tenant (used bytes, available bytes, usage percentage). Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Get Storage Quota",
+        "responses": {
+          "200": {
+            "description": "Storage quota details (total quota, used, available)",
+            "schema": {
+              "$ref": "#/definitions/dto.StorageQuotaDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the storage quota limit (in bytes) for the current tenant. Records audit log (quota before and after change), publishes QuotaUpdatedEvent. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Update Storage Quota",
+        "parameters": [
+          {
+            "description": "Quota update request — quota_bytes: quota limit (bytes)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateStorageQuotaRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated storage quota information",
+            "schema": {
+              "$ref": "#/definitions/dto.StorageQuotaDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/storage/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get storage usage statistics for the current tenant, including file count, total size, distribution by MIME type, etc. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Admin Storage Statistics",
+        "responses": {
+          "200": {
+            "description": "Storage statistics (total file count, total size, MIME type distribution)",
+            "schema": {
+              "$ref": "#/definitions/dto.StorageStatsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions, admin role required",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Tenant data not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get a list of files for the current user in a specified folder, with pagination and filename keyword search, sorted by creation time descending. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "List Files",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Parent folder ID, leave empty to query root directory files",
+            "name": "parent_id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20, max 100)",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Filename keyword search",
+            "name": "keyword",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File list with pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.FileListResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Upload a file to the object storage service, supporting images, videos, documents, etc. Automatically calculates SHA-256 hash, records file metadata, and triggers audit log. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Upload File",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File owner ID",
+            "name": "owner_id",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Visibility: private / public, default private",
+            "name": "visibility",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Parent folder ID, leave empty to upload to root directory",
+            "name": "parent_id",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "description": "File to upload",
+            "name": "file",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully, returns file metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.UploadFileDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or file type not allowed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "413": {
+            "description": "File size exceeds limit",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "507": {
+            "description": "Insufficient storage quota",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/batch-download": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Batch download multiple files, packaging them into a ZIP archive stream. Skips failed downloads and continues with the rest. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/zip",
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Batch Download (ZIP)",
+        "parameters": [
+          {
+            "description": "Batch download request — file_ids: list of file IDs (at least 1)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchDownloadRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ZIP archive, Content-Disposition: attachment, filename format download_YYYYMMDD_HHMMSS.zip",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error (ZIP packaging failed)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/bulk-deletions": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Legacy compatibility endpoint for batch deleting files or folders, internally forwards to the /storage/batch-delete logic. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Batch Delete (Legacy)",
+        "parameters": [
+          {
+            "description": "List of file/folder IDs to delete — file_ids: array of IDs",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch delete successful, returns count and list of IDs",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchDeleteResultDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File/folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Folder not empty, cannot delete",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/bulk-uploads": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Prepare batch upload tasks by generating presigned upload URLs for each file (max 50 files). Automatically checks file type whitelist and tenant storage quota, creates file records in batch. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Batch Upload Preparation",
+        "parameters": [
+          {
+            "description": "Batch upload preparation request — files: list of files (with filename/content_type/size)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BulkUploadPrepareRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "List of batch presigned upload URLs and file count",
+            "schema": {
+              "$ref": "#/definitions/dto.BulkUploadURLsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or file type not allowed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "413": {
+            "description": "Total file size exceeds limit",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "507": {
+            "description": "Insufficient storage quota",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/multipart/init": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Initialize a multipart upload task for large files, generating presigned PUT upload URLs for each part. Automatically checks file type whitelist and tenant storage quota (rejects if quota insufficient). Creates a file record with multipart_pending status. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Initiate Multipart Upload",
+        "parameters": [
+          {
+            "description": "Multipart upload initialization parameters — file_name: file name, content_type: MIME type, total_size: total size (bytes), part_count: number of parts (2-100), folder_id: parent folder ID (optional), visibility: visibility (optional)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.InitMultipartUploadRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Initialization successful, returns upload_id and presigned upload URLs for each part",
+            "schema": {
+              "$ref": "#/definitions/dto.MultipartInitDataDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or file type not allowed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "413": {
+            "description": "Total file size exceeds limit",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "507": {
+            "description": "Insufficient storage quota",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/multipart/{file_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Abort a multipart upload task, clean up all uploaded part temporary objects in MinIO, hard delete the file record. Only the file owner can perform this operation. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Abort Multipart Upload",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Abort successful, no response body"
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Only the file owner can abort the upload",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/multipart/{file_id}/complete": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Verify that all parts have been successfully uploaded to MinIO, use ComposeObjects to merge parts into the target file, and clean up temporary part objects. Only the file owner can perform this operation. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Complete Multipart Upload",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Part merge completed, returns assembled file metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.FileMetadataDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Not all parts uploaded or file status is not multipart_pending",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Only the file owner can complete the upload",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error (part merge failed)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/shared/{token}": {
+      "get": {
+        "description": "Download a file directly using a share token without authentication. Automatically validates share validity (not expired, not exceeding access limit), supports HTTP Range requests. Records access count. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/octet-stream",
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Download via Share Link",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Share token",
+            "name": "token",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File content, Content-Disposition: attachment",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "206": {
+            "description": "Partial content, Content-Range response",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Share link invalid or expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "416": {
+            "description": "Invalid Range request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/upload-url": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Generate a presigned PUT upload URL for a specified file (max 300 seconds expiration), allowing the client to upload directly to object storage. Creates a file record with pending status. SF3 security tightening. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Get Upload Presigned URL",
+        "parameters": [
+          {
+            "description": "Upload URL request — filename: file name, content_type: MIME type, expires_in: expiration seconds (default/max 300), parent_id: parent folder ID (optional), visibility: visibility (optional)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateUploadURLRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Upload URL info (file ID, presigned URL, key, expiration seconds)",
+            "schema": {
+              "$ref": "#/definitions/dto.CreateUploadURLDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "413": {
+            "description": "File size exceeds limit",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "507": {
+            "description": "Insufficient storage quota",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Soft delete a file and its storage object by file ID, records audit log (with file snapshot beforeSnapshot). Deleted files go to recycle bin and can be restored within the retention period. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Delete File",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "File deleted successfully, no response body"
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found or no access permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update file name or custom metadata (metadata JSON merge). Verifies file exists and is not a folder, publishes FileUpdatedEvent. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Update File",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update request — name: new file name (optional), metadata: custom metadata key-value pairs (optional)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateFileNameRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated file metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.FileMetadataDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or no fields to update",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found or is a folder",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/copy": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Copy a file to a specified target folder, using server-side copy (CopyObject) in MinIO to avoid data transfer, supports custom new file name. Automatically rolls back on copy failure. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Copy File",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Source file ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Copy parameters — target_folder_id: target folder ID, new_name: new file name (optional)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CopyFileTargetRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Copy result, returns metadata of source and new files",
+            "schema": {
+              "$ref": "#/definitions/dto.FileCopyResultDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Source file or target folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/download": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Download a file by file ID, with tenant isolation for private file access control, records download metrics. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/octet-stream",
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Download File",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File content, Content-Disposition: attachment",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "206": {
+            "description": "Partial content, Content-Range response",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found or no access permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "416": {
+            "description": "Invalid Range request",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/metadata": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get detailed metadata information of a file, including actual information from MinIO object storage (last modified time, ETag, size, etc.), for verifying database and storage consistency. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Get File Metadata",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File metadata (including MinIO object storage info)",
+            "schema": {
+              "$ref": "#/definitions/dto.FileMetadataExtendedDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found or is a folder",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/move": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Move a file to a specified target folder, using copy-then-delete in MinIO for object migration. Automatically detects circular references (forbids moving a folder into itself or its subfolders). Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Move File",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Move parameters — target_folder_id: target folder ID",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.MoveFileRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Moved file metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.FileMetadataDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or circular reference detected",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File or target folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/presigned-url": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Generate a temporary access URL for a file, default 5 minutes validity (max 15 minutes), allowing direct access/download without authentication within the validity period. SF3 security tightening. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Generate Presigned URL",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Expiration seconds (default 300, max 900)",
+            "name": "expires",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Presigned URL and expiration time",
+            "schema": {
+              "$ref": "#/definitions/dto.PresignedURLDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/preview": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get file preview: for image files returns thumbnail (Lanczos resampling), for PDF files returns presigned download URL, for other files returns download_only status and presigned URL. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "File Preview",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Thumbnail width (default 200, max 1200)",
+            "name": "width",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Thumbnail height (default 200, max 1200)",
+            "name": "height",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preview data (including file info, preview type, presigned URL)",
+            "schema": {
+              "$ref": "#/definitions/dto.FilePreviewDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/share": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "View share details of a file by file ID, including token, expiration time, access statistics, etc. Only the share creator can view. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "View Share Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "file_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Share details, including token, expiration time, and access count",
+            "schema": {
+              "$ref": "#/definitions/dto.ShareDetailDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File or share not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a temporary share link for a file, supporting expiration time and maximum access count limits. The sharer is the current authenticated user. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Create Share Link",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Share parameters — expires_in: expiration duration (e.g., 24h/7d), max_access: maximum access count",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateShareRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Share link created successfully, returns share URL, token, and expiration time",
+            "schema": {
+              "$ref": "#/definitions/dto.FileShareDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Cancel a file share link by file ID and share token. Only the share creator can perform this operation. Records audit log. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Cancel Share Link",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Share token",
+            "name": "token",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Share cancelled successfully, no response body"
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Only the share creator can cancel the share",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Share not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/thumbnail": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Generate a thumbnail of specified dimensions for an image file, supporting custom width, height, JPEG quality, and output format (jpeg/png), using Lanczos resampling algorithm for quality. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "image/jpeg",
+          "image/png",
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Generate Thumbnail",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Thumbnail width (default 200, in pixels)",
+            "name": "width",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Thumbnail height (default 200, in pixels)",
+            "name": "height",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "JPEG quality (default 80, range 1-100)",
+            "name": "quality",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Output format: jpeg / png (default jpeg)",
+            "name": "format",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Thumbnail image data",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "File is not an image or format not supported",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error (image decode/encode failed)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/upload-complete": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Confirm that a presigned upload file has been fully uploaded, retrieve actual file size and ContentType from MinIO, update file status from pending to completed. Only the file owner can confirm. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Upload Completion Confirmation",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upload confirmed successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_storage-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "File status is not pending, or unknown upload status",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Only the file owner can confirm upload",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/versions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List all historical versions of a specified file in MinIO (including version ID, size, ETag, is current version, creation time), supporting client-side pagination. Requires MinIO versioning enabled. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Get File Version List",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File version list with current version indicator",
+            "schema": {
+              "$ref": "#/definitions/dto.FileVersionDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/versions/{version_id}/restore": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Restore a file to a specified historical version, using MinIO CopyObjectVersion to copy the historical version as the current version. Synchronously updates file size. Records audit log, publishes VersionRestoredEvent. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Restore File Version",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Version ID to restore to",
+            "name": "version_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Version restored successfully, returns current file metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.FileMetadataDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File or specified version not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error (version restore failed)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/visibility": {
+      "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Toggle the public status of a file (private ↔ public), migrating the object between MinIO private and public buckets. Records audit log. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Update File Visibility",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Visibility update — visibility: public / private",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateFileVisibilityRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated file metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.FileMetadataDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/files/{file_id}/watermark": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Add a text watermark to an image file, generating a new watermarked file. Supports custom watermark text, position (top-left/top-right/center/bottom-left/bottom-right), opacity, and font size. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Add Watermark",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Source file ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Watermark parameters — text: watermark text, position: position, opacity: opacity (0-1), font_size: font size",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.WatermarkRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Watermark added successfully, returns metadata of the new watermarked file",
+            "schema": {
+              "$ref": "#/definitions/dto.FileMetadataDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or file is not an image",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error (image decode/watermark rendering/storage write failed)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/folders": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new folder under a specified parent folder, with parent folder existence validation. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Create Folder",
+        "parameters": [
+          {
+            "description": "Folder creation request — name: folder name, parent_id: parent folder ID (optional)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateFolderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Folder created successfully, returns folder metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.FolderMetadataDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or name duplicate",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/folders/{folder_id}/contents": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List all files and subfolders under a specified folder (max 500 items), sorted by creation time descending. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Get Folder Contents",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Folder ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder contents list",
+            "schema": {
+              "$ref": "#/definitions/dto.FileMetadataListDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/runtime": {
+      "get": {
+        "description": "Internal API: Get runtime status and health check information of the storage service (for monitoring service).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service - Internal API"
+        ],
+        "summary": "Internal API: Get runtime information",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Internal API Key",
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Runtime status information",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "503": {
+            "description": "Service unavailable",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/schedulers": {
+      "get": {
+        "description": "Internal API: Get all scheduled tasks and their running status for the storage service (for internal monitoring and gateway scheduling panel).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service - Internal API"
+        ],
+        "summary": "Internal API: List scheduled tasks",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Internal API Key",
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scheduled task list",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/internal/storage/batch-delete": {
+      "post": {
+        "description": "Internal API: Batch hard-delete files by user ID and tenant ID (skip recycle bin) for compliance audit and inter-service calls. Records audit log, publishes BatchDeletedEvent. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service - Internal API"
+        ],
+        "summary": "Internal API: Batch delete user files",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Internal API Key",
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Batch delete request — user_id: User ID, ids: List of file IDs",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.InternalBatchDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch delete result (deletion count and ID list)",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchDeleteResultDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Delete operation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/storage/erase-user": {
+      "post": {
+        "description": "Internal API: Erase all file data of a user by user ID and tenant ID (anonymization) for compliance-service data erasure workflow. Reference: GDPR Art 17 (Right to Erasure), GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service - Internal API"
+        ],
+        "summary": "Internal API: GDPR erase user files",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Internal API Key",
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Erase request — user_id: User ID",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Erase successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed (user_id required)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/storage/export-user-data": {
+      "post": {
+        "description": "Internal API: Export all file metadata of a user by tenant ID and user ID for compliance, DSAR, and inter-service calls. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service - Internal API"
+        ],
+        "summary": "Internal API: Export user data",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Internal API Key",
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Export request — user_id: User ID",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExportUserDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of file metadata for the user",
+            "schema": {
+              "$ref": "#/definitions/dto.FileMetadataListDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/storage/files": {
+      "get": {
+        "description": "Internal API: Get file list by user ID and tenant ID (for compliance, audit, and inter-service calls), supports pagination and MIME type filtering, sorted by creation time descending. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service - Internal API"
+        ],
+        "summary": "Internal API: Get user file list",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Internal API Key",
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "MIME type filter (e.g., image/png)",
+            "name": "mime_type",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User file list and pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.FileListResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/storage/usage": {
+      "get": {
+        "description": "Internal API: Query storage usage (bytes used) and file count by tenant ID for billing/tenant and inter-service calls for billing calculation and quota management. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service - Internal API"
+        ],
+        "summary": "Internal API: Get tenant storage usage",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Internal API Key",
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tenant storage usage (bytes used, file count)",
+            "schema": {
+              "$ref": "#/definitions/dto.TenantUsageDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed (tenant_id empty)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/shares": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List all file share links created by the current user, with pagination. Results sorted by creation time descending. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "List shares",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Page number (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Share list and pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.ShareListResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/batch-delete": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Batch delete files or folders by specified IDs. Non-empty folders are rejected; children must be cleared first. Records snapshot before deletion for audit traceability. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Batch delete files/folders",
+        "parameters": [
+          {
+            "description": "Batch delete request — file_ids: List of file/folder IDs to delete",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchDeleteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch delete successful, returns deletion count and ID list",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchDeleteResultDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Request parameter error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File/folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Folder is not empty, cannot delete",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/batch-move": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Move multiple files or folders to a specified target folder. Automatically detects circular references (prohibits moving a folder into itself or its subfolders), publishes BatchMovedEvent. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Batch move files/folders",
+        "parameters": [
+          {
+            "description": "Batch move parameters — ids: List of file/folder IDs to move, target_id: Target folder ID",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch move successful, returns move count and target ID",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchMoveResultDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or circular reference detected",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Target folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/folders": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Storage API version: Create a new folder, supports verifying parent folder existence, publishes FolderCreatedEvent domain event. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Storage API Create folder",
+        "parameters": [
+          {
+            "description": "Folder creation request — name: Folder name, parent_id: Parent folder ID (optional)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateFolderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Folder created successfully, returns folder metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.CreateFolderResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed or parent folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/folders/{folder_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Storage API version: Get folder details and content list (up to 500 items), includes folder metadata and child item list. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Get folder content",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Folder ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder info and content list",
+            "schema": {
+              "$ref": "#/definitions/dto.FolderContentsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Storage API version: Delete an empty folder; non-empty folders are rejected (children must be cleared first). Soft delete records audit log, publishes FolderDeletedEvent. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Delete folder",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Folder ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_storage-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Folder is not empty, cannot delete",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Rename a folder. Records audit log, publishes FolderUpdatedEvent. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Update folder",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Folder ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update request — name: New folder name",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateFolderNameRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated folder metadata",
+            "schema": {
+              "$ref": "#/definitions/dto.FolderMetadataDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Folder not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/public/encryption-status": {
+      "get": {
+        "description": "Trust Center: Get public storage encryption status (no authentication required, no tenant ID needed) for external compliance audit and trust center display. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Compliance Management - Trust Center"
+        ],
+        "summary": "Public: Get storage encryption status",
+        "responses": {
+          "200": {
+            "description": "Encryption status (at-rest encryption, in-transit encryption, algorithm AES-256-GCM, key management KMS)",
+            "schema": {
+              "$ref": "#/definitions/dto.PublicEncryptionStatusDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/public/reports": {
+      "get": {
+        "description": "Trust Center: Get publicly downloadable compliance report list (no authentication required), supports pagination. Only returns public files. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Compliance Management - Trust Center"
+        ],
+        "summary": "Public: Get compliance report list",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Page number (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Public compliance report list and pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.PublicReportListResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/public/reports/{file_id}/download": {
+      "get": {
+        "description": "Trust Center: Download a public compliance report file (no authentication required). Sets 1-hour HTTP public cache. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/octet-stream",
+          "application/json"
+        ],
+        "tags": [
+          "Compliance Management - Trust Center"
+        ],
+        "summary": "Public: Download compliance report",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "File ID of the public report",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report file, Content-Disposition: attachment, Cache-Control: public, max-age=3600",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Report ID is empty",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Report not found or not public",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/quota": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the current tenant's storage usage and quota info (bytes used, bytes available, usage percentage) for regular users. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Get storage quota",
+        "responses": {
+          "200": {
+            "description": "Storage quota details (total quota, used, available, usage percentage)",
+            "schema": {
+              "$ref": "#/definitions/dto.StorageQuotaDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/trash": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List files and folders that have been soft-deleted (in recycle bin) by the current user, with pagination. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Get recycle bin list",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Page number (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recycle bin file list and pagination info",
+            "schema": {
+              "$ref": "#/definitions/dto.FileListResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Hard delete all files and folders in the recycle bin for the current tenant. Records audit log. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Empty recycle bin",
+        "responses": {
+          "200": {
+            "description": "Empty successful, returns deletion count",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchDeleteResultDetailResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/trash/{trash_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Permanently delete files/folders from the recycle bin (completely remove from database and MinIO). Supports retry for deleting storage objects (up to 3 times). Verifies the file is indeed in the recycle bin. Publishes FilePermanentlyDeletedEvent. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Permanent delete from recycle bin",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Recycle bin file ID",
+            "name": "trash_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Permanent delete successful, no response body"
+          },
+          "400": {
+            "description": "File not in recycle bin, please perform normal delete first",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/trash/{trash_id}/restore": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Restore a soft-deleted file or folder to normal state (clear deleted_at field). Verifies the file is indeed in the recycle bin. Records audit log, publishes FileRestoredEvent. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Restore file from recycle bin",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Recycle bin file ID",
+            "name": "trash_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Restore successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_storage-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "File not in recycle bin",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/storage/trends": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get storage usage trend data for a specified time range (daily/weekly), prefers snapshot table data, falls back to current total if no snapshot. Reference: GDPR Art 32 (Security of Processing).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Storage Service"
+        ],
+        "summary": "Storage usage trend",
+        "parameters": [
+          {
+            "type": "string",
+            "default": "day",
+            "description": "Trend period: day (daily, default)/week (weekly)",
+            "name": "period",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Storage trend data (period, daily data points list, update time)",
+            "schema": {
+              "$ref": "#/definitions/dto.StorageTrendsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Parameter validation failed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dto.BatchDeleteRequest": {
+      "description": "Batch delete file request parameters",
+      "type": "object",
+      "required": [
+        "file_ids"
+      ],
+      "properties": {
+        "file_ids": {
+          "description": "List of file IDs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"file_001\"",
+            "\"file_002\"]"
+          ]
+        },
+        "force": {
+          "description": "Force delete",
+          "type": "boolean",
+          "example": false
+        }
+      }
+    },
+    "dto.BatchDeleteResultDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BatchDeleteResultResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchDeleteResultResponse": {
+      "type": "object",
+      "properties": {
+        "deleted_count": {
+          "type": "integer",
+          "example": 5
+        },
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"file_001\"",
+            "\"file_002\"]"
+          ]
+        }
+      }
+    },
+    "dto.BatchDownloadRequest": {
+      "description": "Batch download file request parameters",
+      "type": "object",
+      "required": [
+        "file_ids"
+      ],
+      "properties": {
+        "file_ids": {
+          "description": "List of file IDs",
+          "type": "array",
+          "maxItems": 50,
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"file_001\"",
+            "\"file_002\"]"
+          ]
+        }
+      }
+    },
+    "dto.BatchMoveResultDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BatchMoveResultResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchMoveResultResponse": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"file_001\"",
+            "\"file_002\"]"
+          ]
+        },
+        "moved_count": {
+          "type": "integer",
+          "example": 3
+        },
+        "target_id": {
+          "type": "string",
+          "example": "folder_002"
+        }
+      }
+    },
+    "dto.BucketDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BucketResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BucketListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.BucketResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for easy reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.BucketResponse": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_default": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "physical_name": {
+          "type": "string"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BulkUploadFileInfo": {
+      "type": "object",
+      "required": [
+        "content_type",
+        "filename",
+        "size"
+      ],
+      "properties": {
+        "content_type": {
+          "type": "string",
+          "example": "image/jpeg"
+        },
+        "filename": {
+          "type": "string",
+          "example": "photo.jpg"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 1048576
+        }
+      }
+    },
+    "dto.BulkUploadPrepareRequest": {
+      "type": "object",
+      "required": [
+        "files"
+      ],
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.BulkUploadFileInfo"
+          }
+        }
+      }
+    },
+    "dto.BulkUploadURLsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BulkUploadURLsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BulkUploadURLsResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "example": 5
+        },
+        "upload_urls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.UploadURLInfo"
+          }
+        }
+      }
+    },
+    "dto.CopyFileTargetRequest": {
+      "type": "object",
+      "properties": {
+        "new_name": {
+          "type": "string",
+          "example": "copy-of-file.pdf"
+        },
+        "target_folder_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        }
+      }
+    },
+    "dto.CreateBucketRequest": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateFolderRequest": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "My Folder"
+        },
+        "parent_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        }
+      }
+    },
+    "dto.CreateFolderResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FolderMetadataResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateShareRequest": {
+      "type": "object",
+      "properties": {
+        "expires_in": {
+          "type": "string",
+          "example": "24h"
+        },
+        "max_access": {
+          "type": "integer",
+          "example": 10
+        },
+        "password": {
+          "type": "string",
+          "example": "mypassword"
+        }
+      }
+    },
+    "dto.CreateUploadURLDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CreateUploadURLResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateUploadURLRequest": {
+      "type": "object",
+      "required": [
+        "content_type",
+        "filename"
+      ],
+      "properties": {
+        "content_type": {
+          "type": "string"
+        },
+        "expires_in": {
+          "type": "integer"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "parent_id": {
+          "type": "string"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateUploadURLResponse": {
+      "type": "object",
+      "properties": {
+        "expires_in": {
+          "type": "integer"
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "file_id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "upload_url": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataRetentionPolicyDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.DataRetentionPolicyResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataRetentionPolicyRequest": {
+      "description": "Data retention policy configuration request parameters",
+      "type": "object",
+      "required": [
+        "retention_days"
+      ],
+      "properties": {
+        "archive_before_delete": {
+          "description": "Archive before deletion?",
+          "type": "boolean",
+          "example": true
+        },
+        "auto_delete": {
+          "description": "Auto delete",
+          "type": "boolean",
+          "example": true
+        },
+        "retention_days": {
+          "description": "Retention days",
+          "type": "integer",
+          "example": 365
+        }
+      }
+    },
+    "dto.DataRetentionPolicyResponse": {
+      "description": "Data retention policy configuration result",
+      "type": "object",
+      "properties": {
+        "archive_before_delete": {
+          "description": "Archive before deletion?",
+          "type": "boolean",
+          "example": true
+        },
+        "auto_delete": {
+          "description": "Auto delete",
+          "type": "boolean",
+          "example": true
+        },
+        "effective_at": {
+          "description": "Effective time",
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "retention_days": {
+          "description": "Retention days",
+          "type": "integer",
+          "example": 365
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        }
+      }
+    },
+    "dto.EncryptionStatusDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.EncryptionStatusResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.EncryptionStatusResponse": {
+      "description": "Storage service encryption configuration and status",
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "description": "Algorithm",
+          "type": "string",
+          "example": "AES-256-GCM"
+        },
+        "encryption_at_rest": {
+          "description": "At-rest encryption",
+          "type": "boolean",
+          "example": true
+        },
+        "encryption_in_transit": {
+          "description": "In-transit encryption",
+          "type": "boolean",
+          "example": true
+        },
+        "key_rotation_date": {
+          "description": "Rotation date",
+          "type": "string",
+          "example": "2026-04-01T00:00:00Z"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        }
+      }
+    },
+    "dto.ExportUserDataRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "format": {
+          "type": "string",
+          "example": "json"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        }
+      }
+    },
+    "dto.FieldViolation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the error code (optional). Used for programmatic identification of error types, e.g., \"required\", \"format\", \"range\"",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is a human-readable error description. Should explain what rule was violated, e.g., \"Must be a valid email address\"",
+          "type": "string"
+        },
+        "field": {
+          "description": "Field is the path to the error field. Uses dot notation for nested fields, e.g., \"user.email\" or \"addresses[0].city\"",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value is the value that caused the error (optional, used in development mode). May not be returned in production to avoid leaking sensitive information."
+        }
+      }
+    },
+    "dto.FileCopyResultDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FileCopyResultResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FileCopyResultResponse": {
+      "type": "object",
+      "properties": {
+        "copied_file": {
+          "$ref": "#/definitions/dto.FileMetadataResponse"
+        },
+        "original_file": {
+          "$ref": "#/definitions/dto.FileMetadataResponse"
+        }
+      }
+    },
+    "dto.FileListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FileMetadataResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for easy reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.FileMetadataDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FileMetadataResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FileMetadataExtendedDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FileMetadataExtendedResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FileMetadataExtendedResponse": {
+      "description": "Detailed file metadata information, including MinIO storage info",
+      "type": "object",
+      "properties": {
+        "access_url": {
+          "type": "string",
+          "example": "https://cdn.example.com/file_abc123.jpg"
+        },
+        "bucket": {
+          "type": "string",
+          "example": "avatars"
+        },
+        "checksum": {
+          "type": "string",
+          "example": "abc123"
+        },
+        "content_type": {
+          "type": "string",
+          "example": "image/jpeg"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "filename": {
+          "type": "string",
+          "example": "avatar.jpg"
+        },
+        "id": {
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "is_public": {
+          "type": "boolean",
+          "example": false
+        },
+        "key": {
+          "type": "string",
+          "example": "2026/04/file_abc123.jpg"
+        },
+        "metadata": {
+          "type": "string"
+        },
+        "minio_info": {
+          "$ref": "#/definitions/dto.MinioInfoResponse"
+        },
+        "modified_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "original_name": {
+          "type": "string",
+          "example": "avatar.jpg"
+        },
+        "owner_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "path": {
+          "type": "string",
+          "example": "2026/04/file_abc123.jpg"
+        },
+        "provider": {
+          "type": "string",
+          "example": "minio"
+        },
+        "size": {
+          "type": "integer",
+          "example": 102400
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_xyz789"
+        }
+      }
+    },
+    "dto.FileMetadataListDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FileMetadataResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FileMetadataResponse": {
+      "description": "File metadata information",
+      "type": "object",
+      "properties": {
+        "bucket": {
+          "description": "Storage bucket",
+          "type": "string",
+          "example": "avatars"
+        },
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "etag": {
+          "description": "ETag",
+          "type": "string",
+          "example": "\"abc123def456\""
+        },
+        "file_id": {
+          "description": "File ID",
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "is_public": {
+          "description": "Visibility?",
+          "type": "boolean",
+          "example": false
+        },
+        "mime_type": {
+          "description": "MIME type",
+          "type": "string",
+          "example": "image/jpeg"
+        },
+        "name": {
+          "description": "File name",
+          "type": "string",
+          "example": "avatar.jpg"
+        },
+        "object_name": {
+          "description": "Object name?",
+          "type": "string",
+          "example": "2026/04/file_abc123.jpg"
+        },
+        "original_name": {
+          "description": "Original name",
+          "type": "string",
+          "example": "avatar.jpg"
+        },
+        "owner_id": {
+          "description": "All IDs",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "parent_id": {
+          "description": "Parent folder",
+          "type": "string",
+          "example": "folder_001"
+        },
+        "size": {
+          "description": "File size",
+          "type": "integer",
+          "example": 102400
+        },
+        "storage_class": {
+          "description": "Storage class",
+          "type": "string",
+          "example": "standard"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "updated_at": {
+          "description": "Update time",
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        }
+      }
+    },
+    "dto.FilePreviewData": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string"
+        },
+        "mime_type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "presigned_url": {
+          "type": "string"
+        },
+        "preview": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer"
+        },
+        "suggestion": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FilePreviewDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FilePreviewData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FileShareDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FileShareResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FileShareResponse": {
+      "description": "File share link information",
+      "type": "object",
+      "properties": {
+        "expires_at": {
+          "description": "Expiration time",
+          "type": "string",
+          "example": "2026-04-15T11:00:00Z"
+        },
+        "share_url": {
+          "description": "Share URL",
+          "type": "string",
+          "example": "https://storage.example.com/shared/abc123"
+        },
+        "token": {
+          "description": "Token",
+          "type": "string",
+          "example": "tkn_abc123"
+        }
+      }
+    },
+    "dto.FileVersionDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FileVersionResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FileVersionItem": {
+      "description": "File version record",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "created_by": {
+          "description": "Creator",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "etag": {
+          "description": "ETag",
+          "type": "string",
+          "example": "\"def456\""
+        },
+        "file_id": {
+          "description": "File ID",
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "is_current": {
+          "description": "Current version",
+          "type": "boolean",
+          "example": true
+        },
+        "size": {
+          "description": "Version size",
+          "type": "integer",
+          "example": 102400
+        },
+        "version_id": {
+          "description": "Version ID",
+          "type": "string",
+          "example": "ver_abc123"
+        }
+      }
+    },
+    "dto.FileVersionResponse": {
+      "description": "File version history list",
+      "type": "object",
+      "properties": {
+        "current_version": {
+          "description": "Current version",
+          "type": "string",
+          "example": "ver_latest"
+        },
+        "file_id": {
+          "description": "File ID",
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "versions": {
+          "description": "Version list",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FileVersionItem"
+          }
+        }
+      }
+    },
+    "dto.FolderContentsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FolderContentsResultResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FolderContentsResultResponse": {
+      "type": "object",
+      "properties": {
+        "contents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FileMetadataResponse"
+          }
+        },
+        "folder": {
+          "$ref": "#/definitions/dto.FolderMetadataResponse"
+        }
+      }
+    },
+    "dto.FolderMetadataDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FolderMetadataResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FolderMetadataResponse": {
+      "description": "Folder metadata information",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-04-01T00:00:00Z"
+        },
+        "file_count": {
+          "description": "File count",
+          "type": "integer",
+          "example": 15
+        },
+        "folder_id": {
+          "description": "Folder ID",
+          "type": "string",
+          "example": "folder_abc123"
+        },
+        "is_public": {
+          "description": "Is public",
+          "type": "boolean",
+          "example": false
+        },
+        "name": {
+          "description": "Folder name?",
+          "type": "string",
+          "example": "Project documentation"
+        },
+        "owner_id": {
+          "description": "All IDs",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "parent_id": {
+          "description": "Parent folder",
+          "type": "string",
+          "example": "folder_root"
+        },
+        "subfolder_count": {
+          "description": "Subfolder count?",
+          "type": "integer",
+          "example": 3
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "updated_at": {
+          "description": "Update time",
+          "type": "string",
+          "example": "2026-04-10T14:20:00Z"
+        }
+      }
+    },
+    "dto.InitMultipartUploadRequest": {
+      "type": "object",
+      "required": [
+        "content_type",
+        "file_name",
+        "part_count",
+        "total_size"
+      ],
+      "properties": {
+        "content_type": {
+          "type": "string",
+          "example": "video/mp4"
+        },
+        "file_name": {
+          "type": "string",
+          "example": "large-video.mp4"
+        },
+        "folder_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "part_count": {
+          "type": "integer",
+          "example": 4
+        },
+        "total_size": {
+          "type": "integer",
+          "example": 1073741824
+        },
+        "visibility": {
+          "type": "string",
+          "example": "private"
+        }
+      }
+    },
+    "dto.InternalBatchDeleteRequest": {
+      "type": "object",
+      "required": [
+        "ids",
+        "user_id"
+      ],
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "user_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        }
+      }
+    },
+    "dto.MimeTypeStat": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "example": 1500
+        },
+        "mime_type": {
+          "type": "string",
+          "example": "image/png"
+        },
+        "size": {
+          "type": "integer",
+          "example": 536870912
+        }
+      }
+    },
+    "dto.MinioInfoResponse": {
+      "description": "MinIO storage object statistics",
+      "type": "object",
+      "properties": {
+        "content_type": {
+          "type": "string",
+          "example": "image/jpeg"
+        },
+        "etag": {
+          "type": "string",
+          "example": "\"abc123\""
+        },
+        "last_modified": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "size": {
+          "type": "integer",
+          "example": 102400
+        }
+      }
+    },
+    "dto.MoveFileRequest": {
+      "description": "Move file request parameters",
+      "type": "object",
+      "required": [
+        "target_folder_id"
+      ],
+      "properties": {
+        "target_folder_id": {
+          "description": "Target folder?",
+          "type": "string",
+          "example": "folder_002"
+        },
+        "target_owner_id": {
+          "description": "Target all?",
+          "type": "string",
+          "example": "usr_456"
+        }
+      }
+    },
+    "dto.MultipartInitData": {
+      "type": "object",
+      "properties": {
+        "expires_in": {
+          "type": "integer",
+          "example": 3600
+        },
+        "file_id": {
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.MultipartPartInfo"
+          }
+        },
+        "upload_id": {
+          "type": "string",
+          "example": "upload_abc123"
+        }
+      }
+    },
+    "dto.MultipartInitDataDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.MultipartInitData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.MultipartPartInfo": {
+      "type": "object",
+      "properties": {
+        "part_number": {
+          "type": "integer"
+        },
+        "part_path": {
+          "type": "string"
+        },
+        "part_size": {
+          "type": "integer"
+        },
+        "upload_url": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PresignedURLDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PresignedURLResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PresignedURLResponse": {
+      "description": "Presigned URL information",
+      "type": "object",
+      "properties": {
+        "expires_in": {
+          "description": "Validity period?",
+          "type": "integer",
+          "example": 3600
+        },
+        "url": {
+          "description": "Access URL",
+          "type": "string",
+          "example": "https://storage.example.com/..."
+        }
+      }
+    },
+    "dto.Problem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the business error code. Used for programmatic handling of specific error scenarios. Example: 30101001",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "Detail is a human-readable explanation for this specific error instance. May contain specific error details, e.g., \"Field 'email' is required\"",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Errors is a list of field-level validation errors (extension field). Follows Web API standard practice, each error contains field name and error message.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FieldViolation"
+          }
+        },
+        "i18n_args": {
+          "description": "I18nArgs are internationalization parameters. Used for dynamically filling translation templates.",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "i18n_key": {
+          "description": "I18nKey is the internationalization key. Used for client-side localization of error messages. Example: \"error.user_not_found\"",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Instance is the specific URI reference where the problem occurred. Usually the request URL, may include query parameters. Example: \"/api/v1/users?limit=invalid\"",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "RequestID is the unique request identifier. Used for log correlation and issue tracking. Example: \"req_550e8400-e29b-41d4-a716-446655440000\"",
+          "type": "string"
+        },
+        "retry_after": {
+          "description": "RetryAfter is used for 429 Too Many Requests responses. Indicates how many seconds the client should wait before retrying (RFC 6585).",
+          "type": "integer"
+        },
+        "service": {
+          "description": "Service is the service name. Used in microservice architecture to locate the error source. Example: \"auth-service\"",
+          "type": "string"
+        },
+        "span_id": {
+          "description": "SpanID is the current span identifier. Used for precise location of the current node in a distributed trace.",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status is the HTTP status code produced. Used by clients to distinguish problem types, does not change with Accept-Language. Example: 400, 401, 403, 404, 500",
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "Timestamp is the error occurrence time. ISO 8601 format. Example: \"2026-04-03T12:00:00Z\"",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title is a short, human-readable summary of the problem type. The same Type should always have the same Title (does not vary by instance). Example: \"Invalid Request Parameters\"",
+          "type": "string"
+        },
+        "trace_id": {
+          "description": "TraceID is the distributed trace identifier. Follows W3C Trace Context standard. Example: \"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01\"",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is a URI reference that identifies the problem type. When dereferenced, it should provide human-readable documentation. Example: \"https://api.example.com/errors/invalid-request\"",
+          "type": "string"
+        }
+      }
+    },
+    "dto.PublicEncryptionStatus": {
+      "type": "object",
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "example": "AES-256-GCM"
+        },
+        "encryption_at_rest": {
+          "type": "boolean",
+          "example": true
+        },
+        "encryption_in_transit": {
+          "type": "boolean",
+          "example": true
+        },
+        "key_management": {
+          "type": "string",
+          "example": "KMS"
+        }
+      }
+    },
+    "dto.PublicEncryptionStatusDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PublicEncryptionStatus"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PublicReport": {
+      "type": "object",
+      "properties": {
+        "access_level": {
+          "type": "string",
+          "example": "public"
+        },
+        "content_type": {
+          "type": "string",
+          "example": "application/pdf"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "2026 SOC2 Type II Audit Report"
+        },
+        "filename": {
+          "type": "string",
+          "example": "SOC2-Type-II-Report-2026.pdf"
+        },
+        "id": {
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "size": {
+          "type": "integer",
+          "example": 2048000
+        },
+        "title": {
+          "type": "string",
+          "example": "SOC2 Type II Report"
+        }
+      }
+    },
+    "dto.PublicReportListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.PublicReport"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for easy reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ShareDetailDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ShareDetailResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ShareDetailResponse": {
+      "description": "File share details",
+      "type": "object",
+      "properties": {
+        "access_count": {
+          "description": "Access count",
+          "type": "integer",
+          "example": 3
+        },
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "expires_at": {
+          "description": "Expiration time",
+          "type": "string",
+          "example": "2026-04-15T11:00:00Z"
+        },
+        "file_id": {
+          "description": "File ID",
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "file_name": {
+          "description": "File name",
+          "type": "string",
+          "example": "document.pdf"
+        },
+        "id": {
+          "description": "Share ID",
+          "type": "string",
+          "example": "share_abc123"
+        },
+        "max_access": {
+          "description": "Max access",
+          "type": "integer",
+          "example": 10
+        },
+        "token": {
+          "description": "Token",
+          "type": "string",
+          "example": "tkn_abc123"
+        }
+      }
+    },
+    "dto.ShareListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ShareResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for easy reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ShareResponse": {
+      "description": "Share list item info",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "expires_at": {
+          "description": "Expiration time",
+          "type": "string",
+          "example": "2026-04-15T11:00:00Z"
+        },
+        "file_id": {
+          "description": "File ID",
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "file_name": {
+          "description": "File name",
+          "type": "string",
+          "example": "document.pdf"
+        },
+        "id": {
+          "description": "Share ID",
+          "type": "string",
+          "example": "share_abc123"
+        }
+      }
+    },
+    "dto.StorageQuotaDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.StorageQuotaResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.StorageQuotaResponse": {
+      "description": "Storage quota info",
+      "type": "object",
+      "properties": {
+        "available_bytes": {
+          "description": "Available",
+          "type": "integer",
+          "example": 96636764160
+        },
+        "bucket_quotas": {
+          "description": "Bucket quota?",
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "quota_bytes": {
+          "description": "Quota",
+          "type": "integer",
+          "example": 107374182400
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "usage_percent": {
+          "description": "Usage percentage",
+          "type": "number"
+        },
+        "used_bytes": {
+          "description": "Used",
+          "type": "integer",
+          "example": 10737418240
+        }
+      }
+    },
+    "dto.StorageStatsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.StorageStatsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.StorageStatsResponse": {
+      "description": "Storage usage statistics",
+      "type": "object",
+      "properties": {
+        "mime_types": {
+          "description": "By type?",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.MimeTypeStat"
+          }
+        },
+        "total_files": {
+          "description": "Total file count",
+          "type": "integer",
+          "example": 50000
+        },
+        "total_size": {
+          "description": "Total size?",
+          "type": "integer",
+          "example": 536870912000
+        }
+      }
+    },
+    "dto.StorageTrendItem": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "example": "2026-05-20"
+        },
+        "used_bytes": {
+          "type": "integer",
+          "example": 10737418240
+        }
+      }
+    },
+    "dto.StorageTrendsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.StorageTrendsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.StorageTrendsResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.StorageTrendItem"
+          }
+        },
+        "period": {
+          "type": "string",
+          "example": "day"
+        },
+        "updated": {
+          "type": "string",
+          "example": "2026-05-26T10:00:00Z"
+        }
+      }
+    },
+    "dto.TenantUsageDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.TenantUsageResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TenantUsageResponse": {
+      "type": "object",
+      "properties": {
+        "file_count": {
+          "type": "integer",
+          "example": 250
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "used_bytes": {
+          "type": "integer",
+          "example": 1073741824
+        }
+      }
+    },
+    "dto.UpdateBucketRequest": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "is_default": {
+          "type": "boolean"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdateFileNameRequest": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "name": {
+          "type": "string",
+          "example": "new-name.pdf"
+        }
+      }
+    },
+    "dto.UpdateFileVisibilityRequest": {
+      "description": "Update file visibility request parameters",
+      "type": "object",
+      "required": [
+        "visibility"
+      ],
+      "properties": {
+        "visibility": {
+          "description": "Visibility?",
+          "type": "string",
+          "enum": [
+            "private",
+            "public"
+          ],
+          "example": "public"
+        }
+      }
+    },
+    "dto.UpdateFolderNameRequest": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "New Folder Name"
+        }
+      }
+    },
+    "dto.UpdateStorageQuotaRequest": {
+      "description": "Update storage quota request parameters",
+      "type": "object",
+      "required": [
+        "quota_bytes"
+      ],
+      "properties": {
+        "quota_bytes": {
+          "description": "New quota?",
+          "type": "integer",
+          "example": 214748364800
+        }
+      }
+    },
+    "dto.UploadFileDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.UploadFileResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UploadFileResponse": {
+      "description": "File upload result",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "description": "Upload time",
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "file_id": {
+          "description": "File ID",
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "file_name": {
+          "description": "File count",
+          "type": "string",
+          "example": "document.pdf"
+        },
+        "size": {
+          "description": "File size",
+          "type": "integer",
+          "example": 204800
+        },
+        "thumbnail_url": {
+          "description": "Thumbnail?",
+          "type": "string",
+          "example": "https://..."
+        },
+        "url": {
+          "description": "Access URL",
+          "type": "string",
+          "example": "https://storage.example.com/..."
+        }
+      }
+    },
+    "dto.UploadURLInfo": {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "file_id": {
+          "type": "string",
+          "example": "file_abc123"
+        },
+        "upload_url": {
+          "type": "string",
+          "example": "https://minio:9000/bucket/object?signature=..."
+        }
+      }
+    },
+    "dto.WatermarkRequest": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "properties": {
+        "font_size": {
+          "type": "integer",
+          "example": 48
+        },
+        "opacity": {
+          "type": "number",
+          "example": 0.3
+        },
+        "position": {
+          "type": "string",
+          "example": "center"
+        },
+        "text": {
+          "type": "string",
+          "example": "Confidential"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_storage-service_internal_handler_dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "File storage: upload, download, bucket management",
+      "name": "Storage Service"
+    },
+    {
+      "description": "Public trust center: security status, compliance certificates, documentation",
+      "name": "Trust Center"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

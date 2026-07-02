@@ -1,0 +1,2245 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Payment processing service for AuthMS — handles payments, refunds, channels, webhooks, and reconciliation",
+    "title": "Pay Service API",
+    "contact": {},
+    "version": "1.0"
+  },
+  "basePath": "/bff/pay-service/api/v1",
+  "paths": {
+    "/admin/pay/integrity/{pay_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Recalculate the payment event hash chain one by one to verify ledger integrity. Return the break position if tampering is detected.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Verify Payment Event Ledger Integrity",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment ID",
+            "name": "pay_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification completed"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/payments/channels": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the list of all payment channel configurations for the current tenant. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "List Payment Channels",
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a payment channel configuration, supporting WeChat Pay, Alipay, Stripe, etc. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Create Payment Channel",
+        "parameters": [
+          {
+            "description": "Create channel request parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateChannelRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Created successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/payments/channels/{payment_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query detailed configuration of a payment channel by channel ID. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Get Payment Channel Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Channel ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment channel not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update payment channel configuration, name, status, or webhook secret. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Update Payment Channel",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Channel ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update channel request parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateChannelRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment channel not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified payment channel configuration. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Delete Payment Channel",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Channel ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment channel not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/payments/reconciliation": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Reconcile payment gateway records with internal records to detect amount discrepancies. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Execute Reconciliation",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment channel code",
+            "name": "channel",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start date (YYYY-MM-DD)",
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End date (YYYY-MM-DD)",
+            "name": "end_date",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reconciliation completed"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/payments/reconciliation/history": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the list of reconciliation history records, filterable by payment channel and time range. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "List Reconciliation History",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment channel code",
+            "name": "channel",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start date (YYYY-MM-DD)",
+            "name": "start",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End date (YYYY-MM-DD)",
+            "name": "end",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/payments/reconciliation/{payment_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified reconciliation record. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Delete Reconciliation Record",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Reconciliation record ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Reconciliation record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/payments/webhooks": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the list of payment gateway webhook callback records. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "List Webhook Records",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/payments/webhooks/{payment_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified webhook callback record. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Delete Webhook Record",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Webhook record ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Webhook record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/pay/seed-channels": {
+      "post": {
+        "description": "Create test payment channels for WeChat Pay, Alipay, and Stripe, for non-production environments only. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "internal"
+        ],
+        "summary": "Seed Data: Create Default Payment Channels (Development Only)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Created successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/payments": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the list of payment orders, filterable by application ID and status. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "List Payments",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Application ID",
+            "name": "app_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Payment status",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a payment order, specifying payment channel and amount. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Create Payment Order",
+        "parameters": [
+          {
+            "description": "Create payment request parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreatePaymentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Created successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment channel not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/payments/erase-user": {
+      "post": {
+        "description": "Internal service call: Erase all payment data for a specified user in the payment service, cancel pending payments, retain completed transactions for audit. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "internal"
+        ],
+        "summary": "[Internal] GDPR Erase User Payment Data",
+        "parameters": [
+          {
+            "description": "Erase request parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.EraseUserPaymentDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Erase successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/payments/export-user-data": {
+      "post": {
+        "description": "Internal service call: Export all payment data for a specified user in the payment service for GDPR data portability. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "internal"
+        ],
+        "summary": "[Internal] Export User Payment Data",
+        "parameters": [
+          {
+            "description": "Export request parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExportUserPaymentDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/payments/refund": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a refund for a paid order. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Create Refund",
+        "parameters": [
+          {
+            "description": "Refund request parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RefundRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Refund successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment order not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Refund conflict (duplicate refund or status not satisfied)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid refund amount",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/payments/{payment_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query detailed information of a payment order by payment ID. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Get Payment Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment order not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/runtime": {
+      "get": {
+        "description": "Return runtime information of the payment service, including version, startup time, running status, etc. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "internal"
+        ],
+        "summary": "Get Service Runtime Info",
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/schedulers": {
+      "get": {
+        "description": "Return the running status of all background schedulers in the current service.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "internal"
+        ],
+        "summary": "List Scheduler Statuses",
+        "responses": {
+          "200": {
+            "description": "Query successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-any"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/payments": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the list of payment orders, filterable by application ID and status. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "List Payments",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Application ID",
+            "name": "app_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Payment status",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a payment order, specifying payment channel and amount. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Create Payment Order",
+        "parameters": [
+          {
+            "description": "Create payment request parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreatePaymentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Created successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment channel not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid amount",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/payments/refund": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a refund for a paid order. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Create Refund",
+        "parameters": [
+          {
+            "description": "Refund request parameters",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RefundRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Refund successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment order not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Refund conflict (duplicate refund or status not satisfied)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid refund amount",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/payments/return/{channel}": {
+      "get": {
+        "description": "Receive synchronous callback from payment gateway (browser redirect after user completes payment), look up the payment order and redirect to the frontend result page via 302.",
+        "produces": [
+          "text/html"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Payment Gateway Return Callback",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment channel code (e.g., wechat, alipay, stripe)",
+            "name": "channel",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Payment order ID",
+            "name": "order_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Payment status (success/fail/pending)",
+            "name": "status",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to frontend result page"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/payments/{payment_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query detailed information of a payment order by payment ID. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Get Payment Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment order not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Cancel a pending payment order. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Cancel Payment",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cancelled successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment order not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/payments/{payment_id}/invoice": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Generate an invoice record for a paid order. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Generate Invoice",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment ID",
+            "name": "payment_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Generated successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment order not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Invoice already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/payments/{payment_id}/receipt": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the receipt information of a completed payment order. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Get Payment Receipt",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment order not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/payments/{payment_id}/refund": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query refund details by refund ID, supports query by payment ID or refund ID. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Get Refund Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment ID or refund ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Refund record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/payments/{payment_id}/refunds": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query all refund records for a specified payment order. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "List Payment Refunds",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Payment order not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/refunds/{refund_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query refund details by refund ID, supports query by payment ID or refund ID. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Get Refund Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment ID or refund ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to perform operation",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Refund record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/payment/{channel}": {
+      "post": {
+        "description": "Receive and process webhook callback notifications from payment gateways (WeChat Pay, Alipay, Stripe, etc.), verify signature and update payment status. Reference: PCI DSS v4.0 Req 3.3 (Mask PAN), PCI DSS v4.0 Req 4 (Encrypt Transmission).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Payment Service"
+        ],
+        "summary": "Receive Payment Gateway Callback",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Payment channel code (e.g., wechat, alipay, stripe)",
+            "name": "channel",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Webhook signature (for verifying callback authenticity)",
+            "name": "X-Signature",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Received successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dto.CreateChannelRequest": {
+      "type": "object",
+      "required": [
+        "code",
+        "config",
+        "name"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "wechat"
+        },
+        "config": {
+          "type": "string",
+          "example": "{}"
+        },
+        "name": {
+          "type": "string",
+          "example": "WeChat Pay"
+        },
+        "webhook_secret": {
+          "type": "string",
+          "example": "whsec_abc"
+        }
+      }
+    },
+    "dto.CreatePaymentRequest": {
+      "type": "object",
+      "required": [
+        "amount",
+        "channel_code"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "100.00"
+        },
+        "channel_code": {
+          "type": "string",
+          "example": "wechat"
+        },
+        "currency": {
+          "type": "string",
+          "example": "CNY"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "example": "ik_abc123"
+        },
+        "item_description": {
+          "type": "string",
+          "example": "Account top-up"
+        },
+        "target_id": {
+          "type": "string",
+          "example": "wallet_target_id"
+        },
+        "target_type": {
+          "type": "string",
+          "example": "wallet_recharge"
+        }
+      }
+    },
+    "dto.DataResponse-any": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {},
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.EraseUserPaymentDataRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.ExportUserPaymentDataRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.FieldViolation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the error code (optional). Used by programs to identify error types, such as \"required\", \"format\", \"range\".",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is a human-readable error description. It should explain what rule was violated, e.g., \"Must be a valid email address\".",
+          "type": "string"
+        },
+        "field": {
+          "description": "Field is the path to the error field. Use dot notation for nested fields, e.g., \"user.email\" or \"addresses[0].city\".",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value is the value that caused the error (optional, used in development mode). May not be returned in production to avoid leaking sensitive information."
+        }
+      }
+    },
+    "dto.Problem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the business error code. Used by programs to handle specific error scenarios. Example: 30101001.",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "Detail is a human-readable explanation for this specific error instance. Can include specific error details, e.g., \"Field 'email' is required\".",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Errors is a list of field-level validation errors (extension field). Follows Web API standard practices, each error contains field name and error message.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FieldViolation"
+          }
+        },
+        "i18n_args": {
+          "description": "I18nArgs are internationalization parameters. Used to dynamically fill translation templates.",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "i18n_key": {
+          "description": "I18nKey is the internationalization key. Used for client-side localization of error messages. Example: \"error.user_not_found\".",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Instance is the specific URI reference where the problem occurred. Usually the request URL, may include query parameters. Example: \"/api/v1/users?limit=invalid\".",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "RequestID is the unique request identifier. Used for log correlation and issue tracking. Example: \"req_550e8400-e29b-41d4-a716-446655440000\".",
+          "type": "string"
+        },
+        "retry_after": {
+          "description": "RetryAfter is used for 429 Too Many Requests responses. Indicates the number of seconds the client should wait before retrying (RFC 6585).",
+          "type": "integer"
+        },
+        "service": {
+          "description": "Service is the service name. Used in microservice architectures to locate the error source. Example: \"auth-service\".",
+          "type": "string"
+        },
+        "span_id": {
+          "description": "SpanID is the current span identifier. Used to precisely locate the current node in a distributed trace.",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status is the HTTP status code generated. Used by clients to distinguish problem types, does not change with Accept-Language. Example: 400, 401, 403, 404, 500.",
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "Timestamp is the time when the error occurred. ISO 8601 format. Example: \"2026-04-03T12:00:00Z\".",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title is a short, human-readable summary of the problem type. The same Type should always have the same Title (does not vary per instance). Example: \"Invalid Request Parameters\".",
+          "type": "string"
+        },
+        "trace_id": {
+          "description": "TraceID is the distributed tracing identifier. Follows W3C Trace Context standard. Example: \"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01\".",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is a URI reference that identifies the problem type. When dereferenced, it should provide human-readable documentation. Example: \"https://api.example.com/errors/invalid-request\".",
+          "type": "string"
+        }
+      }
+    },
+    "dto.RefundRequest": {
+      "type": "object",
+      "required": [
+        "amount",
+        "payment_id"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "50.00"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "example": "ref_ik_abc123"
+        },
+        "payment_id": {
+          "type": "string",
+          "example": "pay_abc123"
+        },
+        "reason": {
+          "type": "string",
+          "example": "User refund request"
+        }
+      }
+    },
+    "dto.UpdateChannelRequest": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "type": "string",
+          "example": "{}"
+        },
+        "name": {
+          "type": "string",
+          "example": "WeChat Pay new"
+        },
+        "status": {
+          "type": "string",
+          "example": "active"
+        },
+        "webhook_secret": {
+          "type": "string",
+          "example": "whsec_xyz"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Payment operations: create, query, capture, cancel",
+      "name": "payments"
+    },
+    {
+      "description": "Refund operations: create, query, status tracking",
+      "name": "refunds"
+    },
+    {
+      "description": "Webhook management: registration, delivery, retry",
+      "name": "webhooks"
+    },
+    {
+      "description": "Reconciliation: daily settlement, discrepancy detection",
+      "name": "reconciliation"
+    },
+    {
+      "description": "Payment channel configuration and management",
+      "name": "channels"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

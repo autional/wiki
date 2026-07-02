@@ -1,0 +1,5948 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Notification service providing management and sending capabilities for multiple notification channels such as email, SMS, and push notifications.",
+    "title": "Notification Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/notification-service/api/v1",
+  "paths": {
+    "/admin/announcements": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new announcement, supporting draft/scheduled publishing, with the ability to specify target tenants and roles. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Create Announcement",
+        "parameters": [
+          {
+            "description": "Create Announcement Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateAnnouncementRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.AnnouncementDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/announcements/{announcement_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Edit a specified announcement (editable only in draft status). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Update Announcement",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Announcement ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update Announcement Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateAnnouncementRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.AnnouncementDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified announcement (deletable only in draft status). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Delete Announcement",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Announcement ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_notification-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/announcements/{announcement_id}/publish": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Publish an announcement from draft/scheduled status to published, pushing notifications to target users. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Publish Announcement",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Announcement ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Published successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.AnnouncementDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/announcements/{announcement_id}/unpublish": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Withdraw a published announcement back to draft status (unpublish). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Withdraw Announcement",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Announcement ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Withdrawn successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.AnnouncementDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin queries notification history for a specified user by user_id, supporting filtering by type, read status, and date range.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Admin List User Notifications",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Notification type",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Read status",
+            "name": "is_read",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start date",
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End date",
+            "name": "end_date",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification list",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-dto_NotificationResponse"
+            }
+          },
+          "400": {
+            "description": "Missing user_id parameter",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/broadcast": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send notification messages to all users under a tenant or a specified user group, suitable for system maintenance notifications, security alerts, etc. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Broadcast Notification",
+        "parameters": [
+          {
+            "description": "Broadcast Notification Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BroadcastNotificationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Broadcast sent successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.BroadcastNotificationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/event-mappings": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a mapping relationship between event types and notification templates. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Create Event Mapping",
+        "parameters": [
+          {
+            "description": "Create Event Mapping Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateEventMappingRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.EventMappingDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/event-mappings/{announcement_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the event mapping configuration for a specified ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Update Event Mapping",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Event Mapping ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update Event Mapping Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateEventMappingRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.EventMappingDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete the event mapping for a specified ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Delete Event Mapping",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Event Mapping ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_notification-service_internal_handler_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/global-variables": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create tenant/application-level global variables (e.g., brand name, support email). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Create Global Variable",
+        "parameters": [
+          {
+            "description": "Create Global Variable Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateGlobalVariableRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.GlobalVariableDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/global-variables/{announcement_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the value of a global variable for a specified ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Update Global Variable",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Global Variable ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update Global Variable Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateGlobalVariableRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.GlobalVariableDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete the global variable for a specified ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Delete Global Variable",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Global Variable ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_notification-service_internal_handler_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/platform-stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Retrieve aggregated notification statistics (sends, reads, etc.) for all tenants on the platform. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get Platform Notification Statistics",
+        "responses": {
+          "200": {
+            "description": "Statistics result",
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationStatsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/preferences/{user_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admin sets notification channel preferences (email/SMS/Push, etc.) for a specified user.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Admin Override User Notification Preferences",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Preference settings request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationPreferencesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preferences set successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_NotificationPreferencesResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/templates": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new notification template for sending notifications based on the template. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Create Notification Template",
+        "parameters": [
+          {
+            "description": "Create Template Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateTemplateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.TemplateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/templates/{announcement_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the content of a notification template for a specified ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Update Notification Template",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update Template Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateTemplateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.TemplateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete the notification template for a specified ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Delete Notification Template",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_notification-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/notifications/templates/{announcement_id}/clone-to-locale": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Copy a specified template to a target locale for internationalization support. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Cross-locale Copy Template",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Cross-locale Copy Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CloneTemplateToLocaleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Copied successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.TemplateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/announcements": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of announcement list, supporting filtering by status and keyword search. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "List Announcements",
+        "parameters": [
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Status filter: draft/scheduled/published/expired",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Search keyword",
+            "name": "search",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Announcement list",
+            "schema": {
+              "$ref": "#/definitions/dto.AnnouncementListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/announcements/{announcement_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get detailed information of a specified announcement, including read statistics (views/dismissals). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get Announcement Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Announcement ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Announcement details",
+            "schema": {
+              "$ref": "#/definitions/dto.AnnouncementDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/announcements/{announcement_id}/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get read/delivery statistics for a specified announcement. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get Announcement Statistics",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Announcement ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Statistics result",
+            "schema": {
+              "$ref": "#/definitions/dto.AnnouncementStatsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/notification/export-user-data": {
+      "post": {
+        "description": "Export all notification records and preference settings by tenant and user ID (GDPR-compliant data export). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service - Internal"
+        ],
+        "summary": "Export User Data",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Export Data Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExportUserDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exported successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_ExportUserDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/notification/notifications/erase-user": {
+      "post": {
+        "description": "Erase all notification data for a specified user according to the compliance-service erasure flow. Internal API, protected by InternalAPIKeyMulti.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service - Internal"
+        ],
+        "summary": "GDPR Erase User Notifications",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Erasure Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.EraseUserNotificationsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Erased successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "No valid X-API-Key provided",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/notification/notifications/send-by-event": {
+      "post": {
+        "description": "Internal API to send notification to a specified user based on event type. Protected by InternalAPIKeyMulti + ExtractTenantFromHeaderStrict.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service - Internal"
+        ],
+        "summary": "Send Notification by Event Type",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Event Notification Request {event_type:string, user_id:string, variables:map, metadata:map}",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sent successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_NotificationResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "No valid X-API-Key provided",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/notification/push/send": {
+      "post": {
+        "description": "Send VAPID-signed Web Push notification message to a specified user's device (internal API). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service - Internal"
+        ],
+        "summary": "Internal Push Notification Send",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Internal Push Send Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.InternalPushSendRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sent successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.PushSendDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/notification/templates": {
+      "post": {
+        "description": "Internal API called by seed script to create a template by passing template title, locale, etc. in the request body. Protected by InternalAPIKeyMulti.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service - Internal"
+        ],
+        "summary": "Internal Create Notification Template",
+        "parameters": [
+          {
+            "description": "Create Template Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.InternalCreateTemplateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_TemplateResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "No valid X-API-Key provided",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/runtime": {
+      "get": {
+        "description": "Return service runtime information, including scheduler status, version, uptime, etc. (internal API). Protected by InternalAPIKeyMulti.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service - Internal"
+        ],
+        "summary": "Runtime Info",
+        "responses": {
+          "200": {
+            "description": "Runtime information",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "No valid X-API-Key provided",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Health check service unavailable",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the current user's received notification list, supporting filtering by unread only. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get Notification List",
+        "parameters": [
+          {
+            "type": "boolean",
+            "description": "Filter unread notifications only",
+            "name": "unread_only",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification list",
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send a notification message to a specified user, supporting multiple notification types, recording send status and triggering event notifications. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Send Notification",
+        "parameters": [
+          {
+            "description": "Send Notification Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SendNotificationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sent successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/event-mappings": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the list of all event mappings for the current tenant. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "List Event Mappings",
+        "responses": {
+          "200": {
+            "description": "Event mapping list",
+            "schema": {
+              "$ref": "#/definitions/dto.EventMappingListResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/event-mappings/{announcement_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get details of a specified event mapping by ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get Event Mapping",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Event Mapping ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.EventMappingDetailResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/global-variables": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the list of all global variables for the current tenant. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "List Global Variables",
+        "responses": {
+          "200": {
+            "description": "Global variable list",
+            "schema": {
+              "$ref": "#/definitions/dto.GlobalVariableListResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/global-variables/{announcement_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get details of a specified global variable by ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get Global Variable",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Global Variable ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.GlobalVariableDetailResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/preferences/{user_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get notification receiving preferences for a specified user, including channel toggles, do-not-disturb periods, etc. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get Notification Preferences",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preference settings",
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationPreferencesDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update notification receiving preferences for a specified user, including toggles for in-app, email, SMS, push, etc. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Update Notification Preferences",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Preference settings",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationPreferencesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationPreferencesDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/public/security-confirm": {
+      "get": {
+        "description": "Trust Center public endpoint. Users call this endpoint after clicking the confirmation link in the email to complete subscription confirmation. Requires email and token parameters. Protected by IP-level rate limiting.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Compliance Management - Trust Center"
+        ],
+        "summary": "Confirm Security Bulletin Subscription",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Subscription email",
+            "name": "email",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Confirmation token",
+            "name": "token",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Confirmed successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Missing email or token",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/public/security-subscribe": {
+      "post": {
+        "description": "Trust Center: Public subscription to security bulletins and compliance updates (no authentication). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Compliance Management - Trust Center"
+        ],
+        "summary": "Subscribe to Security Bulletins",
+        "parameters": [
+          {
+            "description": "Subscription request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SecuritySubscribeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscribed successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SecuritySubscribeDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/public/security-unsubscribe": {
+      "post": {
+        "description": "Trust Center: Public unsubscription from security bulletins (no authentication). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Compliance Management - Trust Center"
+        ],
+        "summary": "Unsubscribe from Security Bulletins",
+        "parameters": [
+          {
+            "description": "Unsubscription request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SecurityUnsubscribeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unsubscribed successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SecurityUnsubscribeDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/read-all": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Mark all unread notifications of the current user as read at once. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Mark All Notifications Read",
+        "responses": {
+          "200": {
+            "description": "All marked successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_notification-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/read-report": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Calculate read count, unread count, read rate, and other operational metrics based on real notification records in the database. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get Notification Read/Unread Report",
+        "responses": {
+          "200": {
+            "description": "Read report",
+            "schema": {
+              "$ref": "#/definitions/dto.ReadReportDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/send": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Compatibility endpoint with same functionality as /notifications, sends notification to specified user. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Send Notification (Compatibility Endpoint)",
+        "parameters": [
+          {
+            "description": "Send Notification Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SendNotificationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sent successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SendNotificationCompatDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/send-batch": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send the same notification message to multiple users simultaneously, suitable for system announcements, operational activities, etc. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Batch Send Notification",
+        "parameters": [
+          {
+            "description": "Batch Send Notification Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchSendNotificationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Batch sent successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchSendNotificationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/send-from-template": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send notification to user using a specified template, supporting template variable substitution. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Send Notification Using Template",
+        "parameters": [
+          {
+            "description": "Send Using Template Request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SendFromTemplateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sent successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get aggregated statistics of notification sending, delivery, and reading for the current tenant. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get notification statistics",
+        "responses": {
+          "200": {
+            "description": "Statistics result",
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationStatsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/stream": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Push notifications in real-time via Server-Sent Events. The client must pass the user_id query parameter to subscribe. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/event-stream"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "SSE real-time notification stream",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE event stream"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/templates": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get a list of all notification templates, with an option to include disabled templates. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "List notification templates",
+        "parameters": [
+          {
+            "type": "boolean",
+            "description": "Include disabled templates",
+            "name": "include_inactive",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Notification type filter",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template list",
+            "schema": {
+              "$ref": "#/definitions/dto.TemplateListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/templates/available": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return an aggregated list of platform default templates and custom templates for this tenant. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "List available templates",
+        "responses": {
+          "200": {
+            "description": "Available template list",
+            "schema": {
+              "$ref": "#/definitions/dto.AvailableTemplateListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/templates/{announcement_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get details of a notification template by ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get notification template",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template details",
+            "schema": {
+              "$ref": "#/definitions/dto.TemplateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/test": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send a test notification to the specified channel and target, creating a test notification record in the database to verify the notification service configuration. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Send test notification",
+        "parameters": [
+          {
+            "description": "Test notification request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.TestNotificationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test notification sent",
+            "schema": {
+              "$ref": "#/definitions/dto.TestNotificationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/trend": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return trend data of daily notification sent and read counts within the specified number of days. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get notification trends",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Days (default 30)",
+            "name": "days",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Trend data",
+            "schema": {
+              "$ref": "#/definitions/dto.TrendResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/unread": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get a list of all unread notifications for the current user. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get unread notification list",
+        "responses": {
+          "200": {
+            "description": "Unread notification list",
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/unread-count": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the count of unread notifications and the time of the last notification for the current user. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get unread notification count",
+        "responses": {
+          "200": {
+            "description": "Unread count",
+            "schema": {
+              "$ref": "#/definitions/dto.UnreadCountDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/{notification_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get detailed information of a specified notification.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get notification details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Notification ID",
+            "name": "notification_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification details",
+            "schema": {
+              "$ref": "#/definitions/dto.NotificationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a notification record by ID (soft validation of user ID match). Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Delete notification",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Notification ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Delete notification request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.DeleteNotificationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DeleteNotificationDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/{notification_id}/read": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Mark a specified notification as read, recording the read time. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Mark notification as read",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Notification ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Marked successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.MarkReadDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/notifications/{notification_id}/unread": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Mark a specified notification as unread. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Mark notification as unread",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Notification ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Marked successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_notification-service_internal_handler_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/push/subscriptions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the current user's Web Push subscription list. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "List push subscriptions",
+        "responses": {
+          "200": {
+            "description": "Subscription list",
+            "schema": {
+              "$ref": "#/definitions/dto.PushSubscriptionListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Register a Web Push subscription (RFC 8030 VAPID) to receive push notifications. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Register Web Push subscription",
+        "parameters": [
+          {
+            "description": "Push subscription request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.PushSubscriptionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Registered successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.PushSubscriptionDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a Web Push subscription by endpoint. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Delete push subscription",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Subscription endpoint URL",
+            "name": "endpoint",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/push/subscriptions/{id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get Web Push subscription details by ID.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get push subscription details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Subscription ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription details",
+            "schema": {
+              "$ref": "#/definitions/dto.PushSubscriptionDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/push/vapid-public-key": {
+      "get": {
+        "description": "Return the Web Push VAPID public key for the frontend to use when registering a push subscription. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get VAPID public key",
+        "responses": {
+          "200": {
+            "description": "VAPID public key",
+            "schema": {
+              "$ref": "#/definitions/dto.VapidPublicKeyDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dto.AnnouncementDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.AnnouncementResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.AnnouncementListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.AnnouncementResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.AnnouncementResponse": {
+      "description": "Announcement info response",
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "example": "The system will undergo upgrade maintenance on 2026-05-15"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-05-09T12:00:00Z"
+        },
+        "dismissals": {
+          "type": "integer",
+          "example": 5
+        },
+        "expire_at": {
+          "type": "string",
+          "example": "2026-05-20T12:00:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "ann_abc123"
+        },
+        "publish_at": {
+          "type": "string",
+          "example": "2026-05-10T12:00:00Z"
+        },
+        "status": {
+          "type": "string",
+          "example": "published"
+        },
+        "target_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "title": {
+          "type": "string",
+          "example": "System upgrade announcement"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-05-09T12:00:00Z"
+        },
+        "views": {
+          "type": "integer",
+          "example": 100
+        }
+      }
+    },
+    "dto.AnnouncementStatsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.AnnouncementStatsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.AnnouncementStatsResponse": {
+      "description": "Announcement read statistics",
+      "type": "object",
+      "properties": {
+        "dismissals": {
+          "type": "integer",
+          "example": 5
+        },
+        "views": {
+          "type": "integer",
+          "example": 100
+        }
+      }
+    },
+    "dto.AvailableTemplateListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.AvailableTemplateResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.AvailableTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "in_app"
+        },
+        "code": {
+          "type": "string",
+          "example": "welcome"
+        },
+        "is_customized": {
+          "type": "boolean",
+          "example": false
+        },
+        "locale": {
+          "type": "string",
+          "example": "zh-CN"
+        },
+        "name": {
+          "type": "string",
+          "example": "Welcome notification"
+        },
+        "source": {
+          "description": "platform | tenant",
+          "type": "string",
+          "example": "platform"
+        },
+        "status": {
+          "type": "string",
+          "example": "active"
+        },
+        "title": {
+          "type": "string"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.BatchSendNotificationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BatchSendNotificationResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchSendNotificationRequest": {
+      "description": "Batch send notification request parameters",
+      "type": "object",
+      "required": [
+        "content",
+        "title",
+        "user_ids"
+      ],
+      "properties": {
+        "content": {
+          "description": "Content",
+          "type": "string",
+          "example": "Your account has been successfully upgraded"
+        },
+        "priority": {
+          "description": "Priority",
+          "type": "string",
+          "example": "medium"
+        },
+        "title": {
+          "description": "Title",
+          "type": "string",
+          "example": "System notification"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "system"
+        },
+        "user_ids": {
+          "description": "User ID list",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "usr_001",
+            "usr_002"
+          ]
+        }
+      }
+    },
+    "dto.BatchSendNotificationResponse": {
+      "description": "Batch send notification result",
+      "type": "object",
+      "properties": {
+        "notification_ids": {
+          "description": "Notification ID list",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"ntf_001\"]"
+          ]
+        },
+        "sent_count": {
+          "description": "Sent count",
+          "type": "integer",
+          "example": 5
+        }
+      }
+    },
+    "dto.BroadcastNotificationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BroadcastNotificationResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BroadcastNotificationRequest": {
+      "description": "Request parameters for broadcasting notification to all tenants",
+      "type": "object",
+      "required": [
+        "content",
+        "title"
+      ],
+      "properties": {
+        "content": {
+          "description": "Content",
+          "type": "string",
+          "example": "The system will undergo maintenance tonight from 22:00 to 23:00"
+        },
+        "title": {
+          "description": "Title",
+          "type": "string",
+          "example": "System announcement"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "system"
+        }
+      }
+    },
+    "dto.BroadcastNotificationResponse": {
+      "description": "Broadcast notification response result",
+      "type": "object",
+      "properties": {
+        "broadcast_id": {
+          "description": "Broadcast ID",
+          "type": "string",
+          "example": "broadcast-1234567890"
+        },
+        "content": {
+          "description": "Content",
+          "type": "string",
+          "example": "The system will undergo maintenance tonight from 22:00 to 23:00"
+        },
+        "recipients": {
+          "description": "Recipient count",
+          "type": "integer",
+          "example": 100
+        },
+        "title": {
+          "description": "Title",
+          "type": "string",
+          "example": "System announcement"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "system"
+        }
+      }
+    },
+    "dto.ChannelPref": {
+      "description": "Single notification channel preference",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enabled",
+          "type": "boolean",
+          "example": true
+        },
+        "quiet_hours_end": {
+          "description": "Do not disturb end",
+          "type": "string",
+          "example": "08:00"
+        },
+        "quiet_hours_start": {
+          "description": "Do not disturb start",
+          "type": "string",
+          "example": "22:00"
+        },
+        "types": {
+          "description": "Type",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"system\"",
+            "\"user\"]"
+          ]
+        }
+      }
+    },
+    "dto.ChannelPrefResponse": {
+      "description": "Channel preference response",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enabled",
+          "type": "boolean",
+          "example": true
+        },
+        "quiet_hours_end": {
+          "description": "Do not disturb end",
+          "type": "string",
+          "example": "08:00"
+        },
+        "quiet_hours_start": {
+          "description": "Do not disturb start",
+          "type": "string",
+          "example": "22:00"
+        },
+        "types": {
+          "description": "Type",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.CloneTemplateToLocaleRequest": {
+      "type": "object",
+      "required": [
+        "target_locale"
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "target_locale": {
+          "type": "string",
+          "example": "en-US"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateAnnouncementRequest": {
+      "description": "Create announcement request parameters",
+      "type": "object",
+      "required": [
+        "content",
+        "title"
+      ],
+      "properties": {
+        "content": {
+          "type": "string",
+          "example": "The system will undergo upgrade maintenance on 2026-05-15"
+        },
+        "expire_at": {
+          "type": "string",
+          "example": "2026-05-20T12:00:00Z"
+        },
+        "publish_at": {
+          "type": "string",
+          "example": "2026-05-10T12:00:00Z"
+        },
+        "target_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string",
+          "example": "System upgrade announcement"
+        }
+      }
+    },
+    "dto.CreateEventMappingRequest": {
+      "type": "object",
+      "required": [
+        "event_type",
+        "template_code"
+      ],
+      "properties": {
+        "channel": {
+          "type": "string"
+        },
+        "event_type": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string"
+        },
+        "template_code": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateGlobalVariableRequest": {
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CreateTemplateRequest": {
+      "description": "Create notification template request parameters",
+      "type": "object",
+      "required": [
+        "code",
+        "content",
+        "name",
+        "subject",
+        "type"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "example": "welcome_notification"
+        },
+        "content": {
+          "type": "string",
+          "example": "Dear {{user_name}}"
+        },
+        "format": {
+          "type": "string",
+          "example": "simple"
+        },
+        "name": {
+          "type": "string",
+          "example": "welcome_notification"
+        },
+        "subject": {
+          "type": "string",
+          "example": "Welcome to {{app_name}}"
+        },
+        "type": {
+          "type": "string",
+          "example": "system"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"user_name\"]"
+          ]
+        }
+      }
+    },
+    "dto.DataResponse-dto_ExportUserDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ExportUserDataResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_NotificationPreferencesResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.NotificationPreferencesResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_NotificationResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.NotificationResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_TemplateResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.TemplateResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DeleteNotificationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.DeleteNotificationResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DeleteNotificationRequest": {
+      "description": "Delete notification request parameters",
+      "type": "object",
+      "required": [
+        "notification_id",
+        "user_id"
+      ],
+      "properties": {
+        "notification_id": {
+          "description": "Notification ID",
+          "type": "string",
+          "example": "ntf_abc123"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.DeleteNotificationResponse": {
+      "description": "Delete notification result",
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "description": "Deleted successfully",
+          "type": "boolean",
+          "example": true
+        },
+        "notification_id": {
+          "description": "Notification ID",
+          "type": "string",
+          "example": "ntf_abc123"
+        }
+      }
+    },
+    "dto.EraseUserNotificationsRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.EventMappingDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.EventMappingResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.EventMappingListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.EventMappingResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.EventMappingResponse": {
+      "type": "object",
+      "properties": {
+        "app_id": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "event_type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_enabled": {
+          "type": "boolean"
+        },
+        "priority": {
+          "type": "string"
+        },
+        "template_code": {
+          "type": "string"
+        },
+        "tenant_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExportUserDataRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExportUserDataResponse": {
+      "type": "object",
+      "properties": {
+        "notifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.NotificationResponse"
+          }
+        },
+        "preferences": {
+          "$ref": "#/definitions/dto.NotificationPreferencesResponse"
+        }
+      }
+    },
+    "dto.GlobalVariableDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.GlobalVariableResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.GlobalVariableListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.GlobalVariableResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.GlobalVariableResponse": {
+      "type": "object",
+      "properties": {
+        "app_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.InternalCreateTemplateRequest": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "locale": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.InternalPushSendRequest": {
+      "type": "object",
+      "required": [
+        "body",
+        "title"
+      ],
+      "properties": {
+        "body": {
+          "type": "string",
+          "example": "Login from Beijing - Approve?"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "title": {
+          "type": "string",
+          "example": "New Login Attempt"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user-001"
+        }
+      }
+    },
+    "dto.ListResponse-dto_NotificationResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.NotificationResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.MarkReadDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.MarkReadResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.MarkReadResponse": {
+      "description": "Mark as read result",
+      "type": "object",
+      "properties": {
+        "marked_count": {
+          "description": "Marked count",
+          "type": "integer",
+          "example": 5
+        },
+        "success": {
+          "description": "Success",
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "dto.NotificationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.NotificationResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.NotificationListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.NotificationResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.NotificationPreferencesDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.NotificationPreferencesResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.NotificationPreferencesRequest": {
+      "description": "Update notification preference request parameters",
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "channels": {
+          "description": "Channel settings",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/dto.ChannelPref"
+          }
+        },
+        "email_enabled": {
+          "description": "Email enabled",
+          "type": "boolean",
+          "example": true
+        },
+        "push_enabled": {
+          "description": "Push enabled",
+          "type": "boolean",
+          "example": true
+        },
+        "sms_enabled": {
+          "description": "SMS enabled",
+          "type": "boolean",
+          "example": false
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.NotificationPreferencesResponse": {
+      "description": "User notification preference settings",
+      "type": "object",
+      "properties": {
+        "channels": {
+          "description": "Channel settings",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/dto.ChannelPrefResponse"
+          }
+        },
+        "email_enabled": {
+          "description": "Email enabled",
+          "type": "boolean",
+          "example": true
+        },
+        "push_enabled": {
+          "description": "Push enabled",
+          "type": "boolean",
+          "example": true
+        },
+        "quiet_hours": {
+          "description": "Do not disturb period",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/dto.ChannelPrefResponse"
+          }
+        },
+        "sms_enabled": {
+          "description": "SMS enabled",
+          "type": "boolean",
+          "example": false
+        },
+        "type_prefs": {
+          "description": "Notification type preference",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/dto.ChannelPrefResponse"
+          }
+        },
+        "updated_at": {
+          "description": "Update time",
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.NotificationResponse": {
+      "description": "Notification info response",
+      "type": "object",
+      "properties": {
+        "action_url": {
+          "description": "Action link",
+          "type": "string",
+          "example": "/security"
+        },
+        "content": {
+          "description": "Content",
+          "type": "string",
+          "example": "Your account has been successfully upgraded"
+        },
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "event_type": {
+          "type": "string",
+          "example": "status.incident.created"
+        },
+        "id": {
+          "description": "Notification ID",
+          "type": "string",
+          "example": "ntf_abc123"
+        },
+        "is_read": {
+          "description": "Is read",
+          "type": "boolean",
+          "example": false
+        },
+        "metadata": {
+          "description": "Metadata JSON",
+          "type": "string",
+          "example": "{\"ip\":\"1.2.3.4\"}"
+        },
+        "priority": {
+          "description": "Priority",
+          "type": "string",
+          "example": "medium"
+        },
+        "read_at": {
+          "description": "Read time",
+          "type": "string",
+          "example": "2026-04-15T11:00:00Z"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "title": {
+          "description": "Title",
+          "type": "string",
+          "example": "System notification"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "system"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.NotificationStatsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.NotificationStatsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.NotificationStatsResponse": {
+      "description": "Notification send and read statistics (notification layer does not track delivery status, only read/unread)",
+      "type": "object",
+      "properties": {
+        "by_type": {
+          "description": "By type",
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "read_rate": {
+          "description": "Read rate",
+          "type": "number",
+          "example": 0.45
+        },
+        "total_read": {
+          "description": "Total read",
+          "type": "integer",
+          "example": 450
+        },
+        "total_sent": {
+          "description": "Total sent",
+          "type": "integer",
+          "example": 1000
+        }
+      }
+    },
+    "dto.PushSendDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PushSendResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PushSendResponse": {
+      "type": "object",
+      "properties": {
+        "failed": {
+          "type": "integer",
+          "example": 0
+        },
+        "sent": {
+          "type": "integer",
+          "example": 3
+        },
+        "total": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    },
+    "dto.PushSubscriptionDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PushSubscriptionResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PushSubscriptionKeys": {
+      "type": "object",
+      "required": [
+        "auth",
+        "p256dh"
+      ],
+      "properties": {
+        "auth": {
+          "type": "string",
+          "example": "xK2s9..."
+        },
+        "p256dh": {
+          "type": "string",
+          "example": "BP7S2s9..."
+        }
+      }
+    },
+    "dto.PushSubscriptionListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.PushSubscriptionResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.PushSubscriptionRequest": {
+      "type": "object",
+      "required": [
+        "endpoint",
+        "keys"
+      ],
+      "properties": {
+        "device_name": {
+          "type": "string",
+          "example": "Chrome on Windows"
+        },
+        "device_type": {
+          "type": "string",
+          "example": "web"
+        },
+        "endpoint": {
+          "type": "string",
+          "example": "https://fcm.googleapis.com/fcm/send/..."
+        },
+        "keys": {
+          "$ref": "#/definitions/dto.PushSubscriptionKeys"
+        },
+        "user_agent": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PushSubscriptionResponse": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-05-12T12:00:00Z"
+        },
+        "device_name": {
+          "type": "string",
+          "example": "Chrome on Windows"
+        },
+        "device_type": {
+          "type": "string",
+          "example": "web"
+        },
+        "endpoint": {
+          "type": "string",
+          "example": "https://fcm.googleapis.com/fcm/send/..."
+        },
+        "id": {
+          "type": "string",
+          "example": "sub-abc123"
+        }
+      }
+    },
+    "dto.ReadReportDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ReadReportResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ReadReportResponse": {
+      "description": "Notification read/unread statistics report",
+      "type": "object",
+      "properties": {
+        "read_count": {
+          "description": "Read",
+          "type": "integer",
+          "example": 450
+        },
+        "read_rate": {
+          "description": "Read rate",
+          "type": "number",
+          "example": 0.45
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tenant-001"
+        },
+        "total_sent": {
+          "description": "Total sent",
+          "type": "integer",
+          "example": 1000
+        },
+        "unread_count": {
+          "description": "Unread",
+          "type": "integer",
+          "example": 550
+        }
+      }
+    },
+    "dto.SecuritySubscribeDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.SecuritySubscribeResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.SecuritySubscribeRequest": {
+      "type": "object",
+      "required": [
+        "email"
+      ],
+      "properties": {
+        "captcha_provider": {
+          "type": "string"
+        },
+        "captcha_token": {
+          "type": "string"
+        },
+        "company": {
+          "type": "string",
+          "example": "Example Inc"
+        },
+        "email": {
+          "type": "string",
+          "example": "security@example.com"
+        },
+        "topics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"security_advisory\"",
+            "\"compliance_update\"]"
+          ]
+        }
+      }
+    },
+    "dto.SecuritySubscribeResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Confirmation email sent"
+        },
+        "status": {
+          "type": "string",
+          "example": "pending_confirmation"
+        }
+      }
+    },
+    "dto.SecurityUnsubscribeDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.SecurityUnsubscribeResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.SecurityUnsubscribeRequest": {
+      "type": "object",
+      "required": [
+        "email"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "security@example.com"
+        },
+        "token": {
+          "type": "string",
+          "example": "unsub_token_abc123"
+        }
+      }
+    },
+    "dto.SecurityUnsubscribeResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Unsubscribed"
+        },
+        "status": {
+          "type": "string",
+          "example": "unsubscribed"
+        }
+      }
+    },
+    "dto.SendFromTemplateRequest": {
+      "description": "Send notification using template request parameters",
+      "type": "object",
+      "required": [
+        "template_id",
+        "user_id",
+        "variables"
+      ],
+      "properties": {
+        "template_id": {
+          "description": "Template ID",
+          "type": "string",
+          "example": "tpl_abc123"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "variables": {
+          "description": "Variables",
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "dto.SendNotificationCompatDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.SendNotificationCompatResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.SendNotificationCompatResponse": {
+      "description": "Send notification response result (compatible endpoint)",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Notification ID",
+          "type": "string",
+          "example": "notif-1234567890"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "sent"
+        }
+      }
+    },
+    "dto.SendNotificationRequest": {
+      "description": "Send notification request parameters",
+      "type": "object",
+      "required": [
+        "content",
+        "title",
+        "user_id"
+      ],
+      "properties": {
+        "aggregation_key": {
+          "description": "Aggregation key (notifications with the same key are aggregated into one)",
+          "type": "string",
+          "example": "new_follower"
+        },
+        "content": {
+          "description": "Content",
+          "type": "string",
+          "example": "Your account has been successfully upgraded"
+        },
+        "metadata": {
+          "description": "Metadata",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "priority": {
+          "description": "Priority",
+          "type": "string",
+          "example": "medium"
+        },
+        "title": {
+          "description": "Title",
+          "type": "string",
+          "example": "System notification"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "system"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.TemplateDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.TemplateResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TemplateListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.TemplateResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.TemplateResponse": {
+      "description": "Notification template info",
+      "type": "object",
+      "properties": {
+        "content": {
+          "description": "Content",
+          "type": "string",
+          "example": "Dear {{user_name}}, welcome to {{app_name}}!"
+        },
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-01-01T00:00:00Z"
+        },
+        "name": {
+          "description": "Template name",
+          "type": "string",
+          "example": "welcome_notification"
+        },
+        "subject": {
+          "description": "Subject",
+          "type": "string",
+          "example": "Welcome to {{app_name}}"
+        },
+        "template_id": {
+          "description": "Template ID",
+          "type": "string",
+          "example": "tpl_abc123"
+        },
+        "type": {
+          "description": "Type",
+          "type": "string",
+          "example": "system"
+        },
+        "variables": {
+          "description": "Variables",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"user_name\"",
+            "\"app_name\"]"
+          ]
+        }
+      }
+    },
+    "dto.TestNotificationDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.TestNotificationResponse"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TestNotificationRequest": {
+      "description": "Send test notification request parameters",
+      "type": "object",
+      "required": [
+        "channel",
+        "target"
+      ],
+      "properties": {
+        "channel": {
+          "description": "Channel",
+          "type": "string",
+          "example": "email"
+        },
+        "target": {
+          "description": "Target",
+          "type": "string",
+          "example": "user@example.com"
+        }
+      }
+    },
+    "dto.TestNotificationResponse": {
+      "description": "Test notification send result",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "description": "Channel",
+          "type": "string",
+          "example": "email"
+        },
+        "status": {
+          "description": "Status",
+          "type": "string",
+          "example": "sent"
+        },
+        "target": {
+          "description": "Target",
+          "type": "string",
+          "example": "user@example.com"
+        },
+        "test_id": {
+          "description": "Test ID",
+          "type": "string",
+          "example": "test-1234567890"
+        }
+      }
+    },
+    "dto.TrendPoint": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "example": "2026-06-04"
+        },
+        "read": {
+          "type": "integer",
+          "example": 30
+        },
+        "sent": {
+          "type": "integer",
+          "example": 45
+        }
+      }
+    },
+    "dto.TrendResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.TrendPoint"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination info (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.UnreadCountDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.UnreadCountResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UnreadCountResponse": {
+      "description": "User unread notification count",
+      "type": "object",
+      "properties": {
+        "last_notification_at": {
+          "description": "Last notification",
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "unread_count": {
+          "description": "Unread count",
+          "type": "integer",
+          "example": 5
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.UpdateAnnouncementRequest": {
+      "description": "Update announcement request parameters (only editable in draft status)",
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "expire_at": {
+          "type": "string"
+        },
+        "publish_at": {
+          "type": "string"
+        },
+        "target_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdateEventMappingRequest": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string"
+        },
+        "is_enabled": {
+          "type": "boolean"
+        },
+        "priority": {
+          "type": "string"
+        },
+        "template_code": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdateGlobalVariableRequest": {
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdateTemplateRequest": {
+      "description": "Update notification template request parameters (all fields optional)",
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.VapidPublicKeyDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.VapidPublicKeyResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.VapidPublicKeyResponse": {
+      "description": "Web Push VAPID public key, used by the frontend when registering a push subscription",
+      "type": "object",
+      "properties": {
+        "public_key": {
+          "description": "VAPID public key",
+          "type": "string",
+          "example": "BEL5Oa..."
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_notification-service_internal_handler_dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Notification management: templates, sending, delivery tracking",
+      "name": "Notification Service"
+    },
+    {
+      "description": "Announcement management: create, publish, subscribe",
+      "name": "Announcement Service"
+    },
+    {
+      "description": "Public trust center: security status, compliance certificates, documents",
+      "name": "Trust Center"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

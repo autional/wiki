@@ -1,0 +1,4278 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Communication service, providing integration and management of multiple communication channels such as SMS, email, and push notifications.",
+    "title": "Communication Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/communication-service/api/v1",
+  "paths": {
+    "/admin/communication/logs": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Admins can query any user's communication logs by user ID, with pagination and filtering by channel and status. Unlike the regular user GetLogs endpoint, this endpoint is not subject to user isolation. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Admin query any user's communication logs",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Target user ID (if omitted, returns logs for all users)",
+            "name": "user_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Send channel filter: sms/email/push",
+            "name": "channel",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Send status filter: pending/sent/failed/delivered",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number, starting from 1 (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns full communication log list",
+            "schema": {
+              "$ref": "#/definitions/dto.CommunicationLogListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource (admin only)",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/platform-stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns aggregated communication service statistics across all tenants, including total sends, delivery success rate, and distribution by channel and status. Accessible only by super admin. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Get platform-level communication dashboard (cross-tenant)",
+        "responses": {
+          "200": {
+            "description": "Query successful, returns platform-level aggregated dashboard data",
+            "schema": {
+              "$ref": "#/definitions/dto.CommunicationDashboardDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource (super admin only)",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/providers": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a connection configuration for an SMS/email/push provider for the current tenant. Supports major providers such as Alibaba Cloud, Tencent Cloud, AWS SNS/SES, SendGrid, FCM, etc. Configuration content (API keys, etc.) is stored encrypted and automatically masked in responses. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Create provider configuration",
+        "parameters": [
+          {
+            "description": "Create provider configuration request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateProviderConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully, returns configuration details (credentials masked)",
+            "schema": {
+              "$ref": "#/definitions/dto.ProviderConfigDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "A configuration for the same channel and provider already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/providers/{template_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the credentials, activation status, and priority of a specified provider configuration. Supports partial updates (only send fields to modify). Configuration credentials are stored encrypted. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Update provider configuration",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider configuration ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update provider configuration request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateProviderConfigRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successful, returns updated configuration details (credentials masked)",
+            "schema": {
+              "$ref": "#/definitions/dto.ProviderConfigDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified provider configuration record. After deletion, the channel will fall back to the default provider or prompt that it is not configured. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Delete provider configuration",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider configuration ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuration deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.OKResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/rate-limits": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns rate limit configurations for each channel (sms/email/push) in the current system, including maximum sends per minute/hour and the current provider. Admins can view system defaults and tenant-level overrides. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Admin view rate limit configurations",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Channel filter: sms/email/push (omit to return all)",
+            "name": "channel",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns rate limit configurations for each channel",
+            "schema": {
+              "$ref": "#/definitions/dto.RateLimitsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource (admin only)",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/resend/{template_id}": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Re-queue messages in failed or cancelled status for retry. Only supports sms and email channels (push does not support resend). A new send record will be created and delivered through the corresponding provider. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Resend failed messages",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Message ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resend successful, message re-queued",
+            "schema": {
+              "$ref": "#/definitions/dto.OKResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource (admin only)",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Message not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Message status does not allow resend (only failed/cancelled can be resent)",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/templates": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a message sending template for the current tenant. Supports SMS, email, and push channels. Template content can use {{variable}} or Go template syntax for variable placeholders (e.g., {{code}}), which will be replaced by variable values during sending. Templates support multiple languages (locale). References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Create message template",
+        "parameters": [
+          {
+            "description": "Create template request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreateTemplateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Template created successfully, returns template details",
+            "schema": {
+              "$ref": "#/definitions/dto.CreateTemplateResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/templates/{template_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the name, content, variable list, and other fields of a specified template. After update, the template version number is automatically incremented, and the old version is retained in the version history. Supports modifying the template's activation status. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Update message template",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update template request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateTemplateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successful, returns updated template details",
+            "schema": {
+              "$ref": "#/definitions/dto.MessageTemplateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Template not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Soft delete a message template (set is_active to false). If there are pending messages referencing this template, deletion is refused to ensure delivery traceability. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Delete (deactivate) template",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template deactivated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.OKResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Template not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "There are pending messages referencing this template, cannot delete",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/templates/{template_id}/clone-to-locale": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Copy all fields (name, content, variables, etc.) of a source template to a target locale, keeping the same template code. Used for quickly creating multilingual templates. If a template with the same name already exists in the target locale, returns 409 conflict. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Copy template to another locale",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Source template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Copy target locale request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CloneTemplateToLocaleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Copy successful, returns new template details",
+            "schema": {
+              "$ref": "#/definitions/dto.MessageTemplateDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Source template not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "A template with the same name already exists in the target locale",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/templates/{template_id}/preview": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Render a specified template with provided variable values, returning the rendered subject, content, and plain text version for preview before sending. Supports both simple and go-template formats. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Preview template rendering",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Render variable key-value pairs, e.g., {\"code\": \"123456\"}",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Render successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-dto_PreviewTemplateResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Template not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/communication/templates/{template_id}/versions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get all historical versions of a template by template ID. Each update increments the version number and saves a snapshot for change tracking and version rollback reference. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Query template version history",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns version history list",
+            "schema": {
+              "$ref": "#/definitions/dto.TemplateVersionListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Template not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/bulk": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send bulk SMS or email to multiple recipients. Supports template variable substitution, records send status per item, suitable for marketing notifications, system announcements, and other bulk communication scenarios. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Send bulk messages",
+        "parameters": [
+          {
+            "description": "Bulk send request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BulkSendRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bulk send successful, returns list of individual logs",
+            "schema": {
+              "$ref": "#/definitions/dto.CommunicationLogListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/callback/{provider}": {
+      "post": {
+        "description": "Receive and process delivery status callbacks from various SMS, email, and push providers (Alibaba Cloud, Tencent Cloud, AWS SNS/SES, SendGrid, Mailgun, FCM, APNs, JPush, etc.), automatically updating the corresponding message send status. The callback is a public endpoint called directly by each provider. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Handle SMS/email/push provider callback",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider name: aliyun/tencentcloud/aws/sendgrid/ses/mailgun/fcm/apns/jpush",
+            "name": "provider",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Callback data (format varies by provider, supports JSON and Form)",
+            "name": "request",
+            "in": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Callback received and acknowledged",
+            "schema": {
+              "$ref": "#/definitions/dto.CallbackResultDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request data format",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal callback processing error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/dashboard": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get delivery statistics for each communication channel of the current tenant, including total sends, successful deliveries, failures, delivery success rate, and distribution by channel and status. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Get communication delivery dashboard",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Statistics days range (default 30 days)",
+            "name": "days",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns tenant communication delivery dashboard data",
+            "schema": {
+              "$ref": "#/definitions/dto.CommunicationDashboardDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/email": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send an email to a specified email address. Supports templates (predefined) or direct HTML/plain text content, supports CC and BCC, automatically records in send logs. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Send email",
+        "parameters": [
+          {
+            "description": "Email send request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.EmailRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Send successful, returns send log details",
+            "schema": {
+              "$ref": "#/definitions/dto.CommunicationLogDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/health/{channel}": {
+      "get": {
+        "description": "Check the provider configuration and connectivity status of a specified communication channel (sms/email/push). Used for operational monitoring to verify if the provider API endpoint is reachable and configuration is valid. Public endpoint, no authentication required. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Channel connectivity check",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Communication channel: sms/email/push",
+            "name": "channel",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Check successful, returns channel health status (healthy/unhealthy/not_configured)",
+            "schema": {
+              "$ref": "#/definitions/dto.ChannelHealthDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid channel parameter",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Health check internal error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/logs": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of message send records for the current tenant. Data is isolated by the current logged-in user (only returns the user's own send records). Supports filtering by channel (sms/email/push) and send status (pending/sent/failed/delivered). References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Paginated query of send logs",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID (automatically filtered by current logged-in user)",
+            "name": "user_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Send channel filter: sms/email/push",
+            "name": "channel",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Send status filter: pending/sent/failed/delivered",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number, starting from 1 (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20, max 100)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated query successful, returns send log summary list",
+            "schema": {
+              "$ref": "#/definitions/dto.CommunicationLogListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/providers": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of provider configuration list for the current tenant. Supports filtering by channel (sms/email/push) and activation status. Configuration credentials are automatically masked in responses (displayed as ***REDACTED***). References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Query provider configuration list",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Channel filter: sms/email/push",
+            "name": "channel",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Activation status filter: true/false",
+            "name": "is_active",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number, starting from 1 (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns configuration list (credentials masked)",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-dto_ProviderConfigResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/providers/{template_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get detailed information of a single provider configuration by configuration ID. Configuration credentials are automatically masked in responses. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Get provider configuration details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Provider configuration ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns configuration details (credentials masked)",
+            "schema": {
+              "$ref": "#/definitions/dto.ProviderConfigDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/push": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send push notification to all active devices of a specified user. Supports filtering target devices by platform (iOS/Android/Web/Desktop), automatically records success/failure for each token. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Send push notification",
+        "parameters": [
+          {
+            "description": "Push notification send request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.PushRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Send completed, returns count of successful and failed tokens",
+            "schema": {
+              "$ref": "#/definitions/dto.PushResultDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "User or device not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/push-tokens": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of device push tokens for the current logged-in user under the current tenant. Supports filtering by platform type (ios/android/web/desktop), returns token ID, platform, device ID, activation status, and creation time. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Query push token list",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID (automatically obtained from JWT for current user)",
+            "name": "user_id",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Platform filter: ios/android/web/desktop",
+            "name": "platform",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number, starting from 1 (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns token list",
+            "schema": {
+              "$ref": "#/definitions/dto.PushTokenListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Register a device push token (iOS APNs / Android FCM / Web Push / Desktop) for a specified user under the current tenant, for subsequent push notification sending. Duplicate token registration will automatically deactivate the old record, ensuring each token is unique and up-to-date in the database. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Register device push token",
+        "parameters": [
+          {
+            "description": "Register push token request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.CreatePushTokenRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Registration successful, returns token details",
+            "schema": {
+              "$ref": "#/definitions/dto.PushTokenDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/push-tokens/{template_id}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the activation status (is_active) of a specified push token. After deactivation, the token will no longer receive pushes; reactivation restores it. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Update push token activation status",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Push token ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update push token request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdatePushTokenRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successful",
+            "schema": {
+              "$ref": "#/definitions/dto.OKResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Token not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Deactivate a specified device push token (set is_active to false). After deactivation, the token will no longer receive push notifications; the user must re-register on next app open. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Deactivate push token",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Push token ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token deactivated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.OKResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Token not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/rate-limits": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns rate limit configurations (maximum sends per minute/hour) for SMS, email, push, and other channels based on the currently configured providers, for client-side traffic control reference before sending. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Query rate limits for each channel",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Channel filter: sms/email/push (omit to return all)",
+            "name": "channel",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns rate limit configurations for each channel",
+            "schema": {
+              "$ref": "#/definitions/dto.RateLimitsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/scheduled/{template_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Cancel a scheduled message send task with a specified ID that is in scheduled status. Messages already sent or failed cannot be canceled. After cancellation, the message status changes to cancelled. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Cancel scheduled message",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Message ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Cancel request (can include cancel_key for idempotency matching)",
+            "name": "request",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/dto.CancelScheduledRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cancellation successful",
+            "schema": {
+              "$ref": "#/definitions/dto.OKResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Message not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "409": {
+            "description": "Message is not in scheduled status, cannot cancel",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/sms": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send an SMS to a specified phone number. Supports template sending (predefined template) or direct content sending, automatically records in send logs. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Send SMS",
+        "parameters": [
+          {
+            "description": "SMS send request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SMSRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Send successful, returns send log details",
+            "schema": {
+              "$ref": "#/definitions/dto.CommunicationLogDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/template-stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns statistics of send volume, successful deliveries, and failures for each template in the current tenant over the last 30 days, for template performance analysis. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Get template usage statistics (last 30 days)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Channel filter: sms/email/push",
+            "name": "channel",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns statistics for each template",
+            "schema": {
+              "$ref": "#/definitions/dto.TemplateStatsListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/templates": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of message template list for the current tenant. Supports filtering by send channel (sms/email/push), activation status, and keyword (template name/code). References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Get template list",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Channel filter: sms/email/push",
+            "name": "channel",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "description": "Activation status filter: true/false",
+            "name": "is_active",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Keyword search (matches template name or code)",
+            "name": "keyword",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Page number, starting from 1 (default 1)",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Items per page (default 20)",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns template list",
+            "schema": {
+              "$ref": "#/definitions/dto.TemplateListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/templates/available": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Returns an aggregated list of platform default templates and tenant custom templates, each marked with source (platform/tenant) and whether it is overridden by the tenant. Used for frontend template selector display. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Get available template list (including platform default templates)",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Locale: zh-CN/en-US (default zh-CN)",
+            "name": "locale",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns available template list (with source annotation)",
+            "schema": {
+              "$ref": "#/definitions/dto.AvailableTemplateListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/communication/templates/{template_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get complete information of a message template by template ID, including a rendering example (showing the actual rendered effect using sample variable values). References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Get template details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Template ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns template details (with rendering example)",
+            "schema": {
+              "$ref": "#/definitions/dto.TemplateDetailDataResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or invalid token",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions to access this resource",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Template not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/communication/erase-user-data": {
+      "post": {
+        "description": "Erase a user's communication data by user ID and tenant ID: soft delete communication logs (retain audit trail), hard delete push tokens (data minimization). Used for GDPR Article 17 (Right to Erasure) compliance. Internal endpoint, uses InternalAPIKeyAuth authentication. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Erase user communication data (GDPR compliance)",
+        "parameters": [
+          {
+            "description": "Erase user data request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.EraseUserDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Erase successful",
+            "schema": {
+              "$ref": "#/definitions/dto.OKResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/communication/export-user-data": {
+      "post": {
+        "description": "Export all communication logs and push token data of a user by user ID and tenant ID. Used for GDPR Article 15 (Right of Access) and Article 20 (Right to Data Portability) compliance responses. Internal endpoint, uses InternalAPIKeyAuth authentication. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Export user communication data (GDPR compliance)",
+        "parameters": [
+          {
+            "description": "Export user data request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExportUserDataRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export successful, returns communication logs and push token data",
+            "schema": {
+              "$ref": "#/definitions/dto.ExportUserDataDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/communication/send": {
+      "post": {
+        "description": "Unified message sending interface for internal microservice calls. Supports SMS, email, and push channels, and both template-based and direct content sending modes. Creates real send records in the database and attempts asynchronous sending. Uses InternalAPIKeyAuth authentication. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Communication Service"
+        ],
+        "summary": "Internal service unified send message",
+        "parameters": [
+          {
+            "description": "Internal send request parameters",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.InternalSendRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Message queued/sent, returns message ID and status",
+            "schema": {
+              "$ref": "#/definitions/dto.InternalSendDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    },
+    "/internal/schedulers": {
+      "get": {
+        "description": "Returns the running status of all background schedulers in the current service",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "internal"
+        ],
+        "summary": "Query scheduler status list",
+        "responses": {
+          "200": {
+            "description": "Query successful",
+            "schema": {
+              "$ref": "#/definitions/dto.DataResponse-any"
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "domain.ChannelRateLimitData": {
+      "type": "object",
+      "properties": {
+        "max_per_hour": {
+          "type": "integer"
+        },
+        "max_per_min": {
+          "type": "integer"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "tenant_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.AvailableTemplateListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.AvailableTemplateResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat, for easy reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.AvailableTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "email"
+        },
+        "code": {
+          "type": "string",
+          "example": "welcome"
+        },
+        "is_active": {
+          "type": "boolean",
+          "example": true
+        },
+        "is_customized": {
+          "type": "boolean",
+          "example": false
+        },
+        "locale": {
+          "type": "string",
+          "example": "zh-CN"
+        },
+        "name": {
+          "type": "string",
+          "example": "Welcome email"
+        },
+        "source": {
+          "description": "platform | tenant",
+          "type": "string",
+          "example": "platform"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.BulkSendRequest": {
+      "description": "Bulk send message request parameters",
+      "type": "object",
+      "required": [
+        "channel",
+        "content",
+        "recipients"
+      ],
+      "properties": {
+        "channel": {
+          "type": "string",
+          "enum": [
+            "sms",
+            "email"
+          ],
+          "example": "sms"
+        },
+        "content": {
+          "type": "string",
+          "example": "Your verification code is 123456"
+        },
+        "recipients": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"13800138000\"",
+            "\"13900139000\"]"
+          ]
+        },
+        "subject": {
+          "type": "string",
+          "example": "Notification"
+        },
+        "template": {
+          "type": "string",
+          "example": "verify_code"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "variables": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.CallbackResultDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CallbackResultResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CallbackResultResponse": {
+      "description": "Provider callback result",
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "example": "aliyun"
+        },
+        "received": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "dto.CancelScheduledRequest": {
+      "type": "object",
+      "properties": {
+        "cancel_key": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ChannelHealthDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ChannelHealthResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ChannelHealthResponse": {
+      "description": "Channel connectivity check result",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "sms"
+        },
+        "message": {
+          "type": "string",
+          "example": "SMS provider is reachable"
+        },
+        "provider": {
+          "type": "string",
+          "example": "aliyun"
+        },
+        "status": {
+          "type": "string",
+          "example": "healthy"
+        }
+      }
+    },
+    "dto.CloneTemplateToLocaleRequest": {
+      "type": "object",
+      "required": [
+        "target_locale"
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "target_locale": {
+          "type": "string",
+          "example": "en-US"
+        }
+      }
+    },
+    "dto.CommunicationDashboardDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CommunicationDashboardResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CommunicationDashboardResponse": {
+      "description": "Communication service delivery statistics by channel",
+      "type": "object",
+      "properties": {
+        "by_channel": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "by_status": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "delivered": {
+          "type": "integer",
+          "example": 980
+        },
+        "delivery_rate": {
+          "type": "number",
+          "example": 0.98
+        },
+        "failed": {
+          "type": "integer",
+          "example": 20
+        },
+        "total_sent": {
+          "type": "integer",
+          "example": 1000
+        }
+      }
+    },
+    "dto.CommunicationLogDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CommunicationLogResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CommunicationLogListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.CommunicationLogResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat, for easy reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.CommunicationLogResponse": {
+      "description": "Message send log record",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "sms"
+        },
+        "content": {
+          "type": "string",
+          "example": "Your verification code is 123456"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "error": {
+          "type": "string",
+          "example": "Send timeout"
+        },
+        "id": {
+          "type": "string",
+          "example": "log_abc123"
+        },
+        "provider": {
+          "type": "string",
+          "example": "aliyun"
+        },
+        "recipient": {
+          "type": "string",
+          "example": "138****8000"
+        },
+        "response": {
+          "type": "string"
+        },
+        "sent_at": {
+          "type": "string",
+          "example": "2026-04-15T10:01:00Z"
+        },
+        "status": {
+          "type": "string",
+          "example": "delivered"
+        },
+        "template_id": {
+          "type": "string",
+          "example": "tpl_abc123"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.CreateProviderConfigRequest": {
+      "type": "object",
+      "required": [
+        "channel",
+        "config",
+        "provider"
+      ],
+      "properties": {
+        "channel": {
+          "type": "string",
+          "enum": [
+            "sms",
+            "email",
+            "push"
+          ],
+          "example": "sms"
+        },
+        "config": {
+          "type": "string",
+          "example": "{\"access_key\":\"...\"}"
+        },
+        "priority": {
+          "type": "integer",
+          "example": 10
+        },
+        "provider": {
+          "type": "string",
+          "example": "aliyun"
+        }
+      }
+    },
+    "dto.CreatePushTokenRequest": {
+      "description": "Register device push token request parameters",
+      "type": "object",
+      "required": [
+        "platform",
+        "token",
+        "user_id"
+      ],
+      "properties": {
+        "device_id": {
+          "type": "string",
+          "example": "iPhone15-001"
+        },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "ios",
+            "android",
+            "web",
+            "desktop"
+          ],
+          "example": "ios"
+        },
+        "token": {
+          "type": "string",
+          "example": "device_token_xxx"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.CreateTemplateRequest": {
+      "description": "Create message template request parameters",
+      "type": "object",
+      "required": [
+        "channel",
+        "code",
+        "content",
+        "name"
+      ],
+      "properties": {
+        "channel": {
+          "type": "string",
+          "enum": [
+            "sms",
+            "email",
+            "push"
+          ],
+          "example": "sms"
+        },
+        "code": {
+          "type": "string",
+          "example": "verify_code"
+        },
+        "content": {
+          "type": "string",
+          "example": "Your verification code is {code}, valid for 5 minutes"
+        },
+        "content_type": {
+          "type": "string",
+          "example": "text"
+        },
+        "description": {
+          "type": "string",
+          "example": "Used for sending login verification codes"
+        },
+        "format": {
+          "type": "string",
+          "example": "simple"
+        },
+        "name": {
+          "type": "string",
+          "example": "Verification code template"
+        },
+        "subject": {
+          "type": "string",
+          "example": "Verification code notification"
+        },
+        "text_content": {
+          "type": "string",
+          "example": "Your code is {code}"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"code\"]"
+          ]
+        }
+      }
+    },
+    "dto.CreateTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "example": 0
+        },
+        "data": {
+          "$ref": "#/definitions/dto.MessageTemplateResponse"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "dto.DataResponse-any": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {},
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.DataResponse-dto_PreviewTemplateResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PreviewTemplateResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.EmailRequest": {
+      "description": "Send email request parameters",
+      "type": "object",
+      "required": [
+        "subject",
+        "to"
+      ],
+      "properties": {
+        "bcc": {
+          "description": "BCC",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "manager@example.com"
+          ]
+        },
+        "cancel_key": {
+          "type": "string",
+          "example": "order-123"
+        },
+        "cc": {
+          "description": "CC",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "admin@example.com"
+          ]
+        },
+        "content": {
+          "description": "Content",
+          "type": "string",
+          "example": "<h1>Welcome!</h1>"
+        },
+        "is_html": {
+          "description": "HTML format",
+          "type": "boolean",
+          "example": false
+        },
+        "send_at": {
+          "type": "string",
+          "example": "2026-06-07T10:00:00Z"
+        },
+        "subject": {
+          "description": "Subject",
+          "type": "string",
+          "example": "Account activation email"
+        },
+        "template": {
+          "description": "Template",
+          "type": "string",
+          "example": "welcome_email"
+        },
+        "to": {
+          "description": "Recipient",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "user@example.com"
+          ]
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "variables": {
+          "description": "Variables",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.EraseUserDataRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.ExportUserDataDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ExportUserDataResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExportUserDataRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.ExportUserDataResponse": {
+      "type": "object",
+      "properties": {
+        "logs": {},
+        "tokens": {}
+      }
+    },
+    "dto.FieldViolation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the error code (optional). Used by programs to identify error types, such as \"required\", \"format\", \"range\".",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is a human-readable error description. It should explain which rule was violated, such as \"Must be a valid email address\".",
+          "type": "string"
+        },
+        "field": {
+          "description": "Field is the path to the error field. Use dot notation for nested fields, such as \"user.email\" or \"addresses[0].city\".",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value is the value that caused the error (optional, used in development mode). In production, this field may not be returned to avoid leaking sensitive information."
+        }
+      }
+    },
+    "dto.InternalSendDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.InternalSendResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.InternalSendRequest": {
+      "description": "Request parameters for unified message sending between internal services.",
+      "type": "object",
+      "required": [
+        "channel",
+        "to"
+      ],
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "email"
+        },
+        "content": {
+          "type": "string",
+          "example": "Your verification code is 123456."
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "subject": {
+          "type": "string",
+          "example": "Account activation"
+        },
+        "template": {
+          "type": "string",
+          "example": "welcome"
+        },
+        "to": {
+          "type": "string",
+          "example": "user@example.com"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "variables": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.InternalSendResponse": {
+      "description": "Response information for the internal unified sending interface.",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "email"
+        },
+        "message_id": {
+          "type": "string",
+          "example": "internal-1234567890"
+        },
+        "status": {
+          "type": "string",
+          "example": "queued"
+        },
+        "to": {
+          "type": "string",
+          "example": "user@example.com"
+        }
+      }
+    },
+    "dto.ListResponse-dto_ProviderConfigResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ProviderConfigResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.MessageTemplateDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.MessageTemplateResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.MessageTemplateResponse": {
+      "description": "Message template data",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "sms"
+        },
+        "code": {
+          "type": "string",
+          "example": "verify_code"
+        },
+        "content": {
+          "type": "string",
+          "example": "Your verification code is {code}, valid for 5 minutes."
+        },
+        "content_type": {
+          "type": "string",
+          "example": "text"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "Used to send login verification codes."
+        },
+        "id": {
+          "type": "string",
+          "example": "tpl_abc123"
+        },
+        "is_active": {
+          "type": "boolean",
+          "example": true
+        },
+        "name": {
+          "type": "string",
+          "example": "Verification code template"
+        },
+        "subject": {
+          "type": "string",
+          "example": "Verification code notification"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"code\"]"
+          ]
+        },
+        "version": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+    "dto.OKResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "example": 0
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.PreviewTemplateResponse": {
+      "description": "Template preview rendering result, including channel, subject, body, and plain text rendering effect.",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "sms"
+        },
+        "code": {
+          "type": "string",
+          "example": "verify_code"
+        },
+        "content": {
+          "$ref": "#/definitions/dto.RenderedContent"
+        },
+        "content_type": {
+          "type": "string",
+          "example": "text"
+        },
+        "name": {
+          "type": "string",
+          "example": "Verification code template"
+        },
+        "subject": {
+          "$ref": "#/definitions/dto.RenderedContent"
+        },
+        "text_content": {
+          "$ref": "#/definitions/dto.RenderedContent"
+        }
+      }
+    },
+    "dto.Problem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is a business error code. Used by programs to handle specific error scenarios. Example: 30101001",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "Detail is a human-readable explanation specific to this error instance. It can contain specific error details, such as \"Field 'email' is required\".",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Errors is a list of field-level validation errors (extended field). Following Web API standard practices, each error contains the field name and error message.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FieldViolation"
+          }
+        },
+        "i18n_args": {
+          "description": "I18nArgs are internationalization parameters. Used to dynamically fill translation templates.",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "i18n_key": {
+          "description": "I18nKey is an internationalization key. Used for client-side localization of error messages. Example: \"error.user_not_found\"",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Instance is a URI reference to the specific occurrence of the problem. Usually the request URL, possibly including query parameters. Example: \"/api/v1/users?limit=invalid\"",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "RequestID is a unique request identifier. Used for log correlation and issue tracking. Example: \"req_550e8400-e29b-41d4-a716-446655440000\"",
+          "type": "string"
+        },
+        "retry_after": {
+          "description": "RetryAfter is used for 429 Too Many Requests responses. Indicates how many seconds the client should wait before retrying the request (RFC 6585).",
+          "type": "integer"
+        },
+        "service": {
+          "description": "Service is the service name. Used in microservice architectures to locate the source of the error. Example: \"auth-service\"",
+          "type": "string"
+        },
+        "span_id": {
+          "description": "SpanID is the current span identifier. Used to precisely locate the current node in a distributed trace.",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status is the HTTP status code generated. Used by clients to distinguish problem types, does not change with Accept-Language. Example: 400, 401, 403, 404, 500",
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "Timestamp is the time when the error occurred. ISO 8601 format. Example: \"2026-04-03T12:00:00Z\"",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title is a short, human-readable summary of the problem type. The same Type should always have the same Title (does not vary per instance). Example: \"Invalid Request Parameters\"",
+          "type": "string"
+        },
+        "trace_id": {
+          "description": "TraceID is a distributed tracing identifier. Follows the W3C Trace Context standard. Example: \"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01\"",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is a URI reference that identifies the problem type. When dereferenced, it should provide human-readable documentation. Example: \"https://api.example.com/errors/invalid-request\"",
+          "type": "string"
+        }
+      }
+    },
+    "dto.ProviderConfigDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ProviderConfigResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ProviderConfigResponse": {
+      "type": "object",
+      "properties": {
+        "app_id": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "config": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PushRequest": {
+      "description": "Request parameters for sending push notifications.",
+      "type": "object",
+      "required": [
+        "body",
+        "title",
+        "user_id"
+      ],
+      "properties": {
+        "body": {
+          "description": "Content",
+          "type": "string",
+          "example": "You have a new message."
+        },
+        "channel": {
+          "description": "Channel",
+          "type": "string",
+          "example": "ios"
+        },
+        "data": {
+          "description": "Data",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "device_token": {
+          "description": "Device token",
+          "type": "string",
+          "example": "device_token_xxx"
+        },
+        "platform": {
+          "description": "Platform",
+          "type": "string",
+          "enum": [
+            "all",
+            "ios",
+            "android",
+            "web",
+            "desktop"
+          ],
+          "example": "all"
+        },
+        "title": {
+          "description": "Title",
+          "type": "string",
+          "example": "New message notification"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.PushResultDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PushResultResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PushResultResponse": {
+      "description": "Push sending result",
+      "type": "object",
+      "properties": {
+        "sent": {
+          "type": "boolean",
+          "example": true
+        },
+        "tokens_failed": {
+          "type": "integer",
+          "example": 0
+        },
+        "tokens_sent": {
+          "type": "integer",
+          "example": 2
+        }
+      }
+    },
+    "dto.PushTokenDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PushTokenResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PushTokenListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.PushTokenResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.PushTokenResponse": {
+      "description": "Push token information",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "device_id": {
+          "type": "string",
+          "example": "iPhone15-001"
+        },
+        "id": {
+          "type": "string",
+          "example": "pt_abc123"
+        },
+        "is_active": {
+          "type": "boolean",
+          "example": true
+        },
+        "platform": {
+          "type": "string",
+          "example": "ios"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.RateLimitsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.RateLimitsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.RateLimitsResponse": {
+      "description": "Rate limit configuration for each sending channel of the communication service.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "$ref": "#/definitions/domain.ChannelRateLimitData"
+        },
+        "push": {
+          "$ref": "#/definitions/domain.ChannelRateLimitData"
+        },
+        "sms": {
+          "$ref": "#/definitions/domain.ChannelRateLimitData"
+        }
+      }
+    },
+    "dto.RenderedContent": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "rendered": {
+          "type": "string",
+          "example": "Your verification code is 123456, valid for 5 minutes."
+        }
+      }
+    },
+    "dto.SMSRequest": {
+      "description": "Request parameters for sending SMS.",
+      "type": "object",
+      "required": [
+        "phone"
+      ],
+      "properties": {
+        "cancel_key": {
+          "type": "string",
+          "example": "order-123"
+        },
+        "content": {
+          "description": "Content",
+          "type": "string",
+          "example": "Your verification code is 123456."
+        },
+        "phone": {
+          "description": "Phone number",
+          "type": "string",
+          "example": "13800138000"
+        },
+        "send_at": {
+          "type": "string",
+          "example": "2026-06-07T10:00:00Z"
+        },
+        "template": {
+          "description": "Template",
+          "type": "string",
+          "example": "verify_code"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "variables": {
+          "description": "Variables",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TemplateDetailDataResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.TemplateDetailResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TemplateDetailResponse": {
+      "description": "Template detail data (including rendering example)",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "sms"
+        },
+        "code": {
+          "type": "string",
+          "example": "verify_code"
+        },
+        "content": {
+          "type": "string",
+          "example": "Your verification code is {code}, valid for 5 minutes."
+        },
+        "content_type": {
+          "type": "string",
+          "example": "text"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "Used to send login verification codes."
+        },
+        "id": {
+          "type": "string",
+          "example": "tpl_abc123"
+        },
+        "is_active": {
+          "type": "boolean",
+          "example": true
+        },
+        "name": {
+          "type": "string",
+          "example": "Verification code template"
+        },
+        "render_example": {
+          "type": "string",
+          "example": "Your verification code is [code], valid for 5 minutes."
+        },
+        "subject": {
+          "type": "string",
+          "example": "Verification code notification"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"code\"]"
+          ]
+        },
+        "version": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+    "dto.TemplateListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.TemplateResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.TemplateResponse": {
+      "description": "Template data",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "sms"
+        },
+        "code": {
+          "type": "string",
+          "example": "verify_code"
+        },
+        "content": {
+          "type": "string",
+          "example": "Your verification code is {code}, valid for 5 minutes."
+        },
+        "content_type": {
+          "type": "string",
+          "example": "text"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "description": {
+          "type": "string",
+          "example": "Used to send login verification codes."
+        },
+        "id": {
+          "type": "string",
+          "example": "tpl_abc123"
+        },
+        "is_active": {
+          "type": "boolean",
+          "example": true
+        },
+        "name": {
+          "type": "string",
+          "example": "Verification code template"
+        },
+        "subject": {
+          "type": "string",
+          "example": "Verification code notification"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"code\"]"
+          ]
+        },
+        "version": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+    "dto.TemplateStatsListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.TemplateStatsResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.TemplateStatsResponse": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "sms"
+        },
+        "delivered": {
+          "type": "integer",
+          "example": 480
+        },
+        "failed": {
+          "type": "integer",
+          "example": 20
+        },
+        "template_code": {
+          "type": "string",
+          "example": "verify_code"
+        },
+        "total_sent": {
+          "type": "integer",
+          "example": 500
+        }
+      }
+    },
+    "dto.TemplateVersionListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Unified use of items",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.TemplateVersionResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flattened for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.TemplateVersionResponse": {
+      "type": "object",
+      "properties": {
+        "changed_by": {
+          "type": "string",
+          "example": "usr_abc123"
+        },
+        "channel": {
+          "type": "string",
+          "example": "sms"
+        },
+        "code": {
+          "type": "string",
+          "example": "verify_code"
+        },
+        "content": {
+          "type": "string",
+          "example": "Your verification code is {code}, valid for 5 minutes."
+        },
+        "content_type": {
+          "type": "string",
+          "example": "text"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:00:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "tv_abc123"
+        },
+        "name": {
+          "type": "string",
+          "example": "Verification code template"
+        },
+        "subject": {
+          "type": "string",
+          "example": "Verification code notification"
+        },
+        "template_id": {
+          "type": "string",
+          "example": "tpl_abc123"
+        },
+        "text_content": {
+          "type": "string"
+        },
+        "variables": {
+          "type": "string",
+          "example": "[\"code\"]"
+        },
+        "version": {
+          "type": "integer",
+          "example": 3
+        }
+      }
+    },
+    "dto.UpdateProviderConfigRequest": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "type": "string"
+        },
+        "is_active": {
+          "type": "boolean"
+        },
+        "priority": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.UpdatePushTokenRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "is_active": {
+          "type": "boolean",
+          "example": true
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.UpdateTemplateRequest": {
+      "description": "Request parameters for updating a message template.",
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "example": "Your verification code is {code}, valid for 10 minutes."
+        },
+        "content_type": {
+          "type": "string",
+          "example": "text"
+        },
+        "description": {
+          "type": "string",
+          "example": "Updated verification code template"
+        },
+        "format": {
+          "type": "string",
+          "example": "go-template"
+        },
+        "is_active": {
+          "type": "boolean",
+          "example": true
+        },
+        "name": {
+          "type": "string",
+          "example": "Verification code template v2"
+        },
+        "subject": {
+          "type": "string",
+          "example": "Verification code notification v2"
+        },
+        "text_content": {
+          "type": "string",
+          "example": "Your code is {code}, valid for 10 min"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"code\"]"
+          ]
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Communication interfaces: email, SMS, webhook",
+      "name": "Communication service"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

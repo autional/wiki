@@ -1,0 +1,1444 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Gateway service API, providing unified entry point, route forwarding, API documentation aggregation, etc.",
+    "title": "Gateway Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "paths": {
+    "/bff/gateway/admin/env-vars": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return all environment variables loaded from .env/.env.local, sensitive values are automatically masked (super_admin access only)",
+        "tags": [
+          "Gateway - Operations"
+        ],
+        "summary": "Get environment variables",
+        "responses": {
+          "200": {
+            "description": "Environment variable list",
+            "schema": {
+              "$ref": "#/definitions/dto.EnvVarsResult"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/bff/gateway/admin/feature-flags": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return the feature toggle status matrix of all microservices, including enable/disable summary statistics",
+        "tags": [
+          "Gateway - Operations"
+        ],
+        "summary": "Get feature toggle matrix",
+        "responses": {
+          "200": {
+            "description": "Feature toggle matrix",
+            "schema": {
+              "$ref": "#/definitions/dto.FeatureFlagsResult"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/bff/gateway/admin/health/runtime": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return TCP health check results for the gateway service itself and all upstream microservices, including service name, status, and latency",
+        "tags": [
+          "Gateway - Operations"
+        ],
+        "summary": "Get health check runtime information",
+        "responses": {
+          "200": {
+            "description": "Health check runtime information",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/bff/gateway/admin/infra-credentials": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return the names, environment variable keys, associated containers, and consumer service list of all infrastructure credentials (without actual values)",
+        "tags": [
+          "Gateway - Operations"
+        ],
+        "summary": "Get infrastructure credential list",
+        "responses": {
+          "200": {
+            "description": "Credential list",
+            "schema": {
+              "$ref": "#/definitions/dto.InfraCredentialsResult"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/bff/gateway/admin/rate-limits": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return the availability status and configuration information of the current gateway rate-limiting provider",
+        "tags": [
+          "Gateway - Operations"
+        ],
+        "summary": "Get rate-limiting status",
+        "responses": {
+          "200": {
+            "description": "Rate-limiting status",
+            "schema": {
+              "$ref": "#/definitions/dto.RateLimitStatsResult"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/bff/gateway/admin/schedulers": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Aggregate the background scheduler running status (name, interval, enabled status) of all microservices, collected via each service's internal API",
+        "tags": [
+          "Gateway - Operations"
+        ],
+        "summary": "Get scheduler status",
+        "responses": {
+          "200": {
+            "description": "Scheduler status",
+            "schema": {
+              "$ref": "#/definitions/dto.SystemSchedulersResult"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/bff/gateway/admin/system/runtime": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return the gateway's own running status (startup time, version) and metadata list of all microservices (name, port, category, gRPC port)",
+        "tags": [
+          "Gateway - Operations"
+        ],
+        "summary": "Get system runtime aggregated information",
+        "responses": {
+          "200": {
+            "description": "System runtime information",
+            "schema": {
+              "$ref": "#/definitions/dto.SystemRuntimeResult"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/bff/gateway/admin/topology": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return the port and dependency mapping of all microservices, including the topology of the gateway itself and upstream services",
+        "tags": [
+          "Gateway - Operations"
+        ],
+        "summary": "Get service dependency topology",
+        "responses": {
+          "200": {
+            "description": "Service topology",
+            "schema": {
+              "$ref": "#/definitions/dto.TopologyResult"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/developer/logs": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query tenant logs by level, service, keyword, and time range (Elasticsearch proxy, automatically injects tenant isolation filter), supports pagination",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Log query",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Log level (DEBUG, INFO, WARN, ERROR)",
+            "name": "level",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Service name",
+            "name": "service",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Search keyword",
+            "name": "keyword",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start time (RFC3339 format)",
+            "name": "start_time",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End time (RFC3339 format)",
+            "name": "end_time",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Log list",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/developer/status": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return TCP health check results (healthy/unhealthy) of all upstream microservices, cached for 30 seconds, including gateway uptime and each service's latency",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Service status page",
+        "responses": {
+          "200": {
+            "description": "Service status list",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/developer/traces/operations": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return the list of Span operation names for a specified service in Jaeger",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Trace operation list",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Service name",
+            "name": "service",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation list",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/developer/traces/search": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Search Jaeger traces by service, operation, and time range, automatically injects tenant isolation filter",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Trace search",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Service name",
+            "name": "service",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Operation name",
+            "name": "operation",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Number of results to return",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Start time (RFC3339 format)",
+            "name": "start_time",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "End time (RFC3339 format)",
+            "name": "end_time",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Trace list",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/developer/traces/services": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return the list of registered microservices in Jaeger",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Trace service list",
+        "responses": {
+          "200": {
+            "description": "Service list",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/developer/traces/{traceID}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get full trace details by traceID, automatically verifies tenant ownership to prevent cross-tenant data leakage",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Get single trace",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Trace ID",
+            "name": "traceID",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Trace details",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Trace not found",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/docs": {
+      "get": {
+        "description": "Return the service navigation homepage, listing all microservice cards (Chinese name + English name), click to enter single service API documentation. Pure HTML page.",
+        "produces": [
+          "text/html"
+        ],
+        "tags": [
+          "Gateway - API Documentation"
+        ],
+        "summary": "Service navigation homepage",
+        "responses": {
+          "200": {
+            "description": "Service navigation homepage HTML page",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/docs/openapi.json": {
+      "get": {
+        "description": "Return the aggregated OpenAPI JSON specification of all upstream microservices, including complete API endpoint definitions, Schema references, and service grouping",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - API Documentation"
+        ],
+        "summary": "Aggregated OpenAPI specification",
+        "responses": {
+          "200": {
+            "description": "Aggregated OpenAPI JSON specification",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/docs/specs/{service}": {
+      "get": {
+        "description": "Return the OpenAPI JSON specification of a single microservice (including gateway prefix path), can be directly imported into Swagger UI or Postman",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - API Documentation"
+        ],
+        "summary": "Single service OpenAPI specification",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Service name (e.g., identity-service)",
+            "name": "service",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OpenAPI JSON specification",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/docs/{service}": {
+      "get": {
+        "description": "Return the Scalar UI interactive documentation page for a specified microservice, loading only that service's OpenAPI specification",
+        "produces": [
+          "text/html"
+        ],
+        "tags": [
+          "Gateway - API Documentation"
+        ],
+        "summary": "Specified service documentation page",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Service name (e.g., identity-service)",
+            "name": "service",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scalar UI HTML page",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Return the health status of the gateway service itself and all upstream microservices, used for load balancer and monitoring system health checks",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Operations"
+        ],
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "All services healthy",
+            "schema": {
+              "$ref": "#/definitions/main.swaggerHealthResponse"
+            }
+          },
+          "503": {
+            "description": "Some services unhealthy",
+            "schema": {
+              "$ref": "#/definitions/main.swaggerHealthResponse"
+            }
+          }
+        }
+      }
+    },
+    "/sdk/examples": {
+      "get": {
+        "description": "Return the index of SDK code examples for all languages (including example ID, title, language, category, summary, and associated endpoints)",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Get SDK example list",
+        "responses": {
+          "200": {
+            "description": "Example list",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/sdk/versions": {
+      "get": {
+        "description": "Return all supported SDK languages and their optional version numbers",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Get SDK version list",
+        "responses": {
+          "200": {
+            "description": "SDK version list",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/sdk/{language}/changelog": {
+      "get": {
+        "description": "Return the version changelog list for a specified language SDK (sorted by version descending)",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Get SDK changelog",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "SDK language (go, javascript, python, java)",
+            "name": "language",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Changelog list",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "description": "Perform fuzzy search across OpenAPI specifications and SDK example resources, supporting exact match and Levenshtein fuzzy fallback",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Gateway - Developer Tools"
+        ],
+        "summary": "Global search",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Search keyword",
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Search type (api: API endpoint, sdk: SDK example)",
+            "name": "type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search result list",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dto.EnvVarEntry": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "masked": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.EnvVarsResult": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.EnvVarEntry"
+          }
+        }
+      }
+    },
+    "dto.FeatureFlagInfo": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FeatureFlagsResult": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ServiceFeatureFlagsResult"
+          }
+        },
+        "summary": {
+          "$ref": "#/definitions/dto.FeatureFlagsSummary"
+        }
+      }
+    },
+    "dto.FeatureFlagsSummary": {
+      "type": "object",
+      "properties": {
+        "enabled_flags": {
+          "type": "integer"
+        },
+        "total_flags": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.GatewayInfo": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "uptime": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.InfraCredential": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "consumers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "container": {
+          "type": "string"
+        },
+        "infrastructure": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "source_file": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.InfraCredentialsResult": {
+      "type": "object",
+      "properties": {
+        "credentials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.InfraCredential"
+          }
+        },
+        "total": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.RateLimitStatsResult": {
+      "type": "object",
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "provider_name": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.SchedulerItem": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "interval": {
+          "type": "string"
+        },
+        "last_count": {
+          "type": "integer"
+        },
+        "last_error": {
+          "type": "string"
+        },
+        "last_run": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "running": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ServiceFeatureFlagsResult": {
+      "type": "object",
+      "properties": {
+        "display_name": {
+          "type": "string"
+        },
+        "flags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FeatureFlagInfo"
+          }
+        },
+        "port": {
+          "type": "integer"
+        },
+        "service": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ServiceMeta": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "grpc_port": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ServiceSchedulerInfo": {
+      "type": "object",
+      "properties": {
+        "schedulers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.SchedulerItem"
+          }
+        },
+        "service_name": {
+          "type": "string"
+        },
+        "service_port": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.SystemRuntimeResult": {
+      "type": "object",
+      "properties": {
+        "gateway": {
+          "$ref": "#/definitions/dto.GatewayInfo"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ServiceMeta"
+          }
+        }
+      }
+    },
+    "dto.SystemSchedulersResult": {
+      "type": "object",
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ServiceSchedulerInfo"
+          }
+        }
+      }
+    },
+    "dto.TopologyEntry": {
+      "type": "object",
+      "properties": {
+        "depends_on": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "port": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.TopologyResult": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "topology": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/dto.TopologyEntry"
+          }
+        }
+      }
+    },
+    "main.swaggerHealthResponse": {
+      "type": "object",
+      "properties": {
+        "checks": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "checks_latency": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "service": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "uptime": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Gateway API documentation: Scalar UI interactive documentation, OpenAPI specification aggregation and distribution",
+      "name": "Gateway - API Documentation"
+    },
+    {
+      "description": "Gateway operations management: service status, rate limiting, route configuration, environment variables, health checks, feature toggles, credential list, scheduler",
+      "name": "Gateway - Operations"
+    },
+    {
+      "description": "Gateway security dashboard: user security profile, security event timeline, SSE real-time security event stream",
+      "name": "Gateway - Security Dashboard"
+    },
+    {
+      "description": "Gateway BFF authentication: login, token refresh, logout (httpOnly session cookie mode)",
+      "name": "Gateway - BFF Authentication"
+    },
+    {
+      "description": "Gateway developer tools: global search, SDK download, trace query, log query, service status check",
+      "name": "Gateway - Developer Tools"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

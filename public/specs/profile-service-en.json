@@ -1,0 +1,5118 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "User profile management service, providing profile creation, update, privacy settings, profile completeness, etc.",
+    "title": "Profile Service API",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "basePath": "/bff/profile-service/api/v1",
+  "paths": {
+    "/admin/profiles": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Search user profiles by keyword, country, city, etc. with pagination. Admin permission, only profiles under the current tenant are visible.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Search User Profiles",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Search keyword (matches name, email, etc.)",
+            "name": "keyword",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Country filter",
+            "name": "country",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "City filter",
+            "name": "city",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of user profiles",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "No matching users found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/approval-requests": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query all pending approval requests under the current tenant. Admin read permission. Returns a list of approval requests with their current status.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Approval Management"
+        ],
+        "summary": "List Pending Approvals",
+        "responses": {
+          "200": {
+            "description": "List of pending approval requests",
+            "schema": {
+              "$ref": "#/definitions/dto.ApprovalListDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No approval management permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Approval status conflict",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid approval status",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a profile change approval request for specified users, supporting archive, export, delete, and correct operation types. Admin permission. Reference: GDPR Art 16 (Right to rectification), GDPR Art 17 (Right to erasure).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Approval Management"
+        ],
+        "summary": "Create Approval Request",
+        "parameters": [
+          {
+            "description": "Approval request (including operation type and target user list)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ApprovalRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Approval request created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.ApprovalDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No approval management permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Target user does not exist",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Approval request conflict, a pending request with the same content already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid or non-executable approval operation type",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/approval-requests/{request_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified pending approval request. Only requests in pending status can be deleted. Admin permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Approval Management"
+        ],
+        "summary": "Delete Approval Request",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Approval ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Approval request deleted successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No approval management permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Approval request not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Approval status conflict, request is not in pending status",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid approval status, cannot be deleted",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/approval-requests/{request_id}/approve": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Approve a specified approval request and execute the corresponding operation (archive/export/delete/correct). Publish approval application event. Admin permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Approval Management"
+        ],
+        "summary": "Approve Approval Request",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Approval ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Approval request approved, operation executed",
+            "schema": {
+              "$ref": "#/definitions/dto.ApprovalDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No approval management permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Approval request not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Approval status conflict, request has already been processed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid approval status, current status does not allow approval",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/approval-requests/{request_id}/reject": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Reject a specified approval request. A rejection reason is required. Rejected requests cannot be operated on again. Admin permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Approval Management"
+        ],
+        "summary": "Reject Approval Request",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Approval ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Rejection reason",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.RejectApprovalBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Approval request rejected",
+            "schema": {
+              "$ref": "#/definitions/dto.ApprovalDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing rejection reason",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No approval management permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Approval request not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Approval status conflict, request has already been processed",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid approval status, current status does not allow rejection",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/batch-archive": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Batch archive profiles of specified users, up to 100 users per request. Admin write permission. Reference: GDPR Art 5 (Data minimization).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Batch Archive User Profiles",
+        "parameters": [
+          {
+            "description": "Batch archive request (including user ID list and archive reason)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch archive result (including operation status for each user)",
+            "schema": {
+              "$ref": "#/definitions/dto.BatchResultResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or exceeds batch limit",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/batch-delete": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Batch soft-delete profiles of specified users, up to 100 users per request. Admin write permission. Reference: GDPR Art 17 (Right to erasure).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Batch Delete User Profiles",
+        "parameters": [
+          {
+            "description": "Batch delete request (including user ID list)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch delete successful, returns operation status for each user"
+          },
+          "400": {
+            "description": "Invalid request parameters or exceeds batch limit",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/batch-export": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Batch export profile data of specified users, up to 100 users per request. Admin write permission. Reference: GDPR Art 20 (Right to data portability).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Batch Export User Profiles",
+        "parameters": [
+          {
+            "description": "Batch export request (including user ID list)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.BatchRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch export successful, returns exported data for each user"
+          },
+          "400": {
+            "description": "Invalid request parameters or exceeds batch limit",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/field-schemas": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get all custom field templates for the current tenant, including system preset fields and tenant custom fields. Admin read permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "List Field Templates",
+        "responses": {
+          "200": {
+            "description": "List of field templates",
+            "schema": {
+              "$ref": "#/definitions/dto.FieldSchemaListDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new custom field template for the tenant, defining field type, validation rules, and whether consent is required. Publish field template creation event. Admin write permission. Reference: GDPR Art 5 (Data minimization).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Create Field Template",
+        "parameters": [
+          {
+            "description": "Field template creation request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.FieldSchemaDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Field template created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.FieldSchemaDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or field key already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/field-schemas/{field_key}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the configuration of a specified field template. Publish field template update event. Admin write permission. Reference: GDPR Art 5 (Data minimization).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Update Field Template",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Field key",
+            "name": "field_key",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Field template update request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.FieldSchemaDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Field template updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.FieldSchemaDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Field template not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified field template (system fields cannot be deleted). Publish field template deletion event. Admin write permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Delete Field Template",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Field key",
+            "name": "field_key",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Field template deleted successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters or system field cannot be deleted",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Field template not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/policy": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the profile management policy configuration for the current tenant, including field required rules, privacy defaults, etc. Admin permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get Tenant Profile Policy",
+        "responses": {
+          "200": {
+            "description": "Tenant profile policy details",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfilePolicyDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Policy configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Partially update the tenant's profile management policy configuration. Publish policy update event. Admin permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Update Tenant Profile Policy",
+        "parameters": [
+          {
+            "description": "Policy configuration update request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ProfilePolicyDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Policy updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfilePolicyDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Policy configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a tenant profile management policy configuration. Publish policy creation event. Admin write permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Create Tenant Profile Policy",
+        "parameters": [
+          {
+            "description": "Policy configuration creation request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ProfilePolicyDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Policy created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfilePolicyDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Policy already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete the tenant policy configuration and restore system defaults. Publish policy reset event. Admin permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Delete Tenant Profile Policy",
+        "responses": {
+          "200": {
+            "description": "Restored to system default policy",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfilePolicyDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Policy configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/stats": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get profile statistics for the tenant, including total users, profile completeness distribution, field fill rate, etc. Admin read permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get Profile Statistics",
+        "responses": {
+          "200": {
+            "description": "Profile statistics information",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileStatsDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/versions/{request_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified historical version snapshot of a user profile, for version cleanup. Admin permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Approval Management"
+        ],
+        "summary": "Delete Profile Version Record",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Version ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Version record deleted successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No approval management permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Version record not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Version status conflict",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid or non-deletable version data",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/webhook": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the current tenant's profile change Webhook callback configuration, including callback URL, secret, subscribed event list, and enabled status. Admin read permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get Webhook Configuration",
+        "responses": {
+          "200": {
+            "description": "Webhook configuration details",
+            "schema": {
+              "$ref": "#/definitions/dto.WebhookConfigDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Webhook configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the current tenant's Webhook callback configuration, including callback URL, secret, event list, and enabled status. Publish Webhook configuration update event. Admin write permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Update Webhook Configuration",
+        "parameters": [
+          {
+            "description": "Webhook configuration update request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.WebhookConfigDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook configuration updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.WebhookConfigDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Webhook configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a tenant profile change Webhook callback configuration. Publish Webhook configuration creation event. Admin write permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Create Webhook Configuration",
+        "parameters": [
+          {
+            "description": "Webhook configuration creation request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.WebhookConfigDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook configuration created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.WebhookConfigDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Webhook configuration already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete the current tenant's Webhook callback configuration. Publish Webhook configuration deletion event. Admin write permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Delete Webhook Configuration",
+        "responses": {
+          "200": {
+            "description": "Webhook configuration deleted successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Webhook configuration not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/{user_id}/archive": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Archive the profile of a specified user. Admin permission. Reference: GDPR Art 5 (Data minimization).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Archive User Profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Archive request (optional archive reason)",
+            "name": "request",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/dto.ArchiveProfileRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile archived successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.ArchiveProfileDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/{user_id}/export": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Export user profile data in the specified format. Admin permission. Triggers profile export event for audit. Reference: GDPR Art 20 (Right to data portability).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Export User Profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "default": "json",
+            "description": "Export format (json/csv)",
+            "name": "format",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile export data",
+            "schema": {
+              "$ref": "#/definitions/dto.ExportProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or unsupported export format",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No admin permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/profiles/{user_id}/versions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get all historical version snapshots of a specified user profile, for audit trail and change tracking. Admin read permission.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Approval Management"
+        ],
+        "summary": "Get Profile Version History",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of profile version history (in reverse chronological order)",
+            "schema": {
+              "$ref": "#/definitions/dto.VersionListDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No approval management permission",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Version status conflict",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid version data",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/profile/batch": {
+      "get": {
+        "description": "For other microservices to batch query user profiles, supports querying multiple users at once.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile - Internal"
+        ],
+        "summary": "Batch Internal Query User Profiles",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Comma-separated list of user IDs",
+            "name": "user_ids",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user profiles (returned in request order)",
+            "schema": {
+              "$ref": "#/definitions/dto.InternalProfilesResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing user_ids",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "No valid Internal API Key provided",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/profile/export-user-data": {
+      "post": {
+        "description": "For internal services like identity-service to call, returns all personal data of the user in profile-service (for GDPR data portability). Reference: GDPR Art 20 (Right to data portability).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile - Internal"
+        ],
+        "summary": "Internal Export User Data",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Export request (including user ID)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ExportProfileInternalRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full user profile export data",
+            "schema": {
+              "$ref": "#/definitions/dto.ExportProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing user_id",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "No valid Internal API Key provided",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/profile/{user_id}": {
+      "get": {
+        "description": "For other microservices to query full user profile via internal route. Prefers X-Tenant-ID header for tenant; rejects if empty. Reference: GDPR Art 5 (Data minimization).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile - Internal"
+        ],
+        "summary": "Internal Query User Profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile details",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing tenant ID",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "No valid Internal API Key provided",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "For other microservices (e.g., identity-service SCIM handler) to internally create or update user name and nickname. Automatically determines create or update based on existing profile.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile - Internal"
+        ],
+        "summary": "Internal Create or Update User Profile Name",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          },
+          {
+            "description": "Name field update request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpsertProfileNamesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile created or updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "No valid Internal API Key provided",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "For other microservices (e.g., compliance-service erasure flow) to internally delete a specified user's profile. Generates a full data snapshot before deletion for audit. Reference: GDPR Art 17 (Right to erasure).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile - Internal"
+        ],
+        "summary": "Internal Delete User Profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Tenant ID",
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.DeletedResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or missing tenant ID",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "No valid Internal API Key provided",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profile/avatar": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the avatar URL of the currently authenticated user without specifying user_id.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Quick Get Current User Avatar",
+        "responses": {
+          "200": {
+            "description": "Current user avatar URL",
+            "schema": {
+              "$ref": "#/definitions/dto.MyAvatarDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Paginated query of user profile list under the current tenant (simplified version), supports keyword search.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "List User Profiles",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Search keyword",
+            "name": "keyword",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user profiles",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileListResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get full user profile information by user ID. Reference: GDPR Art 5 (Data minimization), GDPR Art 16 (Right to rectification).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get User Profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile details",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to view this user profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new profile or update existing profile information by user ID. Reference: GDPR Art 5 (Data minimization), GDPR Art 16 (Right to rectification).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Create or Update User Profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Profile update request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateProfileRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate on this user profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Soft-delete a specified user's profile. Generates a data snapshot before deletion for audit. Reference: GDPR Art 17 (Right to erasure), GDPR Art 5 (Data minimization).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Delete User Profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Profile deleted successfully"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to delete this user profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/avatar": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the avatar URL of a specified user. Reference: GDPR Art 5 (Data minimization).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Update User Avatar",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Avatar URL request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdateAvatarRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avatar updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or avatar URL format error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate on this user profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/avatar/upload": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Receive avatar file upload, forward to storage-service for storage, and update the returned URL to the user profile. Supports JPEG, PNG, GIF, WebP formats, max size 10MB.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Upload User Avatar",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "file",
+            "description": "Avatar file",
+            "name": "file",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avatar uploaded successfully (including avatar URL)",
+            "schema": {
+              "$ref": "#/definitions/dto.UploadAvatarResponse"
+            }
+          },
+          "400": {
+            "description": "Unsupported file format or file too large",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate on this user profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Storage service unavailable or internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/completeness": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Calculate the profile completion percentage and list missing fields, helping users understand profile completeness.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get Profile Completeness",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile completeness information (including percentage and missing fields)",
+            "schema": {
+              "$ref": "#/definitions/dto.CompletenessResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to view this user profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/consents": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Return the consent status of all fields for the current user, including the RequiresConsent flag from the field schema. Reference: GDPR Art 7 (Conditions for consent), ePrivacy Directive 2002/58/EC Art 5(3).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Query User Consent Records",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of consent fields (including consent status and schema information)",
+            "schema": {
+              "$ref": "#/definitions/dto.ConsentListDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to view this user's consent records",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "User actively consents to data collection and processing of specific fields. Publishes consent grant event for auditing. Reference: GDPR Art 7 (Conditions for consent).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Grant Data Collection Consent",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Consent field key list",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.GrantConsentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated consent field list",
+            "schema": {
+              "$ref": "#/definitions/dto.ConsentListDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate this user's consent records",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/consents/{field_key}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "User withdraws consent for data collection of specific fields. Reference: GDPR Art 7(3) (Right to withdraw consent).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Withdraw Data Collection Consent",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Field key",
+            "name": "field_key",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consent withdrawal successful",
+            "schema": {
+              "$ref": "#/definitions/dto.RevokeConsentDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate this user's consent records",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile or field not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/export": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "User self-service exports personal profile data, implementing GDPR data portability right. Triggers profile export event for auditing. Reference: GDPR Art 20 (Right to data portability).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Self-Service Export User Profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "default": "json",
+            "description": "Export format (json/csv)",
+            "name": "format",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile export data",
+            "schema": {
+              "$ref": "#/definitions/dto.ExportProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or unsupported export format",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to export this user's profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/fields": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get all custom field key-value pairs of the user profile. Reference: GDPR Art 5 (Data minimization principle).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get Custom Fields",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of custom field key-value pairs",
+            "schema": {
+              "$ref": "#/definitions/dto.FieldsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to view this user's profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update custom field key-value pairs of the user profile. Reference: GDPR Art 5 (Data minimization principle), GDPR Art 16 (Right to rectification).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Update Custom Fields",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Custom field update request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileFieldsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom fields updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.FieldsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate this user's profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/preferences": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the current user's preference settings, including theme, language, timezone, and notification preferences.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get User Preferences",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User preference details",
+            "schema": {
+              "$ref": "#/definitions/dto.PreferencesDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to view this user's preferences",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the current user's preference settings, including theme, language, timezone, and notification preferences.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Update User Preferences",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Preference update request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.UpdatePreferencesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preferences updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.PreferencesDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate this user's profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/privacy": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get privacy control settings of the user profile, including profile visibility, email display, phone display, location display, etc.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get Privacy Settings",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User privacy settings details",
+            "schema": {
+              "$ref": "#/definitions/dto.PrivacyResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to view this user's privacy settings",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update privacy control settings of the user profile, publish privacy update event. Reference: GDPR Art 5 (Data minimization principle), ePrivacy Directive 2002/58/EC Art 5(3).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Update Privacy Settings",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Privacy settings request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.PrivacySettingsDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Privacy settings updated successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.PrivacyResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate this user's profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/privacy-impact": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Dynamically calculate privacy impact score based on user profile data, assess privacy risk level of data collection. Reference: GDPR Art 35 (Data protection impact assessment).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get Privacy Impact Assessment",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Privacy impact assessment report (including score and risk level)",
+            "schema": {
+              "$ref": "#/definitions/dto.PrivacyImpactDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to view this user's assessment",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/public": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get publicly visible profile information based on user privacy settings, hiding fields set to non-public. Reference: GDPR Art 5 (Data minimization principle).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Get Public Profile",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User public profile",
+            "schema": {
+              "$ref": "#/definitions/dto.ProfileResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to view this user's profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/tags": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Set tag list for the specified user, overwriting existing tags.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Set User Tags",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Tag list request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dto.SetTagsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tags set successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate this user's profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete all tags of the specified user.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User Profile"
+        ],
+        "summary": "Delete User Tags",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tags deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated or token expired",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission to operate this user's profile",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{user_id}/versions": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Manually create a profile version snapshot for the specified user, saving the current profile state to version history",
+        "tags": [
+          "Profile Service"
+        ],
+        "summary": "Create Profile Version Snapshot",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Version snapshot created successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.VersionDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "404": {
+            "description": "Profile not found",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "domain.ProfileField": {
+      "type": "object",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ApprovalDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ApprovalResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ApprovalListDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ApprovalListResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ApprovalListResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ApprovalResponse"
+          }
+        }
+      }
+    },
+    "dto.ApprovalRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "field_changes": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "reason": {
+          "type": "string"
+        },
+        "user_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.ApprovalResponse": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "approved_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ArchiveProfileDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ArchiveProfileResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ArchiveProfileRequest": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "example": "User actively requests archiving"
+        }
+      }
+    },
+    "dto.ArchiveProfileResponse": {
+      "type": "object",
+      "properties": {
+        "archived": {
+          "type": "boolean",
+          "example": true
+        },
+        "archived_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "reason": {
+          "type": "string",
+          "example": "User actively requests archiving"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.BatchItemError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.BatchRequest": {
+      "type": "object",
+      "required": [
+        "user_ids"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string"
+        },
+        "user_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.BatchResult": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.BatchItemError"
+          }
+        },
+        "failed": {
+          "type": "integer"
+        },
+        "success": {
+          "type": "integer"
+        },
+        "total": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.BatchResultResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.BatchResult"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.CompletenessData": {
+      "type": "object",
+      "properties": {
+        "completeness": {}
+      }
+    },
+    "dto.CompletenessResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.CompletenessData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ConsentField": {
+      "type": "object",
+      "properties": {
+        "consented": {
+          "type": "boolean",
+          "example": true
+        },
+        "data_classification": {
+          "type": "string",
+          "example": "sensitive"
+        },
+        "display_name": {
+          "type": "string",
+          "example": "Health Data"
+        },
+        "field_key": {
+          "type": "string",
+          "example": "health_data"
+        },
+        "requires_consent": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "dto.ConsentListDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ConsentListResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ConsentListResponse": {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.ConsentField"
+          }
+        }
+      }
+    },
+    "dto.DeletedData": {
+      "type": "object",
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.DeletedResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.DeletedData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExportProfileData": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "avatar_url": {
+          "type": "string"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "birth_date": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "custom_fields": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "preferences": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "social_links": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExportProfileInternalRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ExportProfileResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ExportProfileData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FieldSchemaDTO": {
+      "type": "object",
+      "properties": {
+        "data_classification": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "field_key": {
+          "type": "string"
+        },
+        "field_type": {
+          "type": "string"
+        },
+        "help_text": {
+          "type": "string"
+        },
+        "is_required": {
+          "type": "boolean"
+        },
+        "is_system": {
+          "type": "boolean"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "requires_consent": {
+          "type": "boolean"
+        },
+        "sort_order": {
+          "type": "integer"
+        },
+        "validation_regex": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FieldSchemaDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FieldSchemaDTO"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FieldSchemaListDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FieldSchemaListResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.FieldSchemaListResponse": {
+      "type": "object",
+      "properties": {
+        "schemas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FieldSchemaDTO"
+          }
+        }
+      }
+    },
+    "dto.FieldViolation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the error code (optional)\nUsed for programmatic identification of error types, such as \"required\", \"format\", \"range\"",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is a human-readable error description\nShould explain what rule was violated, such as \"Must be a valid email address\"",
+          "type": "string"
+        },
+        "field": {
+          "description": "Field is the path to the error field\nUse dot notation for nested fields, such as \"user.email\" or \"addresses[0].city\"",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value is the value that caused the error (optional, used in development mode)\nMay not be returned in production to avoid leaking sensitive information"
+        }
+      }
+    },
+    "dto.FieldsData": {
+      "type": "object",
+      "properties": {
+        "fields": {}
+      }
+    },
+    "dto.FieldsResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.FieldsData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.GrantConsentRequest": {
+      "type": "object",
+      "required": [
+        "field_keys"
+      ],
+      "properties": {
+        "field_keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"health_data\"",
+            "\"biometric_data\"]"
+          ]
+        }
+      }
+    },
+    "dto.InternalProfilesData": {
+      "type": "object",
+      "properties": {
+        "profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.UserProfileResponse"
+          }
+        }
+      }
+    },
+    "dto.InternalProfilesResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.InternalProfilesData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.MyAvatarDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.MyAvatarResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.MyAvatarResponse": {
+      "type": "object",
+      "properties": {
+        "avatar_url": {
+          "type": "string",
+          "example": "https://cdn.example.com/avatars/default.png"
+        },
+        "updated_at": {
+          "type": "string",
+          "example": "2026-04-19T12:00:00Z"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user-001"
+        }
+      }
+    },
+    "dto.PreferencesDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PreferencesResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PreferencesResponse": {
+      "type": "object",
+      "properties": {
+        "preferences": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "dto.PrivacyData": {
+      "type": "object",
+      "properties": {
+        "privacy": {}
+      }
+    },
+    "dto.PrivacyImpactDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PrivacyImpactResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PrivacyImpactResponse": {
+      "type": "object",
+      "properties": {
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "risk_factors": {
+          "type": "integer",
+          "example": 3
+        },
+        "risk_level": {
+          "type": "string",
+          "example": "medium"
+        },
+        "risk_score": {
+          "type": "integer",
+          "example": 45
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_abc123"
+        }
+      }
+    },
+    "dto.PrivacyResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.PrivacyData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.PrivacySettingsDTO": {
+      "type": "object",
+      "properties": {
+        "profile_visibility": {
+          "type": "string",
+          "example": "public"
+        },
+        "show_department": {
+          "type": "boolean",
+          "example": false
+        },
+        "show_email": {
+          "type": "boolean",
+          "example": false
+        },
+        "show_location": {
+          "type": "boolean",
+          "example": false
+        },
+        "show_phone": {
+          "type": "boolean",
+          "example": false
+        }
+      }
+    },
+    "dto.Problem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the business error code\nUsed for programmatic handling of specific error scenarios\nExample: 30101001",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "Detail is a human-readable explanation for this specific error instance\nCan include specific error details, such as \"Field 'email' is required\"",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Errors is a list of field-level validation errors (extension field)\nFollows Web API standard practices, each error contains field name and error message",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FieldViolation"
+          }
+        },
+        "i18n_args": {
+          "description": "I18nArgs are internationalization parameters\nUsed to dynamically fill translation templates",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "i18n_key": {
+          "description": "I18nKey is the internationalization key\nUsed for client-side localization of error messages\nExample: \"error.user_not_found\"",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Instance is the specific URI reference where the problem occurred\nUsually the request URL, may include query parameters\nExample: \"/api/v1/users?limit=invalid\"",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "RequestID is the unique request identifier\nUsed for log correlation and issue tracking\nExample: \"req_550e8400-e29b-41d4-a716-446655440000\"",
+          "type": "string"
+        },
+        "retry_after": {
+          "description": "RetryAfter is used for 429 Too Many Requests responses\nIndicates how many seconds the client should wait before retrying (RFC 6585)",
+          "type": "integer"
+        },
+        "service": {
+          "description": "Service is the service name\nUsed in microservice architectures to locate the error source\nExample: \"auth-service\"",
+          "type": "string"
+        },
+        "span_id": {
+          "description": "SpanID is the current span identifier\nUsed to precisely locate the current node in a distributed trace",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status is the HTTP status code generated\nUsed by clients to distinguish problem types, does not change with Accept-Language\nExample: 400, 401, 403, 404, 500",
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "Timestamp is the error occurrence time\nISO 8601 format\nExample: \"2026-04-03T12:00:00Z\"",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title is a short, human-readable summary of the problem type\nThe same Type should always have the same Title (does not change per instance)\nExample: \"Invalid Request Parameters\"",
+          "type": "string"
+        },
+        "trace_id": {
+          "description": "TraceID is the distributed tracing identifier\nFollows W3C Trace Context standard\nExample: \"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01\"",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is a URI reference that identifies the problem type\nWhen dereferenced, should provide human-readable documentation\nExample: \"https://api.example.com/errors/invalid-request\"",
+          "type": "string"
+        }
+      }
+    },
+    "dto.ProfileData": {
+      "type": "object",
+      "properties": {
+        "profile": {}
+      }
+    },
+    "dto.ProfileDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.UserProfileResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ProfileFieldsRequest": {
+      "type": "object",
+      "required": [
+        "fields"
+      ],
+      "properties": {
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/domain.ProfileField"
+          }
+        }
+      }
+    },
+    "dto.ProfileListResponse": {
+      "type": "object"
+    },
+    "dto.ProfilePolicyDTO": {
+      "type": "object",
+      "properties": {
+        "allowed_avatar_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "auto_archive_after_days": {
+          "type": "integer"
+        },
+        "avatar_upload_enabled": {
+          "type": "boolean"
+        },
+        "cache_ttl_seconds": {
+          "type": "integer"
+        },
+        "completeness_enabled": {
+          "type": "boolean"
+        },
+        "completeness_weights": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "custom_fields_enabled": {
+          "type": "boolean"
+        },
+        "default_profile_visibility": {
+          "type": "string"
+        },
+        "default_show_email": {
+          "type": "boolean"
+        },
+        "default_show_location": {
+          "type": "boolean"
+        },
+        "default_show_phone": {
+          "type": "boolean"
+        },
+        "max_avatar_size_bytes": {
+          "type": "integer"
+        },
+        "max_custom_fields": {
+          "type": "integer"
+        },
+        "max_social_links": {
+          "type": "integer"
+        },
+        "max_tags_per_user": {
+          "type": "integer"
+        },
+        "privacy_impact_enabled": {
+          "type": "boolean"
+        },
+        "public_profile_enabled": {
+          "type": "boolean"
+        },
+        "required_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "retention_days_after_delete": {
+          "type": "integer"
+        },
+        "social_links_enabled": {
+          "type": "boolean"
+        },
+        "tags_enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.ProfilePolicyDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ProfilePolicyResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ProfilePolicyResponse": {
+      "type": "object",
+      "properties": {
+        "allowed_avatar_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "auto_archive_after_days": {
+          "type": "integer"
+        },
+        "avatar_upload_enabled": {
+          "type": "boolean"
+        },
+        "cache_ttl_seconds": {
+          "type": "integer"
+        },
+        "completeness_enabled": {
+          "type": "boolean"
+        },
+        "completeness_weights": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "custom_fields_enabled": {
+          "type": "boolean"
+        },
+        "default_profile_visibility": {
+          "type": "string"
+        },
+        "default_show_email": {
+          "type": "boolean"
+        },
+        "default_show_location": {
+          "type": "boolean"
+        },
+        "default_show_phone": {
+          "type": "boolean"
+        },
+        "max_avatar_size_bytes": {
+          "type": "integer"
+        },
+        "max_custom_fields": {
+          "type": "integer"
+        },
+        "max_social_links": {
+          "type": "integer"
+        },
+        "max_tags_per_user": {
+          "type": "integer"
+        },
+        "privacy_impact_enabled": {
+          "type": "boolean"
+        },
+        "public_profile_enabled": {
+          "type": "boolean"
+        },
+        "required_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "retention_days_after_delete": {
+          "type": "integer"
+        },
+        "social_links_enabled": {
+          "type": "boolean"
+        },
+        "tags_enabled": {
+          "type": "boolean"
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ProfileResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ProfileData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ProfileStatsDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.ProfileStatsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.ProfileStatsResponse": {
+      "type": "object",
+      "properties": {
+        "active_profiles": {
+          "type": "integer"
+        },
+        "archived_profiles": {
+          "type": "integer"
+        },
+        "avg_completeness": {
+          "description": "P3: implement avg profile completeness",
+          "type": "number"
+        },
+        "completeness_distribution": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "deleted_profiles": {
+          "type": "integer"
+        },
+        "recent_activity_24h": {
+          "type": "integer"
+        },
+        "total_profiles": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.RejectApprovalBody": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.RevokeConsentDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.RevokeConsentResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.RevokeConsentResponse": {
+      "type": "object",
+      "properties": {
+        "field_key": {
+          "type": "string",
+          "example": "health_data"
+        },
+        "revoked": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "dto.SetTagsRequest": {
+      "type": "object",
+      "required": [
+        "tags"
+      ],
+      "properties": {
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.SuccessData": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dto.SuccessResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.SuccessData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpdateAvatarRequest": {
+      "type": "object",
+      "required": [
+        "avatar_url"
+      ],
+      "properties": {
+        "avatar_url": {
+          "type": "string",
+          "example": "https://example.com/avatar.jpg"
+        }
+      }
+    },
+    "dto.UpdatePreferencesRequest": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "example": "zh-CN"
+        },
+        "notifications": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "theme": {
+          "type": "string",
+          "example": "dark"
+        },
+        "timezone": {
+          "type": "string",
+          "example": "Asia/Shanghai"
+        }
+      }
+    },
+    "dto.UpdateProfileRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "123 Main St"
+        },
+        "avatar_url": {
+          "type": "string",
+          "example": "https://example.com/avatar.jpg"
+        },
+        "bio": {
+          "type": "string",
+          "example": "Software Engineer"
+        },
+        "birthdate": {
+          "type": "string",
+          "example": "1990-01-15"
+        },
+        "city": {
+          "type": "string",
+          "example": "San Francisco"
+        },
+        "country": {
+          "type": "string",
+          "example": "US"
+        },
+        "custom_fields": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "first_name": {
+          "type": "string",
+          "example": "John"
+        },
+        "gender": {
+          "type": "string",
+          "example": "male"
+        },
+        "language": {
+          "type": "string",
+          "example": "en-US"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "nickname": {
+          "type": "string",
+          "example": "Johnny"
+        },
+        "social_links": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "timezone": {
+          "type": "string",
+          "example": "America/Los_Angeles"
+        },
+        "website": {
+          "type": "string",
+          "example": "https://johndoe.com"
+        }
+      }
+    },
+    "dto.UploadAvatarData": {
+      "type": "object",
+      "properties": {
+        "avatar_url": {
+          "type": "string"
+        },
+        "profile": {}
+      }
+    },
+    "dto.UploadAvatarResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.UploadAvatarData"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.UpsertProfileNamesRequest": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "nickname": {
+          "type": "string",
+          "example": "Johnny"
+        }
+      }
+    },
+    "dto.UserProfileResponse": {
+      "type": "object"
+    },
+    "dto.VersionDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.VersionResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.VersionListDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.VersionListResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.VersionListResponse": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.VersionResponse"
+          }
+        }
+      }
+    },
+    "dto.VersionResponse": {
+      "type": "object",
+      "properties": {
+        "change_type": {
+          "type": "string"
+        },
+        "changed_at": {
+          "type": "string"
+        },
+        "changed_by": {
+          "type": "string"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "version": {
+          "type": "integer"
+        }
+      }
+    },
+    "dto.WebhookConfigDTO": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_enabled": {
+          "type": "boolean"
+        },
+        "secret": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.WebhookConfigDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/dto.WebhookConfigResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "dto.WebhookConfigResponse": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_enabled": {
+          "type": "boolean"
+        },
+        "tenant_id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and JWT token.",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "User profile management: CRUD, avatar, privacy settings",
+      "name": "User Profile"
+    },
+    {
+      "description": "Profile approval management: field change approval workflow",
+      "name": "Approval Management"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ]
+}

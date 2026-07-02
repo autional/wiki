@@ -1,0 +1,4538 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "AuthMS Role Permission Management Service",
+    "title": "RBAC Service API",
+    "contact": {},
+    "version": "1.0"
+  },
+  "paths": {
+    "/admin/approval-requests": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List all approval requests under a tenant, with optional status filtering (pending/approved/rejected/cancelled) and pagination. References: NIST SP 800-53 AC-2 (Account Management), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Approval"
+        ],
+        "summary": "List Approval Requests",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Approval status (pending/approved/rejected/cancelled)",
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 10,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of approval requests",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ApprovalRequestResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/approval-requests/{request_id}/approve": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Approve a specified approval request and execute the operation (e.g., role assignment). Only pending requests can be approved. References: NIST SP 800-53 AC-2 (Account Management), AC-5 (Separation of Duties), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Approval"
+        ],
+        "summary": "Approve Approval Request",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Approval request ID",
+            "name": "request_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Approval reason (optional)",
+            "name": "request",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ApproveRejectRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Approval approved",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Approval request not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Approval request already processed (duplicate operation)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid state transition (not pending)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/approval-requests/{request_id}/reject": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Reject a specified approval request; a rejection reason is required. Only pending requests can be rejected. References: NIST SP 800-53 AC-2 (Account Management), AC-5 (Separation of Duties), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Approval"
+        ],
+        "summary": "Reject Approval Request",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Approval request ID",
+            "name": "request_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Rejection reason",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ApproveRejectRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Approval rejected",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Approval request not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Approval request already processed (duplicate operation)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "422": {
+            "description": "Invalid state transition (not pending)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/permissions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the RBAC permission list under a tenant, with pagination and optional filtering by resource, action, or category. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Permission"
+        ],
+        "summary": "List Permissions",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Resource type (fuzzy match)",
+            "name": "resource",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Action type (fuzzy match)",
+            "name": "action",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Category (fuzzy match)",
+            "name": "category",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of permissions",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new RBAC permission for role authorization. Permission code must be globally unique. Supports allow/deny effect, resource category, and tags. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Permission"
+        ],
+        "summary": "Create Permission",
+        "parameters": [
+          {
+            "description": "Create permission request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CreatePermissionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Permission created successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Permission code already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/permissions/simulate": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Simulate permission check results for a specified user against a set of resources and actions (no data changes). Used for troubleshooting permission issues or pre-validating RBAC policies. References: NIST SP 800-53 AC-3 (Access Enforcement), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Permission"
+        ],
+        "summary": "Permission Simulation / Check",
+        "parameters": [
+          {
+            "description": "Permission simulation request (max 50 check items)",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.SimulatePermissionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permission simulation result",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/permissions/{permission_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get detailed information of a permission by ID, including resource, action type, effect, category, and tags. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Permission"
+        ],
+        "summary": "Get Permission Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Permission ID",
+            "name": "permission_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permission details",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Permission not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the name, description, category, and tags of a permission by ID (code, resource, and action cannot be changed). References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Permission"
+        ],
+        "summary": "Update Permission",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Permission ID",
+            "name": "permission_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update permission request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.UpdatePermissionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permission updated successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Permission not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a permission by ID. Checks if any roles still reference the permission; deletion is rejected if references exist. References: NIST SP 800-53 AC-2 (Account Management), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Permission"
+        ],
+        "summary": "Delete Permission",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Permission ID",
+            "name": "permission_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Permission deleted successfully, no response body"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Permission not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Permission is still referenced by roles and cannot be deleted",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/permissions/{permission_id}/roles": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query all roles that have a specified permission (reverse lookup: \"which roles contain this permission\"). References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Permission"
+        ],
+        "summary": "Get Roles with Permission",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Permission ID",
+            "name": "permission_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of roles with this permission",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Permission not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/permissions/{permission_id}/users": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query all user IDs that have a specified permission (via role inheritance or direct assignment). Used for security auditing and permission tracing. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Permission"
+        ],
+        "summary": "Get Users with Permission",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Permission ID",
+            "name": "permission_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user IDs with this permission",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_UserIDsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Permission not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query the RBAC role list under a tenant, with pagination and optional filtering by code or name. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "List Roles",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role code (fuzzy match)",
+            "name": "code",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "Role name (fuzzy match)",
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 1,
+            "description": "Page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "default": 20,
+            "description": "Items per page",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of roles",
+            "schema": {
+              "$ref": "#/definitions/dto.ListResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new RBAC role for permission management. Role code must be globally unique. Supports setting a parent role for hierarchical inheritance and data scope control. References: NIST SP 800-53 AC-2 (Account Management), AC-5 (Separation of Duties), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Create Role",
+        "parameters": [
+          {
+            "description": "Create role request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CreateRoleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Role created successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Role code already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/batch/permissions": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Assign permissions to multiple roles in batch. Validates that permissions belong to the same tenant before assignment. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Batch Assign Permissions",
+        "parameters": [
+          {
+            "description": "Batch assign permissions request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BatchAssignPermissionsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch assignment result",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role or permission not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Revoke permissions from multiple roles in batch. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Batch Revoke Permissions",
+        "parameters": [
+          {
+            "description": "Batch revoke permissions request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BatchRevokePermissionsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch revocation result",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/conflict-pairs": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List all configured Separation of Duties (SoD) conflict pairs under a tenant. References: NIST SP 800-53 AC-5 (Separation of Duties).",
+        "tags": [
+          "RBAC - SoD"
+        ],
+        "summary": "List SoD Conflict Pairs",
+        "responses": {
+          "200": {
+            "description": "List of conflict pairs",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ConflictPairResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create a new Separation of Duties (SoD) conflict pair, specifying two mutually exclusive roles (e.g., approver and operator cannot be the same person). After creation, the system automatically detects and prevents conflicts during role assignment. References: NIST SP 800-53 AC-5 (Separation of Duties).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - SoD"
+        ],
+        "summary": "Create SoD Conflict Pair",
+        "parameters": [
+          {
+            "description": "Conflict pair request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CreateConflictPairRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Conflict pair created successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ConflictPairResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Conflict pair already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/conflict-pairs/{pair_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a specified Separation of Duties (SoD) conflict pair. After deletion, the related roles are no longer mutually exclusive. References: NIST SP 800-53 AC-5 (Separation of Duties).",
+        "tags": [
+          "RBAC - SoD"
+        ],
+        "summary": "Delete SoD Conflict Pair",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Conflict pair ID",
+            "name": "pair_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conflict pair deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Conflict pair not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/defaults": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "List all default roles and their priorities for a tenant. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "List Default Roles",
+        "responses": {
+          "200": {
+            "description": "List of default roles",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_DefaultRoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Add a tenant-level default role. New users will be automatically assigned this role upon registration. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Add Tenant Default Role",
+        "parameters": [
+          {
+            "description": "Add default role request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AddDefaultRoleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default role added successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/defaults/{role_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Remove a default role from a tenant. New users will no longer be automatically assigned this role. References: NIST SP 800-53 AC-2 (Account Management), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Remove Default Role",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default role removed successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Default role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/{role_id}": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get detailed information of a role by ID, including role name, description, data scope, and parent-child hierarchy. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Get Role Details",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role details",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Update the name, description, parent role, and data scope configuration of a role by ID. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Update Role",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Update role request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.UpdateRoleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role updated successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Delete a role by ID. Checks if any users are associated with the role; deletion is rejected if associations exist. References: NIST SP 800-53 AC-2 (Account Management), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Delete Role",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Role deleted successfully, no response body"
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Role still has associated users and cannot be deleted",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/{role_id}/approval-requests": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Create an approval request for role changes (e.g., assign or remove a role for a user). After submission, it enters the approval workflow and awaits admin approval. References: NIST SP 800-53 AC-2 (Account Management), AC-5 (Separation of Duties), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Approval"
+        ],
+        "summary": "Request Role Change Approval",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Approval request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RequestApprovalRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Approval request created successfully",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ApprovalRequestResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "A pending request of the same type already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/{role_id}/children": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query all direct child roles (next level) of a specified role. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Get Child Roles",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of child roles",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Set a specified role as a child of the current role, establishing a hierarchical inheritance relationship (child roles automatically inherit parent role permissions). References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Add Child Role",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Parent role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Child role request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AddRoleChildRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Child role added successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Adding the hierarchy would cause a circular reference",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/{role_id}/children/{child_id}": {
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Remove the hierarchical inheritance relationship between a specified role and its child role. References: NIST SP 800-53 AC-2 (Account Management), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Remove Child Role",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Parent role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Child role ID",
+            "name": "child_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Child role removed successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/{role_id}/clone": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Clone an existing role's attributes and permissions to create a new role. A new role code and name must be specified. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Clone Role",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Source role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Clone request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CloneRoleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Clone successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Source role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Target role code already exists",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/{role_id}/effective-permissions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query all effective permissions of a role (directly assigned permissions + inherited permissions from all parent roles), deduplicated into a flat list. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Get Role Effective Permissions",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of effective permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/{role_id}/parents": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query all ancestor roles of a specified role (parent → grandparent → ... → root), ordered from nearest to farthest. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Get Ancestor Role Chain",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of ancestor role chain",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/{role_id}/permissions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get the list of permissions directly assigned to a role by ID (excluding inherited permissions from parent roles). References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Get Role Direct Permissions",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of role permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Assign one or more permissions to a specified role in batch. Validates that permissions belong to the same tenant before assignment. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Assign Permissions to Role",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Assign permissions request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AssignPermissionsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permissions assigned successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role or permission not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Revoke one or more assigned permissions from a specified role. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Revoke Permissions from Role",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Revoke permissions request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RevokePermissionsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permissions revoked successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/roles/{role_id}/users": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Query all user IDs that have a specified role (reverse lookup: \"who has this role\"). Used for security auditing and permission tracing. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - Role"
+        ],
+        "summary": "Get Users with Role",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Role ID",
+            "name": "role_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user IDs with this role",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_UserIDsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "Role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/users/batch/roles": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Assign roles to multiple users in batch (up to 1000 users). Automatically performs SoD conflict detection and returns the assignment result for each user. References: NIST SP 800-53 AC-2 (Account Management), AC-5 (Separation of Duties), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - User Role"
+        ],
+        "summary": "Batch Assign Roles",
+        "parameters": [
+          {
+            "description": "Batch assign roles request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BatchAssignRolesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch assignment result",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Remove roles from multiple users in batch (up to 1000 users). Returns the removal result for each user. References: NIST SP 800-53 AC-2 (Account Management), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - User Role"
+        ],
+        "summary": "Batch Remove Roles",
+        "parameters": [
+          {
+            "description": "Batch remove roles request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BatchRemoveRolesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch removal result",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/users/{user_id}/permissions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Get all effective permissions of a specified user (aggregated: role direct permissions + role hierarchy inherited permissions + user direct permissions), deduplicated into a flat list. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - User Role"
+        ],
+        "summary": "Get User Effective Permissions",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user permissions",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Unauthenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Directly assign permissions to a user (without going through roles). Suitable for temporary or special permission scenarios. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - User Role"
+        ],
+        "summary": "Assign direct permissions to a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Direct permission assignment request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AssignDirectPermissionsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Direct permissions assigned successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User or permission not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Revoke one or more direct permissions assigned to a user (does not affect permissions inherited through roles). Reference: NIST SP 800-53 AC-2 (Account Management), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - User Roles"
+        ],
+        "summary": "Revoke direct permissions from a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Revoke direct permissions request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RevokeDirectPermissionsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Direct permissions revoked successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/users/{user_id}/roles": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Retrieve the list of all roles currently assigned to a specified user, including role details and hierarchy. Reference: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - User Roles"
+        ],
+        "summary": "List user roles",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User role list",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Assign one or more roles to a specified user in bulk, automatically performing Separation of Duties (SoD) conflict detection, with support for setting expiration and authorization type. Reference: NIST SP 800-53 AC-2 (Account Management), AC-5 (Separation of Duties), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - User Roles"
+        ],
+        "summary": "Assign roles to a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Assign role request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AssignRolesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role assigned successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User or role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "409": {
+            "description": "Separation of Duties (SoD) conflict detected",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Remove one or more assigned roles from a specified user. Reference: NIST SP 800-53 AC-2 (Account Management), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - User Roles"
+        ],
+        "summary": "Remove user roles",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Remove role request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RemoveRolesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role removed successfully",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User or role not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/admin/users/{user_id}/roles/validate": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Check whether the roles currently assigned to a specified user have Separation of Duties (SoD) conflicts, returning conflict details. Reference: NIST SP 800-53 AC-5 (Separation of Duties).",
+        "tags": [
+          "RBAC - SoD"
+        ],
+        "summary": "Validate user role conflicts",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SoD validation result",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ValidateUserRolesResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "No permission (non-admin)",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/auth/check-permission": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Check whether the currently logged-in user has permission for a specified resource and action, for frontend button-level permission control. Reference: NIST SP 800-53 AC-3 (Access Enforcement), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - User Roles"
+        ],
+        "summary": "Check user permission (user side)",
+        "parameters": [
+          {
+            "description": "Permission check request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CheckPermissionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permission check result",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionCheckResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/auth/check-role": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Check whether the currently logged-in user has a specified role code, for frontend role gating. Reference: NIST SP 800-53 AC-2 (Account Management), OWASP ASVS V1.2 (Access Control Architecture).",
+        "tags": [
+          "RBAC - User Roles"
+        ],
+        "summary": "Check user role (user side)",
+        "parameters": [
+          {
+            "description": "Role check request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CheckRoleRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role check result",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleCheckResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/rbac/bootstrap-admin": {
+      "post": {
+        "description": "Internal API: Create an admin role and assign it to a specified user, available only when APP_ENV=development. Used for test/CI environments to quickly set up an admin role without requiring a pre-existing admin. Reference: NIST SP 800-53 AC-2 (Account Management).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Roles"
+        ],
+        "summary": "Bootstrap admin role",
+        "parameters": [
+          {
+            "description": "Bootstrap admin request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BootstrapAdminRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bootstrap successful",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_BootstrapAdminResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "403": {
+            "description": "Forbidden in production environment",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/rbac/check-permission": {
+      "post": {
+        "description": "Permission check interface for internal calls from other microservices, passing tenant information via the X-Tenant-ID request header, supporting direct user_id specification. Requires InternalAPIKeyAuth authentication. Reference: NIST SP 800-53 AC-3 (Access Enforcement), OWASP ASVS V1.2 (Access Control Architecture).",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Permissions"
+        ],
+        "summary": "Check user permission (internal service call)",
+        "parameters": [
+          {
+            "description": "Internal permission check request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CheckPermissionInternalRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permission check result",
+            "schema": {
+              "$ref": "#/definitions/gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionCheckDetailResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.Problem"
+            }
+          }
+        }
+      }
+    },
+    "/internal/rbac/erase-user": {
+      "post": {
+        "description": "Inter-service internal call: Erase all role assignments and direct permission records for a specified user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "RBAC - Internal Interfaces"
+        ],
+        "summary": "Internal GDPR erasure",
+        "parameters": [
+          {
+            "description": "{\\",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Erasure successful",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "401": {
+            "description": "Not authenticated or invalid API key",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/dto.SimpleResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "dto.FieldViolation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the error code (optional) used by programs to identify error types, e.g., \"required\", \"format\", \"range\"",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is a human-readable error description that should explain which rule was violated, e.g., \"Must be a valid email address\"",
+          "type": "string"
+        },
+        "field": {
+          "description": "Field is the path to the error field, using dot notation for nested fields, e.g., \"user.email\" or \"addresses[0].city\"",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value is the value that caused the error (optional, used in development mode); may not be returned in production to avoid leaking sensitive information"
+        }
+      }
+    },
+    "dto.ListResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ApprovalRequestResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ApprovalRequestResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat, for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ListResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat, for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.ListResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "items": {
+          "description": "Use items uniformly",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RoleResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "pagination": {
+          "description": "Pagination information (nested object)",
+          "allOf": [
+            {
+              "$ref": "#/definitions/dto.PageInfo"
+            }
+          ]
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total": {
+          "description": "Total count (flat, for direct reading)",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.PageInfo": {
+      "type": "object",
+      "properties": {
+        "has_next": {
+          "description": "HasNext indicates whether there is a next page",
+          "type": "boolean"
+        },
+        "has_prev": {
+          "description": "HasPrev indicates whether there is a previous page",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page is the current page number (1-based)",
+          "type": "integer"
+        },
+        "page_size": {
+          "description": "PageSize is the number of items per page",
+          "type": "integer"
+        },
+        "total": {
+          "description": "Total is the total number of items across all pages",
+          "type": "integer"
+        },
+        "total_pages": {
+          "description": "TotalPages is the total number of pages",
+          "type": "integer"
+        }
+      }
+    },
+    "dto.Problem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Code is the business error code used by programs to handle specific error scenarios. Example: 30101001",
+          "type": "integer"
+        },
+        "detail": {
+          "description": "Detail is a human-readable explanation specific to this error instance, which may include specific error details, e.g., \"Field 'email' is required\"",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Errors is a list of field-level validation errors (extension field), following Web API standard practices, each error contains the field name and error message",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dto.FieldViolation"
+          }
+        },
+        "i18n_args": {
+          "description": "I18nArgs are internationalization parameters used to dynamically fill translation templates",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "i18n_key": {
+          "description": "I18nKey is the internationalization key used for client-side localization of error messages. Example: \"error.user_not_found\"",
+          "type": "string"
+        },
+        "instance": {
+          "description": "Instance is the specific URI reference where the problem occurred, usually the request URL, possibly including query parameters. Example: \"/api/v1/users?limit=invalid\"",
+          "type": "string"
+        },
+        "request_id": {
+          "description": "RequestID is the unique request identifier used for log correlation and issue tracking. Example: \"req_550e8400-e29b-41d4-a716-446655440000\"",
+          "type": "string"
+        },
+        "retry_after": {
+          "description": "RetryAfter is used for 429 Too Many Requests responses, indicating how many seconds the client should wait before retrying (RFC 6585)",
+          "type": "integer"
+        },
+        "service": {
+          "description": "Service is the service name used in microservice architectures to locate the error source. Example: \"auth-service\"",
+          "type": "string"
+        },
+        "span_id": {
+          "description": "SpanID is the current span identifier used to precisely locate the current node in a distributed trace",
+          "type": "string"
+        },
+        "status": {
+          "description": "Status is the HTTP status code generated, used by clients to distinguish problem types, does not change with Accept-Language. Example: 400, 401, 403, 404, 500",
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "Timestamp is the time the error occurred, in ISO 8601 format. Example: \"2026-04-03T12:00:00Z\"",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title is a short, human-readable summary of the problem type; the same Type should always have the same Title (does not vary by instance). Example: \"Invalid Request Parameters\"",
+          "type": "string"
+        },
+        "trace_id": {
+          "description": "TraceID is the distributed tracing identifier, following the W3C Trace Context standard. Example: \"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01\"",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type is a URI reference that identifies the problem type; when dereferenced, it should provide human-readable documentation. Example: \"https://api.example.com/errors/invalid-request\"",
+          "type": "string"
+        }
+      }
+    },
+    "dto.SimpleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ConflictPairResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ConflictPairResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_DefaultRoleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.DefaultRoleResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-array_gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RoleResponse"
+          }
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ApprovalRequestResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ApprovalRequestResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_BootstrapAdminResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BootstrapAdminResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ConflictPairResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ConflictPairResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionCheckDetailResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionCheckDetailResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionCheckResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionCheckResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleCheckResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RoleCheckResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_RoleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RoleResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_UserIDsResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.UserIDsResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ValidateUserRolesResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "data": {
+          "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ValidateUserRolesResponse"
+        },
+        "message": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_domain_rbac.SimulatePermissionCheck": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AddDefaultRoleRequest": {
+      "type": "object",
+      "required": [
+        "role_id"
+      ],
+      "properties": {
+        "role_id": {
+          "description": "Role ID",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AddRoleChildRequest": {
+      "type": "object",
+      "required": [
+        "child_id"
+      ],
+      "properties": {
+        "child_id": {
+          "description": "Sub-role ID",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ApprovalRequestResponse": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "example": "assign_role"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "payload": {
+          "type": "string",
+          "example": "{}"
+        },
+        "reason": {
+          "type": "string",
+          "example": ""
+        },
+        "requester_id": {
+          "type": "string",
+          "example": "usr_example_001"
+        },
+        "reviewer_id": {
+          "type": "string",
+          "example": "usr_example_003"
+        },
+        "role_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "status": {
+          "type": "string",
+          "example": "pending"
+        },
+        "target_id": {
+          "type": "string",
+          "example": "usr_example_002"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "tnt_example_001"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ApproveRejectRequest": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "description": "Reason",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AssignDirectPermissionsRequest": {
+      "type": "object",
+      "required": [
+        "permission_ids"
+      ],
+      "properties": {
+        "permission_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AssignPermissionsRequest": {
+      "type": "object",
+      "required": [
+        "permission_ids"
+      ],
+      "properties": {
+        "permission_ids": {
+          "description": "Permission IDs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.AssignRolesRequest": {
+      "type": "object",
+      "required": [
+        "role_ids"
+      ],
+      "properties": {
+        "department_id": {
+          "description": "Department ID",
+          "type": "string"
+        },
+        "expire_at": {
+          "description": "Expiration time",
+          "type": "string"
+        },
+        "grant_type": {
+          "description": "Grant type",
+          "type": "string"
+        },
+        "role_ids": {
+          "description": "Role IDs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BatchAssignPermissionsRequest": {
+      "type": "object",
+      "required": [
+        "permission_ids",
+        "role_ids"
+      ],
+      "properties": {
+        "permission_ids": {
+          "description": "Permission ID list",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "role_ids": {
+          "description": "Role ID list",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BatchAssignRolesRequest": {
+      "type": "object",
+      "required": [
+        "role_ids",
+        "user_ids"
+      ],
+      "properties": {
+        "role_ids": {
+          "description": "Role ID list",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "user_ids": {
+          "description": "User ID list",
+          "type": "array",
+          "maxItems": 1000,
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BatchRemoveRolesRequest": {
+      "type": "object",
+      "required": [
+        "role_ids",
+        "user_ids"
+      ],
+      "properties": {
+        "role_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "user_ids": {
+          "type": "array",
+          "maxItems": 1000,
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BatchRevokePermissionsRequest": {
+      "type": "object",
+      "required": [
+        "permission_ids",
+        "role_ids"
+      ],
+      "properties": {
+        "permission_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "role_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BootstrapAdminRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.BootstrapAdminResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "admin role assigned"
+        },
+        "role_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CheckPermissionInternalRequest": {
+      "type": "object",
+      "required": [
+        "action",
+        "resource",
+        "user_id"
+      ],
+      "properties": {
+        "action": {
+          "description": "Action",
+          "type": "string"
+        },
+        "resource": {
+          "description": "Resource",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "User ID",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CheckPermissionRequest": {
+      "type": "object",
+      "required": [
+        "action",
+        "resource"
+      ],
+      "properties": {
+        "action": {
+          "description": "Action",
+          "type": "string"
+        },
+        "resource": {
+          "description": "Resource",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CheckRoleRequest": {
+      "type": "object",
+      "required": [
+        "role_code"
+      ],
+      "properties": {
+        "role_code": {
+          "description": "Role code",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CloneRoleRequest": {
+      "type": "object",
+      "required": [
+        "code",
+        "name"
+      ],
+      "properties": {
+        "code": {
+          "description": "New role code",
+          "type": "string"
+        },
+        "name": {
+          "description": "New role name",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ConflictPairResponse": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-04-15T10:30:00Z"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string",
+          "example": "Approval and operation separation of duties"
+        },
+        "id": {
+          "description": "Conflict pair ID",
+          "type": "string",
+          "example": "cp_abc123"
+        },
+        "role_id_a": {
+          "description": "Role A ID",
+          "type": "string",
+          "example": "role_admin"
+        },
+        "role_id_b": {
+          "description": "Role B ID",
+          "type": "string",
+          "example": "role_operator"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CreateConflictPairRequest": {
+      "type": "object",
+      "required": [
+        "role_id_a",
+        "role_id_b"
+      ],
+      "properties": {
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "role_id_a": {
+          "description": "Role A ID",
+          "type": "string"
+        },
+        "role_id_b": {
+          "description": "Role B ID",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CreatePermissionRequest": {
+      "type": "object",
+      "required": [
+        "action",
+        "code",
+        "name",
+        "resource"
+      ],
+      "properties": {
+        "action": {
+          "description": "Action",
+          "type": "string"
+        },
+        "category": {
+          "description": "Category",
+          "type": "string"
+        },
+        "code": {
+          "description": "Permission code",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "effect": {
+          "description": "Effect",
+          "allOf": [
+            {
+              "$ref": "#/definitions/rbac.Effect"
+            }
+          ]
+        },
+        "name": {
+          "description": "Permission name",
+          "type": "string"
+        },
+        "resource": {
+          "description": "Resource",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Tags",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CreateRoleRequest": {
+      "type": "object",
+      "required": [
+        "code",
+        "name"
+      ],
+      "properties": {
+        "code": {
+          "description": "Role code",
+          "type": "string"
+        },
+        "data_scope": {
+          "description": "Data scope",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "name": {
+          "description": "Role name",
+          "type": "string"
+        },
+        "parent_id": {
+          "description": "Parent role ID",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.DefaultRoleResponse": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "example": "2026-01-01T00:00:00Z"
+        },
+        "id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "priority": {
+          "type": "integer",
+          "example": 0
+        },
+        "role_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        },
+        "tenant_id": {
+          "type": "string",
+          "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionCheckDetailResponse": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "example": "create"
+        },
+        "allowed": {
+          "type": "boolean",
+          "example": true
+        },
+        "resource": {
+          "type": "string",
+          "example": "user"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "usr_example_001"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionCheckResponse": {
+      "type": "object",
+      "properties": {
+        "allowed": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionResponse": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "description": "Operation type",
+          "type": "string",
+          "example": "create"
+        },
+        "category": {
+          "description": "Category",
+          "type": "string",
+          "example": "user_mgmt"
+        },
+        "code": {
+          "description": "Permission code",
+          "type": "string",
+          "example": "user:create"
+        },
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-01-01T00:00:00Z"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string",
+          "example": "Create user permission"
+        },
+        "effect": {
+          "description": "Effect",
+          "allOf": [
+            {
+              "$ref": "#/definitions/rbac.Effect"
+            }
+          ],
+          "example": "allow"
+        },
+        "id": {
+          "description": "Permission ID",
+          "type": "string",
+          "example": "perm_abc123"
+        },
+        "name": {
+          "description": "Permission name",
+          "type": "string",
+          "example": "Created by"
+        },
+        "resource": {
+          "description": "Resource type",
+          "type": "string",
+          "example": "user"
+        },
+        "tags": {
+          "description": "Tags",
+          "type": "string",
+          "example": "Management, Account"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "updated_at": {
+          "description": "Update time",
+          "type": "string",
+          "example": "2026-04-10T14:20:00Z"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RemoveRolesRequest": {
+      "type": "object",
+      "properties": {
+        "role_ids": {
+          "description": "Role IDs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RequestApprovalRequest": {
+      "type": "object",
+      "required": [
+        "action",
+        "target_id"
+      ],
+      "properties": {
+        "action": {
+          "description": "Action",
+          "type": "string"
+        },
+        "expire_at": {
+          "description": "Expiration time",
+          "type": "string"
+        },
+        "payload": {
+          "description": "Additional data",
+          "type": "string"
+        },
+        "target_id": {
+          "description": "Target ID",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RevokeDirectPermissionsRequest": {
+      "type": "object",
+      "required": [
+        "permission_ids"
+      ],
+      "properties": {
+        "permission_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RevokePermissionsRequest": {
+      "type": "object",
+      "required": [
+        "permission_ids"
+      ],
+      "properties": {
+        "permission_ids": {
+          "description": "Permission IDs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RoleCheckResponse": {
+      "type": "object",
+      "properties": {
+        "has_role": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.RoleResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Role code",
+          "type": "string",
+          "example": "admin"
+        },
+        "created_at": {
+          "description": "Creation time",
+          "type": "string",
+          "example": "2026-01-01T00:00:00Z"
+        },
+        "data_scope": {
+          "description": "Data scope",
+          "type": "string",
+          "example": "self"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string",
+          "example": "System administrator"
+        },
+        "id": {
+          "description": "Role ID",
+          "type": "string",
+          "example": "rol_abc123"
+        },
+        "is_system": {
+          "description": "Is system role",
+          "type": "boolean",
+          "example": false
+        },
+        "name": {
+          "description": "Role name",
+          "type": "string",
+          "example": "Administrator"
+        },
+        "parent_id": {
+          "description": "Parent role ID",
+          "type": "string",
+          "example": "rol_parent"
+        },
+        "tenant_id": {
+          "description": "Tenant ID",
+          "type": "string",
+          "example": "tnt_xyz789"
+        },
+        "updated_at": {
+          "description": "Update time",
+          "type": "string",
+          "example": "2026-04-10T14:20:00Z"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.SimulatePermissionRequest": {
+      "type": "object",
+      "required": [
+        "checks",
+        "user_id"
+      ],
+      "properties": {
+        "checks": {
+          "type": "array",
+          "maxItems": 50,
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_domain_rbac.SimulatePermissionCheck"
+          }
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.UpdatePermissionRequest": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "description": "Category",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "name": {
+          "description": "Permission name",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Tags",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.UpdateRoleRequest": {
+      "type": "object",
+      "properties": {
+        "data_scope": {
+          "description": "Data scope",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "name": {
+          "description": "Role name",
+          "type": "string"
+        },
+        "parent_id": {
+          "description": "Parent role ID",
+          "type": "string"
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.UserIDsResponse": {
+      "type": "object",
+      "properties": {
+        "user_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "[\"01ARZ3NDEKTSV4RRFFQ69G5FAV\"]"
+          ]
+        }
+      }
+    },
+    "gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ValidateUserRolesResponse": {
+      "type": "object",
+      "properties": {
+        "conflicts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ConflictPairResponse"
+          }
+        },
+        "has_conflict": {
+          "type": "boolean",
+          "example": false
+        }
+      }
+    },
+    "rbac.Effect": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "deny"
+      ],
+      "x-enum-varnames": [
+        "EffectAllow",
+        "EffectDeny"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "tags": [
+    {
+      "description": "Role permission management: Role CRUD, permission assignment, approval workflow, SoD",
+      "name": "RBAC"
+    }
+  ],
+  "host": "api.aucial.com",
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/bff/rbac-service/api/v1"
+}
