@@ -31,7 +31,7 @@ const services = [
   { name:'gateway-service', title:'Gateway Service', port:11080 },
 ];
 
-const { title = 'Aucial API Wiki' } = Astro.props;
+const { title = 'Autional API Wiki' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const currentSvc = Astro.url.pathname.split('/')[1] || '';
 ---
@@ -53,12 +53,12 @@ const currentSvc = Astro.url.pathname.split('/')[1] || '';
   <!-- Top bar -->
   <header class="sticky top-0 z-50 h-14 flex items-center justify-between px-6 border-b border-primary-100/70 bg-white/90 backdrop-blur-xl">
     <a href="/" class="flex items-center gap-2.5 no-underline">
-      <img src="/logo-mark.svg" alt="Aucial" class="h-7 w-7 object-contain">
-      <span class="text-[1.05rem] font-extrabold tracking-[-0.03em] text-primary-900">Aucial</span>
+      <img src="/logo-mark.svg" alt="Autional" class="h-7 w-7 object-contain">
+      <span class="text-[1.05rem] font-extrabold tracking-[-0.03em] text-primary-900">Autional</span>
       <span class="hidden sm:inline text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-primary-400 ml-1.5">API Wiki</span>
     </a>
     <div class="flex items-center gap-5">
-      <a href="https://reference.aucial.com" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">API Reference</a>
+      <a href="https://reference.autional.com" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">API Reference</a>
       <a href="https://www.autional.com" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">autional.com &rarr;</a>
     </div>
   </header>
