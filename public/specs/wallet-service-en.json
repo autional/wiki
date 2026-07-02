@@ -6632,7 +6632,7 @@
       "name": "Wallet Service - Admin"
     }
   ],
-  "host": "api.aucial.com",
+  "host": "api.autional.com",
   "schemes": [
     "https"
   ]
