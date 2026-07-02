@@ -2,3 +2,6 @@ node_modules/
 dist/
 .env
 *.log
+package-lock.json
+.git_bak/
+.astro/
