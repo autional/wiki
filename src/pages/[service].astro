@@ -31,13 +31,21 @@ try {
   const styleMatch = html.match(/<style>([\s\S]*?)<\/style>/);
   if (styleMatch) inlineStyles = styleMatch[1];
 
-  const mainMatch = html.match(/<main[^>]*class="[^"]*main-content[^"]*"[^>]*>([\s\S]*?)<\/main>/);
+  // Extract only the <main> content (pre-generated HTML may use bare <main> or <main class="...">)
+  const mainMatch = html.match(/<main[^>]*>([\s\S]*?)<\/main>/);
   if (mainMatch) {
     endpointHtml = mainMatch[1];
   } else {
     const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/);
     if (bodyMatch) endpointHtml = bodyMatch[1];
   }
+
+  // Fix broken URLs in pre-generated HTML (generator bugs in backend)
+  endpointHtml = endpointHtml
+    .replace(/https:\/\/docs\.autional\.com\/reference([a-z])/g, 'https://reference.autional.com/$1')
+    .replace(/https:\/\/docs\.autional\.com\/referencespecs\//g, 'https://reference.autional.com/specs/')
+    .replace(/"https:\/\/docs\.autional\.com\/reference"/g, '"https://reference.autional.com"')
+    .replace(/https:\/\/autional\.com/g, 'https://www.autional.com');
 
   // Count endpoint rows for the header
   const rowMatches = endpointHtml.match(/<tr>/g);
