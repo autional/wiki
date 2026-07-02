@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>POST /admin/users/{user_id}/roles/validate — RBAC Service API | Aucial</title>
+  <title>POST /admin/users/{user_id}/roles/validate — RBAC Service API | Autional</title>
   <meta name="description" content="Check whether the roles currently assigned to a specified user have Separation of Duties (SoD) conflicts, returning conflict details. Reference: NIST SP 800-53 AC-5 (Separation of Duties).">
   <meta name="robots" content="index, follow">
   <meta name="language" content="en-US">
   <meta name="docsearch:language" content="en-US">
-  <link rel="canonical" href="https://wiki.aucial.com/rbac-service/POST-admin-users-user_id-roles-validate/">
-  <link rel="alternate" hreflang="en" href="https://wiki.aucial.com/rbac-service/POST-admin-users-user_id-roles-validate/">
-  <link rel="alternate" hreflang="x-default" href="https://wiki.aucial.com/rbac-service/POST-admin-users-user_id-roles-validate/">
+  <link rel="canonical" href="https://wiki.autional.com/rbac-service/POST-admin-users-user_id-roles-validate/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/rbac-service/POST-admin-users-user_id-roles-validate/">
+  <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/rbac-service/POST-admin-users-user_id-roles-validate/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
-  <meta property="og:title" content="POST /admin/users/{user_id}/roles/validate — RBAC Service API | Aucial">
+  <meta property="og:title" content="POST /admin/users/{user_id}/roles/validate — RBAC Service API | Autional">
   <meta property="og:description" content="Check whether the roles currently assigned to a specified user have Separation of Duties (SoD) conflicts, returning conflict details. Reference: NIST SP 800-53 AC-5 (Separation of Duties).">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://wiki.aucial.com/rbac-service/POST-admin-users-user_id-roles-validate/">
-  <meta property="og:site_name" content="Aucial API Wiki">
+  <meta property="og:url" content="https://wiki.autional.com/rbac-service/POST-admin-users-user_id-roles-validate/">
+  <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="POST /admin/users/{user_id}/roles/validate — RBAC Service API | Aucial">
+  <meta name="twitter:title" content="POST /admin/users/{user_id}/roles/validate — RBAC Service API | Autional">
   <meta name="twitter:description" content="Check whether the roles currently assigned to a specified user have Separation of Duties (SoD) conflicts, returning conflict details. Reference: NIST SP 800-53 AC-5 (Separation of Duties).">
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://docs.aucial.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.aucial.com/"}, {"@type": "ListItem", "position": 3, "name": "RBAC Service", "item": "https://wiki.aucial.com/rbac-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /admin/users/{user_id}/roles/validate"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/users/{user_id}/roles/validate — RBAC Service API | Aucial", "description": "Check whether the roles currently assigned to a specified user have Separation of Duties (SoD) conflicts, returning conflict details. Reference: NIST SP 800-53 AC-5 (Separation of Duties).", "about": {"@type": "SoftwareApplication", "name": "Aucial"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://docs.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "RBAC Service", "item": "https://wiki.autional.com/rbac-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /admin/users/{user_id}/roles/validate"}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/users/{user_id}/roles/validate — RBAC Service API | Autional", "description": "Check whether the roles currently assigned to a specified user have Separation of Duties (SoD) conflicts, returning conflict details. Reference: NIST SP 800-53 AC-5 (Separation of Duties).", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -128,11 +128,11 @@
   <header class="topbar">
     <a href="/" class="brand">
       <svg width="22" height="22" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#1d4ed8"/><text x="16" y="22" text-anchor="middle" fill="#fff" font-size="18" font-weight="700" font-family="system-ui">A</text></svg>
-      Aucial API Wiki
+      Autional API Wiki
     </a>
     <a href="/api/">API Reference</a>
     <span style="flex:1"></span>
-    <a href="https://aucial.com" target="_blank" rel="noreferrer" style="font-weight:400;font-size:13px;color:var(--c-text2)">aucial.com →</a>
+    <a href="https://autional.com" target="_blank" rel="noreferrer" style="font-weight:400;font-size:13px;color:var(--c-text2)">autional.com →</a>
   </header>
   <div class="layout">
     <aside class="sidebar" id="sidebar">
@@ -428,12 +428,12 @@
 </table>
 </section>
 <div class="actions">
-  <a href="https://docs.aucial.com/referencerbac-service" target="_blank" rel="noreferrer" class="btn btn-primary">Try this API in Scalar →</a>
-  <a href="https://docs.aucial.com/referencespecs/rbac-service" target="_blank" rel="noreferrer" class="btn btn-outline">Download OpenAPI spec (JSON) ↓</a>
+  <a href="https://docs.autional.com/referencerbac-service" target="_blank" rel="noreferrer" class="btn btn-primary">Try this API in Scalar →</a>
+  <a href="https://docs.autional.com/referencespecs/rbac-service" target="_blank" rel="noreferrer" class="btn btn-outline">Download OpenAPI spec (JSON) ↓</a>
 </div>
       <footer>
-        Generated from OpenAPI specs. <a href="https://docs.aucial.com/reference">Interactive API explorer (Scalar)</a>
-        &mdash; <a href="https://docs.aucial.com/">Aucial</a>
+        Generated from OpenAPI specs. <a href="https://docs.autional.com/reference">Interactive API explorer (Scalar)</a>
+        &mdash; <a href="https://docs.autional.com/">Autional</a>
       </footer>
     </main>
   </div>

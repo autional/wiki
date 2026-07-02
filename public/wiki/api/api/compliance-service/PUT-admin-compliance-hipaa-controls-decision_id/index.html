@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PUT /admin/compliance/hipaa/controls/{decision_id} — Compliance Service API | Autional</title>
+  <meta name="description" content="Update status and evidence of a specified HIPAA security control item">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
+  <link rel="canonical" href="https://wiki.autional.com/compliance-service/PUT-admin-compliance-hipaa-controls-decision_id/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/compliance-service/PUT-admin-compliance-hipaa-controls-decision_id/">
+  <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/compliance-service/PUT-admin-compliance-hipaa-controls-decision_id/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
+  <meta property="og:title" content="PUT /admin/compliance/hipaa/controls/{decision_id} — Compliance Service API | Autional">
+  <meta property="og:description" content="Update status and evidence of a specified HIPAA security control item">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wiki.autional.com/compliance-service/PUT-admin-compliance-hipaa-controls-decision_id/">
+  <meta property="og:site_name" content="Autional API Wiki">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="PUT /admin/compliance/hipaa/controls/{decision_id} — Compliance Service API | Autional">
+  <meta name="twitter:description" content="Update status and evidence of a specified HIPAA security control item">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://docs.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Compliance Service", "item": "https://wiki.autional.com/compliance-service/"}, {"@type": "ListItem", "position": 4, "name": "PUT /admin/compliance/hipaa/controls/{decision_id}"}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "PUT /admin/compliance/hipaa/controls/{decision_id} — Compliance Service API | Autional", "description": "Update status and evidence of a specified HIPAA security control item", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <style>  html{visibility:visible;opacity:1}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --c-bg:#ffffff;--c-bg2:#f8fafc;--c-text:#0f172a;--c-text2:#475569;
+    --c-border:#e2e8f0;--c-primary:#1d4ed8;--c-primary-bg:#eff6ff;
+    --c-code-bg:#f1f5f9;--c-tag-bg:#e0e7ff;--c-tag-text:#3730a3;
+    --c-method-get:#059669;--c-method-post:#1d4ed8;--c-method-put:#d97706;
+    --c-method-delete:#dc2626;--c-method-patch:#7c3aed;
+    --c-deprecated:#dc2626;--c-deprecated-bg:#fef2f2;
+    --sidebar-w:260px;--topbar-h:56px
+  }
+  @media(prefers-color-scheme:dark){
+    :root{
+      --c-bg:#0f172a;--c-bg2:#1e293b;--c-text:#e2e8f0;--c-text2:#94a3b8;
+      --c-border:#334155;--c-primary:#60a5fa;--c-primary-bg:#1e3a5f;
+      --c-code-bg:#1e293b;--c-tag-bg:#312e81;--c-tag-text:#a5b4fc;
+      --c-method-get:#34d399;--c-method-post:#60a5fa;--c-method-put:#fbbf24;
+      --c-method-delete:#f87171;--c-method-patch:#a78bfa;
+      --c-deprecated:#f87171;--c-deprecated-bg:#3b1a1a
+    }
+  }
+  body{font-family:system-ui,-apple-system,sans-serif;background:var(--c-bg);color:var(--c-text);line-height:1.6}
+  .topbar{position:sticky;top:0;z-index:100;height:var(--topbar-h);background:var(--c-bg);border-bottom:1px solid var(--c-border);display:flex;align-items:center;padding:0 24px;gap:16px}
+  .topbar a{color:var(--c-text);text-decoration:none;font-weight:600;font-size:15px}
+  .topbar .brand{display:flex;align-items:center;gap:8px}
+  .layout{display:flex;min-height:calc(100vh - var(--topbar-h))}
+  .sidebar{width:var(--sidebar-w);flex-shrink:0;border-right:1px solid var(--c-border);padding:20px 0;overflow-y:auto;position:sticky;top:var(--topbar-h);height:calc(100vh - var(--topbar-h))}
+  .sidebar nav{padding:0 16px}
+  .sidebar h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--c-text2);padding:8px 0;margin-top:12px}
+  .sidebar a{display:block;padding:5px 8px;border-radius:6px;color:var(--c-text2);text-decoration:none;font-size:13px;transition:background .1s}
+  .sidebar a:hover{background:var(--c-bg2);color:var(--c-text)}
+  .sidebar a.active{background:var(--c-primary-bg);color:var(--c-primary);font-weight:500}
+  .sidebar .count{font-size:11px;color:var(--c-text2);float:right}
+  main{flex:1;min-width:0;padding:32px 48px;max-width:960px}
+  @media(max-width:900px){.sidebar{display:none}main{padding:24px 16px}}
+  .breadcrumb{font-size:13px;color:var(--c-text2);margin-bottom:24px}
+  .breadcrumb a{color:var(--c-text2);text-decoration:none}
+  .breadcrumb a:hover{color:var(--c-primary)}
+  .breadcrumb span{color:var(--c-text2);margin:0 4px}
+  h1{font-size:28px;font-weight:700;margin-bottom:8px}
+  h1 code.path{font-weight:500;color:var(--c-primary)}
+  h2{font-size:20px;font-weight:600;margin:32px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--c-border)}
+  h3{font-size:16px;font-weight:600;margin:20px 0 8px}
+  h4{font-size:14px;font-weight:600;margin:12px 0 4px}
+  p{margin:8px 0}
+  .summary{font-size:15px;color:var(--c-text2);margin:8px 0 16px}
+  .deprecated-banner{background:var(--c-deprecated-bg);border:1px solid var(--c-deprecated);border-radius:8px;padding:12px 16px;margin:16px 0;color:var(--c-deprecated);font-weight:600;font-size:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+  .meta-item{font-size:12px;padding:2px 10px;border-radius:999px;border:1px solid var(--c-border);color:var(--c-text2)}
+  .meta-item.method{font-weight:700;font-size:12px}
+  .meta-item.GET{color:var(--c-method-get);border-color:var(--c-method-get)}
+  .meta-item.POST{color:var(--c-method-post);border-color:var(--c-method-post)}
+  .meta-item.PUT{color:var(--c-method-put);border-color:var(--c-method-put)}
+  .meta-item.DELETE{color:var(--c-method-delete);border-color:var(--c-method-delete)}
+  .meta-item.PATCH{color:var(--c-method-patch);border-color:var(--c-method-patch)}
+  .meta-item.auth{padding:2px 10px}
+  .meta-item.public{border-color:var(--c-method-get);color:var(--c-method-get)}
+  .meta-item.authenticated{border-color:var(--c-method-post);color:var(--c-method-post)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+  thead{background:var(--c-bg2)}
+  th{text-align:left;padding:8px 12px;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--c-text2);border-bottom:2px solid var(--c-border);white-space:nowrap}
+   td{padding:8px 12px;border-bottom:1px solid var(--c-border);vertical-align:top}
+   td code{font-size:12px;background:var(--c-code-bg);padding:1px 6px;border-radius:4px;white-space:nowrap}
+   tbody tr:hover td{background:var(--c-primary-bg)}
+   tr:nth-child(even) td{background:var(--c-bg2)}
+  .required{color:var(--c-deprecated);font-weight:600}
+  .optional{color:var(--c-text2)}
+  code{font-family:"SF Mono","Cascadia Code","Fira Code",monospace;font-size:13px}
+  code.inline{background:var(--c-code-bg);padding:1px 5px;border-radius:3px}
+  a{color:var(--c-primary);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .actions{display:flex;gap:12px;margin:32px 0;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;font-size:14px;font-weight:500;text-decoration:none;transition:background .15s}
+  .btn-primary{background:var(--c-primary);color:#fff}
+  .btn-primary:hover{opacity:.9;text-decoration:none}
+  .btn-outline{border:1px solid var(--c-border);color:var(--c-text)}
+  .btn-outline:hover{background:var(--c-bg2);text-decoration:none}
+  .home-hero{text-align:center;padding:60px 24px 40px}
+  .home-hero h1{font-size:36px;margin-bottom:12px}
+  .home-hero p{font-size:17px;color:var(--c-text2);max-width:560px;margin:0 auto 24px}
+  .home-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;padding:0 24px 40px;max-width:1100px;margin:0 auto}
+  .home-card{border:1px solid var(--c-border);border-radius:10px;padding:20px;transition:border-color .15s}
+  .home-card:hover{border-color:var(--c-primary)}
+  .home-card h3{font-size:15px;margin:0 0 4px}
+  .home-card .ep-count{font-size:28px;font-weight:700;color:var(--c-primary)}
+  .home-card .port{font-size:12px;color:var(--c-text2)}
+  .api-stats{display:flex;gap:32px;flex-wrap:wrap;margin:16px 0}
+  .api-stat{text-align:center;min-width:80px}
+  .api-stat .val{font-size:32px;font-weight:700;color:var(--c-primary)}
+  .api-stat .lbl{font-size:12px;color:var(--c-text2);text-transform:uppercase}
+  footer{margin-top:48px;padding:24px 0;border-top:1px solid var(--c-border);font-size:12px;color:var(--c-text2);text-align:center}
+  @media print{.sidebar,.topbar{display:none}main{max-width:100%;padding:0}}
+   .toc{background:var(--c-bg2);border-radius:8px;padding:16px 20px;margin:16px 0;font-size:13px}
+   .toc ul{list-style:none;padding-left:0}
+   .toc li{padding:2px 0}
+   .back-top{position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--c-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;text-decoration:none;opacity:0;transition:opacity .3s;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:50}
+   .back-top:hover{opacity:.9!important;text-decoration:none}
+   @media(min-height:600px){.back-top{opacity:.75}}
+   @media print{.back-top{display:none}}
+   html{scroll-behavior:smooth}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand">
+      <svg width="22" height="22" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#1d4ed8"/><text x="16" y="22" text-anchor="middle" fill="#fff" font-size="18" font-weight="700" font-family="system-ui">A</text></svg>
+      Autional API Wiki
+    </a>
+    <a href="/api/">API Reference</a>
+    <span style="flex:1"></span>
+    <a href="https://www.autional.com" target="_blank" rel="noreferrer" style="font-weight:400;font-size:13px;color:var(--c-text2)">autional.com →</a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <nav>
+        <h3>Services</h3>
+                <a href="/api/identity-service/" class="">Identity Service<span class="count"></span></a>
+        <a href="/api/profile-service/" class="">Profile Service<span class="count"></span></a>
+        <a href="/api/tenant-service/" class="">Tenant Service<span class="count"></span></a>
+        <a href="/api/session-service/" class="">Session Service<span class="count"></span></a>
+        <a href="/api/mfa-service/" class="">MFA Service<span class="count"></span></a>
+        <a href="/api/oauth-service/" class="">OAuth Service<span class="count"></span></a>
+        <a href="/api/point-service/" class="">Point Service<span class="count"></span></a>
+        <a href="/api/wallet-service/" class="">Wallet Service<span class="count"></span></a>
+        <a href="/api/audit-service/" class="">Audit Service<span class="count"></span></a>
+        <a href="/api/notification-service/" class="">Notification Service<span class="count"></span></a>
+        <a href="/api/communication-service/" class="">Communication Service<span class="count"></span></a>
+        <a href="/api/storage-service/" class="">Storage Service<span class="count"></span></a>
+        <a href="/api/billing-service/" class="">Billing Service<span class="count"></span></a>
+        <a href="/api/compliance-service/" class="active">Compliance Service<span class="count"></span></a>
+        <a href="/api/status-service/" class="">Status Service<span class="count"></span></a>
+        <a href="/api/secret-service/" class="">Secret Service<span class="count"></span></a>
+        <a href="/api/pay-service/" class="">Pay Service<span class="count"></span></a>
+        <a href="/api/rbac-service/" class="">RBAC Service<span class="count"></span></a>
+        <a href="/api/thirdparty-service/" class="">Thirdparty Service<span class="count"></span></a>
+        <a href="/api/verification-service/" class="">Verification Service<span class="count"></span></a>
+        <a href="/api/gateway-service/" class="">Gateway Service<span class="count"></span></a>
+        <a href="/api/saml-service/" class="">SAML Service<span class="count"></span></a>
+        <a href="/api/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
+        <a href="/api/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
+      </nav>
+    </aside>
+    <main>
+      <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/api/">API Reference</a><span>›</span><a href="/api/compliance-service/">Compliance Service</a><span>›</span><span>PUT /admin/compliance/hipaa/controls/{decision_id}</span></nav>
+      <h1><span class="meta-item method PUT">PUT</span> <code class="path">/admin/compliance/hipaa/controls/{decision_id}</code></h1>
+<p class="summary">Update status and evidence of a specified HIPAA security control item</p>
+<div class="meta"><span class="meta-item">Compliance Management - HIPAA</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<section><h2>Request Parameters</h2>
+<table>
+  <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>id</code></td>
+    <td><code>path</code></td>
+    <td><code>string</code></td>
+    <td><span class="required">Yes</span></td>
+    <td></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>control ID</td>
+  </tr></tbody>
+</table>
+</section>
+<section><h2>Request Body</h2>
+<p><strong>Schema:</strong> <a href="#schema-dto.updatehipaacontrolrequest"><code>dto.UpdateHIPAAControlRequest</code></a></p>
+<div id="schema-dto.updatehipaacontrolrequest">
+<table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>category</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>Administrative Safeguards</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>description</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>Implement policies and procedures</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>evidence_url</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>https://docs.example.com/hipaa/164.308.a.1</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>Security Management Process</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>status</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>compliant</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table>
+</div>
+</section>
+<section><h2>Responses</h2>
+<table>
+  <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
+  <tbody><tr><td><strong>200</strong></td><td>success</td><td><a href="#schema-dto.hipaacontrolitemresponse"><code>dto.HIPAAControlItemResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>bad request</td><td><a href="#schema-dto.errorresponse"><code>dto.ErrorResponse</code></a></td></tr></tbody>
+</table>
+</section>
+<section><h2>Referenced Schemas</h2>
+<h3 id="schema-dto.errorresponse">dto.ErrorResponse</h3>
+<table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>400</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>invalid request</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table>
+<h3 id="schema-dto.hipaacontrolitem">dto.HIPAAControlItem</h3>
+<table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>category</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>Administrative Safeguards</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>control_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>164.308(a)(1)</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>control_name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>Security Management Process</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>evidence_url</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>https://docs.example.com/...</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>01JQ...</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>last_reviewed</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>2026-04-01T00:00:00Z</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>status</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>compliant</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table>
+<h3 id="schema-dto.hipaacontrolitemresponse">dto.HIPAAControlItemResponse</h3>
+<table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>data</code></td>
+    <td><a href="#schema-dto.hipaacontrolitem"><code>dto.HIPAAControlItem</code></a></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table>
+</section>
+<div class="actions">
+  <a href="https://docs.autional.com/referencecompliance-service" target="_blank" rel="noreferrer" class="btn btn-primary">Try this API in Scalar →</a>
+  <a href="https://docs.autional.com/referencespecs/compliance-service" target="_blank" rel="noreferrer" class="btn btn-outline">Download OpenAPI spec (JSON) ↓</a>
+</div>
+      <footer>
+        Generated from OpenAPI specs. <a href="https://docs.autional.com/reference">Interactive API explorer (Scalar)</a>
+        &mdash; <a href="https://docs.autional.com/">Autional</a>
+      </footer>
+    </main>
+  </div>
+  <a href="#" class="back-top" title="Back to top" aria-label="Back to top">↑</a>
+</body>
+</html>
