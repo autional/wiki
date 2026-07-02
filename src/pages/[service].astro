@@ -9,27 +9,27 @@ const { service } = Astro.params;
 ---
 
 <WikiLayout title={`${service} Wiki — Aucial`}>
-  <!-- CENTER: Endpoint Table -->
-  <div class="w-[420px] shrink-0 border-r border-neutral-100 overflow-y-auto bg-white" id="endpoint-panel">
-    <div class="sticky top-0 bg-white border-b border-neutral-100 px-4 py-2.5 z-10">
+  <!-- LEFT: Endpoint list panel -->
+  <div class="w-[420px] shrink-0 border-r border-primary-100/50 bg-white overflow-y-auto" id="endpoint-panel">
+    <div class="sticky top-0 bg-white/95 backdrop-blur border-b border-primary-100/50 px-4 py-3 z-10">
       <div class="flex items-center justify-between">
-        <span class="text-sm font-semibold text-neutral-800 truncate">{service}</span>
-        <span class="text-[11px] font-mono text-neutral-400" id="ep-count">loading...</span>
+        <span class="text-sm font-semibold text-primary-900 truncate">{service}</span>
+        <span class="text-[0.65rem] font-mono font-medium text-primary-400" id="ep-count">loading...</span>
       </div>
     </div>
-    <div id="endpoint-list" class="divide-y divide-neutral-50">
-      <div class="px-4 py-12 text-center text-sm text-neutral-400">Loading endpoints...</div>
+    <div id="endpoint-list" class="divide-y divide-primary-100/30">
+      <div class="px-4 py-16 text-center text-sm text-neutral-400">Loading endpoints...</div>
     </div>
   </div>
 
-  <!-- RIGHT: Detail Panel -->
-  <div class="flex-1 overflow-y-auto bg-white" id="detail-panel">
-    <div class="sticky top-0 bg-white border-b border-neutral-100 px-6 py-2.5 z-10 flex items-center justify-between">
-      <span class="text-xs font-semibold uppercase tracking-widest text-neutral-400" id="detail-title">Detail</span>
-      <span class="text-[10px] font-mono text-neutral-400" id="detail-method"></span>
+  <!-- RIGHT: Detail panel -->
+  <div class="flex-1 overflow-y-auto bg-neutral-50/50" id="detail-panel">
+    <div class="sticky top-0 bg-white/95 backdrop-blur border-b border-primary-100/50 px-6 py-3 z-10 flex items-center justify-between">
+      <span class="text-xs font-bold uppercase tracking-[0.16em] text-primary-400" id="detail-title">Detail</span>
+      <span class="text-[0.65rem] font-mono font-semibold text-primary-500" id="detail-method"></span>
     </div>
-    <div id="detail-content" class="wiki-detail p-6">
-      <div class="text-sm text-neutral-400 text-center py-20">← Select an endpoint to view details</div>
+    <div id="detail-content" class="p-6">
+      <div class="text-sm text-neutral-400 text-center py-24">← Select an endpoint to view details</div>
     </div>
   </div>
 
@@ -68,8 +68,8 @@ const { service } = Astro.params;
             var method = cells[0].textContent.trim();
             var path = cells[1].textContent.trim();
             var summary = cells[2].textContent.trim();
-            var detailLink = cells[2].querySelector('a');
-            var detailHref = detailLink ? detailLink.getAttribute('href') : '';
+            var detailLink = cells[3].querySelector('a');
+            var detailHref = detailLink ? detailLink.getAttribute('href').replace('/api/' + service + '/', '') : '';
             if (method && path && (method === 'GET' || method === 'POST' || method === 'PUT' || method === 'DELETE' || method === 'PATCH')) {
               endpoints.push({ method: method, path: path, summary: summary, cat: currentCategory, href: detailHref });
               total++;
@@ -83,16 +83,16 @@ const { service } = Astro.params;
           var ep = endpoints[j];
           if (ep.cat !== lastCat) {
             lastCat = ep.cat;
-            html2 += '<div class="px-4 py-2 bg-neutral-50 text-[11px] font-semibold uppercase tracking-wider text-neutral-500">' + ep.cat + '</div>';
+            html2 += '<div class="px-4 py-2 bg-primary-50/50 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-primary-600 border-b border-primary-100/30">' + ep.cat + '</div>';
           }
-          var methodColor = ep.method === 'GET' ? 'text-emerald-600' : ep.method === 'POST' ? 'text-blue-600' : ep.method === 'DELETE' ? 'text-red-500' : 'text-amber-600';
-          html2 += '<div class="flex flex-col px-4 py-2.5 hover:bg-primary-50 cursor-pointer border-b border-neutral-50 transition" onclick="loadDetail(\'' + ep.href.replace(/\/$/, '') + '\',\'' + ep.method + ' ' + ep.path + '\')">';
+          var methodCls = ep.method === 'GET' ? 'text-emerald-600 bg-emerald-50 border-emerald-200' : ep.method === 'POST' ? 'text-primary-600 bg-primary-50 border-primary-200' : ep.method === 'DELETE' ? 'text-red-500 bg-red-50 border-red-200' : ep.method === 'PUT' ? 'text-amber-600 bg-amber-50 border-amber-200' : 'text-purple-600 bg-purple-50 border-purple-200';
+          html2 += '<div class="flex flex-col px-4 py-2.5 hover:bg-primary-50/60 cursor-pointer border-b border-primary-50 transition" onclick="loadDetail(\'' + ep.href.replace(/\/$/, '') + '\',\'' + ep.method + ' ' + ep.path + '\')">';
           html2 += '<div class="flex items-center gap-3">';
-          html2 += '<span class="text-[10px] font-bold font-mono w-14 shrink-0 ' + methodColor + '">' + ep.method + '</span>';
-          html2 += '<span class="text-[11px] font-mono text-neutral-600 flex-1">' + ep.path + '</span>';
+          html2 += '<span class="text-[0.58rem] font-bold font-mono w-14 shrink-0 px-1.5 py-0.5 rounded text-center border ' + methodCls + '">' + ep.method + '</span>';
+          html2 += '<span class="text-[0.72rem] font-mono text-neutral-700 flex-1">' + ep.path + '</span>';
           html2 += '</div>';
           if (ep.summary) {
-            html2 += '<div class="text-[11px] text-neutral-400 ml-[72px] mt-0.5 leading-relaxed">' + ep.summary.replace(/detail →$/,'').trim() + '</div>';
+            html2 += '<div class="text-[0.7rem] text-neutral-400 ml-[72px] mt-0.5 leading-relaxed">' + ep.summary.replace(/detail →$/,'').trim() + '</div>';
           }
           html2 += '</div>';
         }
@@ -108,7 +108,7 @@ const { service } = Astro.params;
       var detail = document.getElementById('detail-content');
       detail.innerHTML = '<div class="wiki-loading">Loading...</div>';
       document.getElementById('detail-title').textContent = title || 'Detail';
-      
+
       // Parse method+path for header
       if (title && title.indexOf(' ') > 0) {
         var parts = title.split(' ');
@@ -122,24 +122,48 @@ const { service } = Astro.params;
           var parser = new DOMParser();
           var doc = parser.parseFromString(html, 'text/html');
           var body = doc.body;
-          
-          // Remove all nav, header, footer elements
+
+          // Extract and preserve scoped CSS from the wiki detail page
+          var styleText = '';
+          var styleEls = body.querySelectorAll('style');
+          styleEls.forEach(function(s) { styleText += s.textContent; });
+
+          // Scope CSS variables under .wiki-detail-content
+          styleText = styleText.replace(/:root/g, '.wiki-detail-content');
+
+          // Drop rules that target elements we remove or that conflict with the page shell
+          var dropREs = [
+            /html\{[^}]*\}/g,
+            /body\{[^}]*\}/g,
+            /\.topbar[^{]*\{[^}]*\}/g,
+            /\.layout\{[^}]*\}/g,
+            /\.sidebar[^{]*\{[^}]*\}/g,
+            /\.breadcrumb[^{]*\{[^}]*\}/g,
+            /\.back-top[^{]*\{[^}]*\}/g,
+            /\.home-hero[^{]*\{[^}]*\}/g,
+            /\.home-cards[^{]*\{[^}]*\}/g,
+            /\.home-card[^{]*\{[^}]*\}/g,
+            /footer\{[^}]*\}/g,
+            /thead\{[^}]*\}/g,
+            /@media[^{]*\{[^}]*\}/g
+          ];
+          dropREs.forEach(function(re) { styleText = styleText.replace(re, ''); });
+          styleText = styleText.replace(/\n\s*\n/g, '\n').trim();
+
+          // Remove nav, header, footer, old style/script elements, sidebar
           var toRemove = body.querySelectorAll('nav, header, footer, .docs-prose-breadcrumb, script, style, .sidebar, .nav, [role=navigation]');
           toRemove.forEach(function(el) { el.remove(); });
-          
+
           // Find main content - look for the endpoint detail area
           var main = body.querySelector('main, article, .content, .main-content');
           if (!main) {
             // Fallback: get everything and clean it up
             main = body.cloneNode(true);
-            // Remove navigation links
             main.querySelectorAll('a[href]').forEach(function(a) {
-              // Remove "Back to top" and navigation links
               var txt = a.textContent.trim();
               if (txt === '↑' || txt === 'Docs' || txt.indexOf('API Reference') >= 0) {
                 a.remove();
               }
-              // Remove duplicate "detail" links within the content
               if (a.textContent.trim().indexOf('detail') >= 0) {
                 a.removeAttribute('href');
                 a.style.color = 'inherit';
@@ -148,7 +172,7 @@ const { service } = Astro.params;
               }
             });
           }
-          detail.innerHTML = '<div class=\"wiki-detail-content\">' + (main ? main.innerHTML : body.innerHTML) + '</div>';
+          detail.innerHTML = '<style>' + styleText + '</style><div class=\"wiki-detail-content\">' + (main ? main.innerHTML : body.innerHTML) + '</div>';
         })
         .catch(function(e) {
           detail.innerHTML = '<div class="text-sm text-red-500 py-4">Failed to load detail</div>';
