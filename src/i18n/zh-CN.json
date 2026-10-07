@@ -45,7 +45,7 @@
     "title": "API 知识库",
     "leadA": "覆盖全部 ",
     "leadB": " 个微服务的端点文档。选择一个服务即可浏览其 API 参考。",
-    "kicker": "OpenAPI 3.0",
+    "kicker": "Swagger 2.0",
     "serviceCountSuffix": " 个服务",
     "browse": "浏览端点 →"
   },

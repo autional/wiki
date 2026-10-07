@@ -157,7 +157,7 @@
     border-color: var(--color-primary-600);
   }
 
-  /* Mobile: horizontal scroll container wrapped around every table by sync-wiki-zh.py */
+  /* Mobile: horizontal scroll container wrapped around every table by sync-wiki.py */
   .wiki-detail-content .table-wrap {
     overflow-x: auto;
     margin: 0.75rem 0 1.5rem;

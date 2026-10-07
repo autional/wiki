@@ -45,7 +45,7 @@
     "title": "API Wiki",
     "leadA": "Endpoint documentation for all ",
     "leadB": " microservices. Select a service to browse its API reference.",
-    "kicker": "OpenAPI 3.0",
+    "kicker": "Swagger 2.0",
     "serviceCountSuffix": " services",
     "browse": "Browse endpoints →"
   },
