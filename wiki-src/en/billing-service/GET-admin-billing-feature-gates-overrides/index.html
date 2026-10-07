@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /admin/billing/feature-gates/overrides — Billing Service API | Autional</title>
-  <meta name="description" content="获取当前租户的所有 FeatureGate 覆盖配置。覆盖允许按租户级别开启/关闭功能开关，优先级高于套餐默认权益。">
+  <meta name="description" content="Get all FeatureGate override configurations for the current tenant. Overrides allow enabling/disabling feature gates at the tenant level, with higher priority than plan default entitlements.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/billing-service/GET-admin-billing-feature-gates-overrides/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/billing-service/GET-admin-billing-feature-gates-overrides/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/billing-service/GET-admin-billing-feature-gates-overrides/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/billing-service/GET-admin-billing-feature-gates-overrides/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /admin/billing/feature-gates/overrides — Billing Service API | Autional">
-  <meta property="og:description" content="获取当前租户的所有 FeatureGate 覆盖配置。覆盖允许按租户级别开启/关闭功能开关，优先级高于套餐默认权益。">
+  <meta property="og:description" content="Get all FeatureGate override configurations for the current tenant. Overrides allow enabling/disabling feature gates at the tenant level, with higher priority than plan default entitlements.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/billing-service/GET-admin-billing-feature-gates-overrides/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /admin/billing/feature-gates/overrides — Billing Service API | Autional">
-  <meta name="twitter:description" content="获取当前租户的所有 FeatureGate 覆盖配置。覆盖允许按租户级别开启/关闭功能开关，优先级高于套餐默认权益。">
+  <meta name="twitter:description" content="Get all FeatureGate override configurations for the current tenant. Overrides allow enabling/disabling feature gates at the tenant level, with higher priority than plan default entitlements.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Billing Service", "item": "https://wiki.autional.com/billing-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /admin/billing/feature-gates/overrides"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /admin/billing/feature-gates/overrides — Billing Service API | Autional", "description": "获取当前租户的所有 FeatureGate 覆盖配置。覆盖允许按租户级别开启/关闭功能开关，优先级高于套餐默认权益。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /admin/billing/feature-gates/overrides — Billing Service API | Autional", "description": "Get all FeatureGate override configurations for the current tenant. Overrides allow enabling/disabling feature gates at the tenant level, with higher priority than plan default entitlements.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,18 +163,19 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/billing-service/">Billing Service</a><span>›</span><span>GET /admin/billing/feature-gates/overrides</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/admin/billing/feature-gates/overrides</code></h1>
-<p class="summary">获取当前租户的所有 FeatureGate 覆盖配置。覆盖允许按租户级别开启/关闭功能开关，优先级高于套餐默认权益。</p>
-<div class="meta"><span class="meta-item">计费服务 - 特性开关</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Get all FeatureGate override configurations for the current tenant. Overrides allow enabling/disabling feature gates at the tenant level, with higher priority than plan default entitlements.</p>
+<div class="meta"><span class="meta-item">Billing Service - Feature Gates</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>功能开关覆盖查询成功</td><td><a href="#schema-handler.overrideresponse"><code>handler.overrideResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未授权</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>无权限</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Feature gate override query successful</td><td><a href="#schema-handler.overrideresponse"><code>handler.overrideResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>No permission</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
@@ -229,7 +230,7 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>审计列（AC 回归）：26→128 只扩不缩；API 已暴露故 json tag 不动</td>
+    <td></td>
   </tr></tbody>
 </table></div>
 <h3 id="schema-dto.simpleresponse">dto.SimpleResponse</h3>

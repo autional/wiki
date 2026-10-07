@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /admin/billing/revenue-amortization — Billing Service API | Autional</title>
-  <meta name="description" content="查询收入的递延情况和按时间分摊的报表（Revenue Amortization）。遵循 GAAP/IFRS 收入确认原则，按会计期间分摊已递延收入。">
+  <meta name="description" content="Query revenue deferral and amortization reports by time period (Revenue Amortization). Follows GAAP/IFRS revenue recognition principles, amortizing deferred revenue by accounting period.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/billing-service/GET-admin-billing-revenue-amortization/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/billing-service/GET-admin-billing-revenue-amortization/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/billing-service/GET-admin-billing-revenue-amortization/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/billing-service/GET-admin-billing-revenue-amortization/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /admin/billing/revenue-amortization — Billing Service API | Autional">
-  <meta property="og:description" content="查询收入的递延情况和按时间分摊的报表（Revenue Amortization）。遵循 GAAP/IFRS 收入确认原则，按会计期间分摊已递延收入。">
+  <meta property="og:description" content="Query revenue deferral and amortization reports by time period (Revenue Amortization). Follows GAAP/IFRS revenue recognition principles, amortizing deferred revenue by accounting period.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/billing-service/GET-admin-billing-revenue-amortization/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /admin/billing/revenue-amortization — Billing Service API | Autional">
-  <meta name="twitter:description" content="查询收入的递延情况和按时间分摊的报表（Revenue Amortization）。遵循 GAAP/IFRS 收入确认原则，按会计期间分摊已递延收入。">
+  <meta name="twitter:description" content="Query revenue deferral and amortization reports by time period (Revenue Amortization). Follows GAAP/IFRS revenue recognition principles, amortizing deferred revenue by accounting period.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Billing Service", "item": "https://wiki.autional.com/billing-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /admin/billing/revenue-amortization"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /admin/billing/revenue-amortization — Billing Service API | Autional", "description": "查询收入的递延情况和按时间分摊的报表（Revenue Amortization）。遵循 GAAP/IFRS 收入确认原则，按会计期间分摊已递延收入。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /admin/billing/revenue-amortization — Billing Service API | Autional", "description": "Query revenue deferral and amortization reports by time period (Revenue Amortization). Follows GAAP/IFRS revenue recognition principles, amortizing deferred revenue by accounting period.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/billing-service/">Billing Service</a><span>›</span><span>GET /admin/billing/revenue-amortization</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/admin/billing/revenue-amortization</code></h1>
-<p class="summary">查询收入的递延情况和按时间分摊的报表（Revenue Amortization）。遵循 GAAP/IFRS 收入确认原则，按会计期间分摊已递延收入。</p>
-<div class="meta"><span class="meta-item">计费服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Query revenue deferral and amortization reports by time period (Revenue Amortization). Follows GAAP/IFRS revenue recognition principles, amortizing deferred revenue by accounting period.</p>
+<div class="meta"><span class="meta-item">Billing Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,7 +183,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>开始日期 (YYYY-MM-DD)</td>
+    <td>Start date (YYYY-MM-DD)</td>
   </tr><tr>
     <td><code>end_date</code></td>
     <td><code>query</code></td>
@@ -191,18 +192,18 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>结束日期 (YYYY-MM-DD)</td>
+    <td>End date (YYYY-MM-DD)</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>收入递延查询成功</td><td><a href="#schema-service-billing/internal/handler/dto.revenueamortizationdetailresponse"><code>service-billing/internal/handler/dto.RevenueAmortizationDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><code>object</code></td></tr><tr><td><strong>401</strong></td><td>未授权</td><td><code>object</code></td></tr><tr><td><strong>403</strong></td><td>无权限</td><td><code>object</code></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><code>object</code></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Revenue deferral query successful</td><td><a href="#schema-dto.revenueamortizationdetailresponse"><code>dto.RevenueAmortizationDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><code>object</code></td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td><code>object</code></td></tr><tr><td><strong>403</strong></td><td>No permission</td><td><code>object</code></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><code>object</code></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-billing/internal/handler/dto.revenueamortizationdetailresponse">service-billing/internal/handler/dto.RevenueAmortizationDetailResponse</h3>
+<h3 id="schema-dto.revenueamortizationdetailresponse">dto.RevenueAmortizationDetailResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -214,7 +215,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-billing/internal/handler/dto.revenueamortizationresponse"><code>service-billing/internal/handler/dto.RevenueAmortizationResponse</code></a></td>
+    <td><a href="#schema-dto.revenueamortizationresponse"><code>dto.RevenueAmortizationResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -235,7 +236,7 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-billing/internal/handler/dto.revenueamortizationitem">service-billing/internal/handler/dto.RevenueAmortizationItem</h3>
+<h3 id="schema-dto.revenueamortizationitem">dto.RevenueAmortizationItem</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -261,7 +262,7 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-billing/internal/handler/dto.revenueamortizationresponse">service-billing/internal/handler/dto.RevenueAmortizationResponse</h3>
+<h3 id="schema-dto.revenueamortizationresponse">dto.RevenueAmortizationResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -280,7 +281,7 @@
     <td></td>
   </tr><tr>
     <td><code>items</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-billing/internal/handler/dto.revenueamortizationitem"><code>service-billing/internal/handler/dto.RevenueAmortizationItem</code></a></p></td>
+    <td>array of<br/><p>See <a href="#schema-dto.revenueamortizationitem"><code>dto.RevenueAmortizationItem</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>

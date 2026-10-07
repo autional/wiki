@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /admin/role-activations — Identity Service API | Autional</title>
-  <meta name="description" content="管理员分页查询所有角色激活记录，支持按状态过滤">
+  <meta name="description" content="Admin: list all role activation records with pagination, filterable by status">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/identity-service/GET-admin-role-activations/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/identity-service/GET-admin-role-activations/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/identity-service/GET-admin-role-activations/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/identity-service/GET-admin-role-activations/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /admin/role-activations — Identity Service API | Autional">
-  <meta property="og:description" content="管理员分页查询所有角色激活记录，支持按状态过滤">
+  <meta property="og:description" content="Admin: list all role activation records with pagination, filterable by status">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/identity-service/GET-admin-role-activations/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /admin/role-activations — Identity Service API | Autional">
-  <meta name="twitter:description" content="管理员分页查询所有角色激活记录，支持按状态过滤">
+  <meta name="twitter:description" content="Admin: list all role activation records with pagination, filterable by status">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Identity Service", "item": "https://wiki.autional.com/identity-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /admin/role-activations"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /admin/role-activations — Identity Service API | Autional", "description": "管理员分页查询所有角色激活记录，支持按状态过滤", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /admin/role-activations — Identity Service API | Autional", "description": "Admin: list all role activation records with pagination, filterable by status", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/identity-service/">Identity Service</a><span>›</span><span>GET /admin/role-activations</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/admin/role-activations</code></h1>
-<p class="summary">管理员分页查询所有角色激活记录，支持按状态过滤</p>
-<div class="meta"><span class="meta-item">RBAC - 角色</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Admin: list all role activation records with pagination, filterable by status</p>
+<div class="meta"><span class="meta-item">Role Permissions</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,7 +183,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>激活状态过滤</td>
+    <td>Filter by activation status</td>
   </tr><tr>
     <td><code>page</code></td>
     <td><code>query</code></td>
@@ -191,7 +192,7 @@
     <td><code>1</code></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>页码</td>
+    <td>Page number</td>
   </tr><tr>
     <td><code>page_size</code></td>
     <td><code>query</code></td>
@@ -200,138 +201,18 @@
     <td><code>20</code></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>每页数量</td>
+    <td>Items per page</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>角色激活列表</td><td><a href="#schema-dto.listresponse-service-identity/internal/handler/dto/activationresponse"><code>dto.ListResponse-service-identity/internal/handler/dto/ActivationResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数无效</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Role activation list</td><td><a href="#schema-dto.listresponse-dto_activationresponse"><code>dto.ListResponse-dto_ActivationResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.simpleresponsewrapper"><code>dto.SimpleResponseWrapper</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-dto.listresponse-service-identity/internal/handler/dto/activationresponse">dto.ListResponse-service-identity/internal/handler/dto/ActivationResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>items</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-identity/internal/handler/dto.activationresponse"><code>service-identity/internal/handler/dto.ActivationResponse</code></a></p></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>统一使用 items</td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>pagination</code></td>
-    <td><code>object</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>分页信息（嵌套对象）</td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>total</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>总条数（平铺，便于直接读取）</td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-core/base/dto.pageinfo">service-core/base/dto.PageInfo</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>has_next</code></td>
-    <td><code>boolean</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>HasNext indicates whether there is a next page</td>
-  </tr><tr>
-    <td><code>has_prev</code></td>
-    <td><code>boolean</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>HasPrev indicates whether there is a previous page</td>
-  </tr><tr>
-    <td><code>page</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>Page is the current page number (1-based)</td>
-  </tr><tr>
-    <td><code>page_size</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>PageSize is the number of items per page</td>
-  </tr><tr>
-    <td><code>total</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>Total is the total number of items across all pages</td>
-  </tr><tr>
-    <td><code>total_pages</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>TotalPages is the total number of pages</td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-identity/internal/handler/dto.activationresponse">service-identity/internal/handler/dto.ActivationResponse</h3>
+<h3 id="schema-dto.activationresponse">dto.ActivationResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -404,6 +285,119 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.listresponse-dto_activationresponse">dto.ListResponse-dto_ActivationResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>items</code></td>
+    <td>array of<br/><p>See <a href="#schema-dto.activationresponse"><code>dto.ActivationResponse</code></a></p></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Use items uniformly</td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>pagination</code></td>
+    <td><code>object</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Pagination info (nested object)</td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Total count (flattened for direct reading)</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.simpleresponsewrapper">dto.SimpleResponseWrapper</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.pageinfo">gitee_com_linmes_authms_base_dto.PageInfo</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>has_next</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>HasNext indicates whether there is a next page</td>
+  </tr><tr>
+    <td><code>has_prev</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>HasPrev indicates whether there is a previous page</td>
+  </tr><tr>
+    <td><code>page</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Page is the current page number (1-based)</td>
+  </tr><tr>
+    <td><code>page_size</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>PageSize is the number of items per page</td>
+  </tr><tr>
+    <td><code>total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Total is the total number of items across all pages</td>
+  </tr><tr>
+    <td><code>total_pages</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>TotalPages is the total number of pages</td>
   </tr></tbody>
 </table></div>
 </section>

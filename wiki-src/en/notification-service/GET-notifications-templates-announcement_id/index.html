@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /notifications/templates/{announcement_id} — Notification Service API | Autional</title>
-  <meta name="description" content="获取指定ID的通知模板详情 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。">
+  <meta name="description" content="Get details of a notification template by ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/notification-service/GET-notifications-templates-announcement_id/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/notification-service/GET-notifications-templates-announcement_id/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/notification-service/GET-notifications-templates-announcement_id/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/notification-service/GET-notifications-templates-announcement_id/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /notifications/templates/{announcement_id} — Notification Service API | Autional">
-  <meta property="og:description" content="获取指定ID的通知模板详情 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。">
+  <meta property="og:description" content="Get details of a notification template by ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/notification-service/GET-notifications-templates-announcement_id/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /notifications/templates/{announcement_id} — Notification Service API | Autional">
-  <meta name="twitter:description" content="获取指定ID的通知模板详情 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。">
+  <meta name="twitter:description" content="Get details of a notification template by ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Notification Service", "item": "https://wiki.autional.com/notification-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /notifications/templates/{announcement_id}"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /notifications/templates/{announcement_id} — Notification Service API | Autional", "description": "获取指定ID的通知模板详情 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /notifications/templates/{announcement_id} — Notification Service API | Autional", "description": "Get details of a notification template by ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,63 +163,38 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/notification-service/">Notification Service</a><span>›</span><span>GET /notifications/templates/{announcement_id}</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/notifications/templates/{announcement_id}</code></h1>
-<p class="summary">获取指定ID的通知模板详情 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。</p>
-<div class="meta"><span class="meta-item">通知服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Get details of a notification template by ID. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.</p>
+<div class="meta"><span class="meta-item">Notification Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
-    <td><code>announcement_id</code></td>
+    <td><code>id</code></td>
     <td><code>path</code></td>
     <td><code>string</code></td>
     <td><span class="required">Yes</span></td>
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>模板ID</td>
+    <td>Template ID</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>模板详情</td><td><a href="#schema-service-notification/internal/handler/dto.templatedetailresponse"><code>service-notification/internal/handler/dto.TemplateDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>权限不足</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>资源未找到</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Template details</td><td><a href="#schema-dto.templatedetailresponse"><code>dto.TemplateDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>Insufficient permissions</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>Resource not found</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-notification/internal/handler/dto.templatedetailresponse">service-notification/internal/handler/dto.TemplateDetailResponse</h3>
+<h3 id="schema-dto.templatedetailresponse">dto.TemplateDetailResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -231,7 +206,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-notification/internal/handler/dto.templateresponse"><code>service-notification/internal/handler/dto.TemplateResponse</code></a></td>
+    <td><a href="#schema-dto.templateresponse"><code>dto.TemplateResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -252,59 +227,85 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-notification/internal/handler/dto.templateresponse">service-notification/internal/handler/dto.TemplateResponse</h3>
-<p>通知模板信息</p>
+<h3 id="schema-dto.templateresponse">dto.TemplateResponse</h3>
+<p>Notification template info</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>content</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>亲爱的{{user_name}}，欢迎加入{{app_name}}！</code></td>
+    <td><code>Dear {{user_name}}, welcome to {{app_name}}!</code></td>
     <td style="font-size:11px"></td>
-    <td>内容</td>
+    <td>Content</td>
   </tr><tr>
     <td><code>created_at</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>2026-01-01T00:00:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>创建时间</td>
+    <td>Creation time</td>
   </tr><tr>
     <td><code>name</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>welcome_notification</code></td>
     <td style="font-size:11px"></td>
-    <td>模板名称</td>
+    <td>Template name</td>
   </tr><tr>
     <td><code>subject</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>欢迎加入{{app_name}}</code></td>
+    <td><code>Welcome to {{app_name}}</code></td>
     <td style="font-size:11px"></td>
-    <td>主题</td>
+    <td>Subject</td>
   </tr><tr>
     <td><code>template_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>tpl_abc123</code></td>
     <td style="font-size:11px"></td>
-    <td>模板ID</td>
+    <td>Template ID</td>
   </tr><tr>
     <td><code>type</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>system</code></td>
     <td style="font-size:11px"></td>
-    <td>类型</td>
+    <td>Type</td>
   </tr><tr>
     <td><code>variables</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
     <td><span class="optional">No</span></td>
     <td><code>['[&quot;user_name&quot;', '&quot;app_name&quot;]']</code></td>
     <td style="font-size:11px"></td>
-    <td>变量</td>
+    <td>Variables</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.simpleresponse">gitee_com_linmes_authms_base_dto.SimpleResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
   </tr></tbody>
 </table></div>
 </section>

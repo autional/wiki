@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DELETE /oauth/register/{client_id} — OAuth Service API | Autional</title>
-  <meta name="description" content="OAuth 2.0 动态客户端注册删除端点。使用 Registration Access Token 软删除客户端注册。参考：RFC 7591 §2.3 (Client Delete Request)。">
+  <meta name="description" content="OAuth 2.0 dynamic client registration delete endpoint. Uses Registration Access Token to soft-delete client registration. Reference: RFC 7591 §2.3 (Client Delete Request).">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/oauth-service/DELETE-oauth-register-client_id/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/oauth-service/DELETE-oauth-register-client_id/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/oauth-service/DELETE-oauth-register-client_id/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/oauth-service/DELETE-oauth-register-client_id/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="DELETE /oauth/register/{client_id} — OAuth Service API | Autional">
-  <meta property="og:description" content="OAuth 2.0 动态客户端注册删除端点。使用 Registration Access Token 软删除客户端注册。参考：RFC 7591 §2.3 (Client Delete Request)。">
+  <meta property="og:description" content="OAuth 2.0 dynamic client registration delete endpoint. Uses Registration Access Token to soft-delete client registration. Reference: RFC 7591 §2.3 (Client Delete Request).">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/oauth-service/DELETE-oauth-register-client_id/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="DELETE /oauth/register/{client_id} — OAuth Service API | Autional">
-  <meta name="twitter:description" content="OAuth 2.0 动态客户端注册删除端点。使用 Registration Access Token 软删除客户端注册。参考：RFC 7591 §2.3 (Client Delete Request)。">
+  <meta name="twitter:description" content="OAuth 2.0 dynamic client registration delete endpoint. Uses Registration Access Token to soft-delete client registration. Reference: RFC 7591 §2.3 (Client Delete Request).">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "OAuth Service", "item": "https://wiki.autional.com/oauth-service/"}, {"@type": "ListItem", "position": 4, "name": "DELETE /oauth/register/{client_id}"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "DELETE /oauth/register/{client_id} — OAuth Service API | Autional", "description": "OAuth 2.0 动态客户端注册删除端点。使用 Registration Access Token 软删除客户端注册。参考：RFC 7591 §2.3 (Client Delete Request)。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "DELETE /oauth/register/{client_id} — OAuth Service API | Autional", "description": "OAuth 2.0 dynamic client registration delete endpoint. Uses Registration Access Token to soft-delete client registration. Reference: RFC 7591 §2.3 (Client Delete Request).", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,13 +163,14 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/oauth-service/">OAuth Service</a><span>›</span><span>DELETE /oauth/register/{client_id}</span></nav>
       <h1><span class="meta-item method DELETE">DELETE</span> <code class="path">/oauth/register/{client_id}</code></h1>
-<p class="summary">OAuth 2.0 动态客户端注册删除端点。使用 Registration Access Token 软删除客户端注册。参考：RFC 7591 §2.3 (Client Delete Request)。</p>
+<p class="summary">OAuth 2.0 dynamic client registration delete endpoint. Uses Registration Access Token to soft-delete client registration. Reference: RFC 7591 §2.3 (Client Delete Request).</p>
 <div class="meta"><span class="meta-item">OAuth</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
@@ -182,7 +183,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>客户端ID</td>
+    <td>Client ID</td>
   </tr><tr>
     <td><code>Authorization</code></td>
     <td><code>header</code></td>
@@ -198,12 +199,12 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>204</strong></td><td>删除成功（无响应体）</td><td><code>string</code></td></tr><tr><td><strong>401</strong></td><td>invalid_token：缺少或无效的 Registration Access Token。参考：RFC 7591 §2.3。</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>server_error：删除客户端注册失败</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>204</strong></td><td>Deleted successfully (no response body)</td><td><code>string</code></td></tr><tr><td><strong>401</strong></td><td>invalid_token: missing or invalid Registration Access Token. Reference: RFC 7591 §2.3.</td><td><a href="#schema-dto.oautherrorresponse"><code>dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>server_error: failed to delete client registration</td><td><a href="#schema-dto.oautherrorresponse"><code>dto.OAuthErrorResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-oauth/internal/handler/dto.oautherrorresponse">service-oauth/internal/handler/dto.OAuthErrorResponse</h3>
-<p>OAuth标准错误响应</p>
+<h3 id="schema-dto.oautherrorresponse">dto.OAuthErrorResponse</h3>
+<p>OAuth standard error response</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -212,28 +213,28 @@
     <td><span class="optional">No</span></td>
     <td><code>invalid_request</code></td>
     <td style="font-size:11px"></td>
-    <td>错误码</td>
+    <td>Error code</td>
   </tr><tr>
     <td><code>error_description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>Missing required parameter</code></td>
     <td style="font-size:11px"></td>
-    <td>错误描述</td>
+    <td>Error description</td>
   </tr><tr>
     <td><code>error_uri</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>https://docs.example.com/errors</code></td>
     <td style="font-size:11px"></td>
-    <td>错误URI</td>
+    <td>Error URI</td>
   </tr><tr>
     <td><code>state</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>state-123</code></td>
     <td style="font-size:11px"></td>
-    <td>状态</td>
+    <td>Status</td>
   </tr></tbody>
 </table></div>
 </section>

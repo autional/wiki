@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /public/key-exchange — Identity Service API | Autional</title>
-  <meta name="description" content="生成临时 ECDH P-256 密钥对，返回服务端公钥和交换 ID。客户端用此公钥完成 ECDH → 派生 AES-256-GCM 会话密钥加密密码。">
+  <meta name="description" content="Generate a temporary ECDH P-256 key pair, return the server public key and exchange ID. The client uses this public key to complete ECDH → derive AES-256-GCM session key to encrypt the password.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/identity-service/GET-public-key-exchange/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/identity-service/GET-public-key-exchange/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/identity-service/GET-public-key-exchange/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/identity-service/GET-public-key-exchange/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /public/key-exchange — Identity Service API | Autional">
-  <meta property="og:description" content="生成临时 ECDH P-256 密钥对，返回服务端公钥和交换 ID。客户端用此公钥完成 ECDH → 派生 AES-256-GCM 会话密钥加密密码。">
+  <meta property="og:description" content="Generate a temporary ECDH P-256 key pair, return the server public key and exchange ID. The client uses this public key to complete ECDH → derive AES-256-GCM session key to encrypt the password.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/identity-service/GET-public-key-exchange/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /public/key-exchange — Identity Service API | Autional">
-  <meta name="twitter:description" content="生成临时 ECDH P-256 密钥对，返回服务端公钥和交换 ID。客户端用此公钥完成 ECDH → 派生 AES-256-GCM 会话密钥加密密码。">
+  <meta name="twitter:description" content="Generate a temporary ECDH P-256 key pair, return the server public key and exchange ID. The client uses this public key to complete ECDH → derive AES-256-GCM session key to encrypt the password.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Identity Service", "item": "https://wiki.autional.com/identity-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /public/key-exchange"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /public/key-exchange — Identity Service API | Autional", "description": "生成临时 ECDH P-256 密钥对，返回服务端公钥和交换 ID。客户端用此公钥完成 ECDH → 派生 AES-256-GCM 会话密钥加密密码。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /public/key-exchange — Identity Service API | Autional", "description": "Generate a temporary ECDH P-256 key pair, return the server public key and exchange ID. The client uses this public key to complete ECDH → derive AES-256-GCM session key to encrypt the password.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,55 +163,23 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/identity-service/">Identity Service</a><span>›</span><span>GET /public/key-exchange</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/public/key-exchange</code></h1>
-<p class="summary">生成临时 ECDH P-256 密钥对，返回服务端公钥和交换 ID。客户端用此公钥完成 ECDH → 派生 AES-256-GCM 会话密钥加密密码。</p>
-<div class="meta"><span class="meta-item">身份认证 - 内部接口</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Generate a temporary ECDH P-256 key pair, return the server public key and exchange ID. The client uses this public key to complete ECDH → derive AES-256-GCM session key to encrypt the password.</p>
+<div class="meta"><span class="meta-item">Authentication - Internal</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>密钥交换参数</td><td><a href="#schema-service-core/base/dto.dataresponse-service-identity/internal/handler/dto/keyexchangeresponse"><code>service-core/base/dto.DataResponse-service-identity/internal/handler/dto/KeyExchangeResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Key exchange parameters</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.dataresponse-dto_keyexchangeresponse"><code>gitee_com_linmes_authms_base_dto.DataResponse-dto_KeyExchangeResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.dataresponse-service-identity/internal/handler/dto/keyexchangeresponse">service-core/base/dto.DataResponse-service-identity/internal/handler/dto/KeyExchangeResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>data</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.keyexchangeresponse"><code>service-identity/internal/handler/dto.KeyExchangeResponse</code></a></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-identity/internal/handler/dto.keyexchangeresponse">service-identity/internal/handler/dto.KeyExchangeResponse</h3>
+<h3 id="schema-dto.keyexchangeresponse">dto.KeyExchangeResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -242,6 +210,39 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td>base64 ECDH P-256 public key</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.dataresponse-dto_keyexchangeresponse">gitee_com_linmes_authms_base_dto.DataResponse-dto_KeyExchangeResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>data</code></td>
+    <td><a href="#schema-dto.keyexchangeresponse"><code>dto.KeyExchangeResponse</code></a></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
   </tr></tbody>
 </table></div>
 </section>

@@ -1,30 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /admin/sessions/risk-score — Session Service API | Autional</title>
-  <meta name="description" content="管理员基于会话的IP地址、设备指纹、登录时间、地理位置等多维度评估会话风险评分。
-参考：RFC 7519 (JWT)、NIST SP 800-63B §4 (Session Management)。">
+  <meta name="description" content="Administrator evaluates session risk score based on multi-dimensional factors: IP address, device fingerprint, login time, geographic location, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/session-service/GET-admin-sessions-risk-score/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/session-service/GET-admin-sessions-risk-score/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/session-service/GET-admin-sessions-risk-score/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/session-service/GET-admin-sessions-risk-score/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /admin/sessions/risk-score — Session Service API | Autional">
-  <meta property="og:description" content="管理员基于会话的IP地址、设备指纹、登录时间、地理位置等多维度评估会话风险评分。
-参考：RFC 7519 (JWT)、NIST SP 800-63B §4 (Session Management)。">
+  <meta property="og:description" content="Administrator evaluates session risk score based on multi-dimensional factors: IP address, device fingerprint, login time, geographic location, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/session-service/GET-admin-sessions-risk-score/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /admin/sessions/risk-score — Session Service API | Autional">
-  <meta name="twitter:description" content="管理员基于会话的IP地址、设备指纹、登录时间、地理位置等多维度评估会话风险评分。
-参考：RFC 7519 (JWT)、NIST SP 800-63B §4 (Session Management)。">
+  <meta name="twitter:description" content="Administrator evaluates session risk score based on multi-dimensional factors: IP address, device fingerprint, login time, geographic location, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Session Service", "item": "https://wiki.autional.com/session-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /admin/sessions/risk-score"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /admin/sessions/risk-score — Session Service API | Autional", "description": "管理员基于会话的IP地址、设备指纹、登录时间、地理位置等多维度评估会话风险评分。\n参考：RFC 7519 (JWT)、NIST SP 800-63B §4 (Session Management)。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /admin/sessions/risk-score — Session Service API | Autional", "description": "Administrator evaluates session risk score based on multi-dimensional factors: IP address, device fingerprint, login time, geographic location, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -166,15 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/session-service/">Session Service</a><span>›</span><span>GET /admin/sessions/risk-score</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/admin/sessions/risk-score</code></h1>
-<p class="summary">管理员基于会话的IP地址、设备指纹、登录时间、地理位置等多维度评估会话风险评分。
-参考：RFC 7519 (JWT)、NIST SP 800-63B §4 (Session Management)。</p>
-<div class="meta"><span class="meta-item">会话管理</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Administrator evaluates session risk score based on multi-dimensional factors: IP address, device fingerprint, login time, geographic location, etc. References: RFC 7519 (JWT), NIST SP 800-63B §4 (Session Management).</p>
+<div class="meta"><span class="meta-item">Session Management</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -186,14 +183,14 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>会话ID（可选，不填则返回当前所有会话的汇总风险评分）</td>
+    <td>Session ID (optional, returns aggregate risk score for all current sessions if not provided)</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>风险评分结果</td><td><a href="#schema-service-session/internal/handler/dto.riskscoreresponse"><code>service-session/internal/handler/dto.RiskScoreResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数有误</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证或令牌已过期</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>403</strong></td><td>无管理员或安全管理员权限</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>404</strong></td><td>租户不存在</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Risk score result</td><td><a href="#schema-dto.riskscoreresponse"><code>dto.RiskScoreResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated or token expired</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>403</strong></td><td>No administrator or security administrator permission</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>404</strong></td><td>Tenant not found</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
@@ -206,41 +203,28 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Code 是错误代码（可选）
-用于程序识别错误类型，如 &quot;required&quot;, &quot;format&quot;, &quot;range&quot;</td>
+    <td>Code is an error code (optional). Used by programs to identify error types, e.g., &quot;required&quot;, &quot;format&quot;, &quot;range&quot;</td>
   </tr><tr>
     <td><code>description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Description 是人类可读的错误描述
-应该说明违反了什么规则，如 &quot;必须是一个有效的邮箱地址&quot;</td>
+    <td>Description is a human-readable error description. Should explain which rule was violated, e.g., &quot;Must be a valid email address&quot;</td>
   </tr><tr>
     <td><code>field</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Field 是错误字段的路径
-使用点号表示嵌套字段，如 &quot;user.email&quot; 或 &quot;addresses[0].city&quot;</td>
-  </tr><tr>
-    <td><code>standard</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>Standard 是指向权威规范文档的 URI 引用
-用于告知 API 消费者具体违反哪个标准
-示例：&quot;https://www.rfc-editor.org/info/rfc5322&quot;</td>
+    <td>Field is the path to the error field. Uses dot notation for nested fields, e.g., &quot;user.email&quot; or &quot;addresses[0].city&quot;</td>
   </tr><tr>
     <td><code>value</code></td>
     <td><code>object</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Value 是导致错误的值（可选，开发模式下使用）
-生产环境可能不返回此字段以避免泄露敏感信息</td>
+    <td>Value is the value that caused the error (optional, used in development mode). May not be returned in production to avoid leaking sensitive information</td>
   </tr></tbody>
 </table></div>
 <h3 id="schema-dto.problem">dto.Problem</h3>
@@ -252,168 +236,143 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Code 是业务错误码
-用于程序处理特定错误场景
-示例：30101001</td>
+    <td>Code is a business error code. Used by programs to handle specific error scenarios. Example: 30101001</td>
   </tr><tr>
     <td><code>detail</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Detail 是针对此具体错误实例的人类可读解释
-可以包含具体的错误细节，如&quot;Field 'email' is required&quot;</td>
+    <td>Detail is a human-readable explanation for this specific error instance. May include specific error details, e.g., &quot;Field 'email' is required&quot;</td>
   </tr><tr>
     <td><code>errors</code></td>
     <td>array of<br/><p>See <a href="#schema-dto.fieldviolation"><code>dto.FieldViolation</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Errors 是字段级验证错误列表（扩展字段）
-遵循 Web API 标准实践，每个错误包含字段名和错误信息</td>
+    <td>Errors is a list of field-level validation errors (extension field). Follows Web API standard practices, each error contains field name and error message</td>
   </tr><tr>
     <td><code>i18n_args</code></td>
     <td><code>object</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>I18nArgs 是国际化参数
-用于动态填充翻译模板</td>
+    <td>I18nArgs are internationalization parameters. Used to dynamically fill translation templates</td>
   </tr><tr>
     <td><code>i18n_key</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>I18nKey 是国际化键
-用于客户端本地化错误消息
-示例：&quot;error.user_not_found&quot;</td>
+    <td>I18nKey is an internationalization key. Used for client-side localization of error messages. Example: &quot;error.user_not_found&quot;</td>
   </tr><tr>
     <td><code>instance</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Instance 是发生问题的具体URI引用
-通常是请求的URL，可能包含查询参数
-示例：&quot;/api/v1/users?limit=invalid&quot;</td>
+    <td>Instance is a specific URI reference where the problem occurred. Usually the request URL, may include query parameters. Example: &quot;/api/v1/users?limit=invalid&quot;</td>
   </tr><tr>
     <td><code>request_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>RequestID 是请求唯一标识
-用于日志关联和问题追踪
-示例：&quot;req_550e8400-e29b-41d4-a716-446655440000&quot;</td>
+    <td>RequestID is a unique request identifier. Used for log correlation and issue tracking. Example: &quot;req_550e8400-e29b-41d4-a716-446655440000&quot;</td>
   </tr><tr>
     <td><code>retry_after</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>RetryAfter 用于 429 Too Many Requests 响应
-指示客户端应在多少秒后重试请求（RFC 6585）</td>
+    <td>RetryAfter is used for 429 Too Many Requests responses. Indicates how many seconds the client should wait before retrying (RFC 6585)</td>
   </tr><tr>
     <td><code>service</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Service 是服务名
-用于微服务架构中定位错误来源
-示例：&quot;auth-service&quot;</td>
+    <td>Service is the service name. Used in microservice architecture to locate the error source. Example: &quot;auth-service&quot;</td>
   </tr><tr>
     <td><code>span_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>SpanID 是当前 span 标识
-用于精确定位分布式链路中的当前节点</td>
+    <td>SpanID is the current span identifier. Used to precisely locate the current node in a distributed trace</td>
   </tr><tr>
     <td><code>status</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Status 是产生的HTTP状态码
-用于客户端区分问题类型，不随Accept-Language变化
-示例：400, 401, 403, 404, 500</td>
+    <td>Status is the HTTP status code generated. Used by clients to distinguish problem types, does not change with Accept-Language. Example: 400, 401, 403, 404, 500</td>
   </tr><tr>
     <td><code>timestamp</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Timestamp 是错误发生时间
-ISO 8601 格式
-示例：&quot;2026-04-03T12:00:00Z&quot;</td>
+    <td>Timestamp is the error occurrence time. ISO 8601 format. Example: &quot;2026-04-03T12:00:00Z&quot;</td>
   </tr><tr>
     <td><code>title</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Title 是简短、人类可读的问题类型摘要
-相同的 Type 应该始终有相同的 Title（不随实例变化）
-示例：&quot;Invalid Request Parameters&quot;</td>
+    <td>Title is a short, human-readable summary of the problem type. The same Type should always have the same Title (does not change per instance). Example: &quot;Invalid Request Parameters&quot;</td>
   </tr><tr>
     <td><code>trace_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>TraceID 是分布式追踪标识
-遵循 W3C Trace Context 标准
-示例：&quot;00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01&quot;</td>
+    <td>TraceID is a distributed tracing identifier. Follows W3C Trace Context standard. Example: &quot;00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01&quot;</td>
   </tr><tr>
     <td><code>type</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Type 是标识问题类型的URI引用
-当该URI被解引用时，应提供人类可读的文档
-示例：&quot;https://api.example.com/errors/invalid-request&quot;</td>
+    <td>Type is a URI reference that identifies the problem type. When dereferenced, it should provide human-readable documentation. Example: &quot;https://api.example.com/errors/invalid-request&quot;</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-session/internal/handler/dto.riskfactor">service-session/internal/handler/dto.RiskFactor</h3>
-<p>风险评估因素</p>
+<h3 id="schema-dto.riskfactor">dto.RiskFactor</h3>
+<p>Risk Assessment Factor</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>登录地点异常</code></td>
+    <td><code>Abnormal Login Location</code></td>
     <td style="font-size:11px"></td>
-    <td>描述</td>
+    <td>Description</td>
   </tr><tr>
     <td><code>score</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>20</code></td>
     <td style="font-size:11px"></td>
-    <td>评分</td>
+    <td>Score</td>
   </tr><tr>
     <td><code>type</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>unusual_location</code></td>
     <td style="font-size:11px"></td>
-    <td>类型</td>
+    <td>Type</td>
   </tr><tr>
     <td><code>weight</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>30</code></td>
     <td style="font-size:11px"></td>
-    <td>权重</td>
+    <td>Weight</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-session/internal/handler/dto.riskscoreresponse">service-session/internal/handler/dto.RiskScoreResponse</h3>
-<p>会话风险评分结果</p>
+<h3 id="schema-dto.riskscoreresponse">dto.RiskScoreResponse</h3>
+<p>Session Risk Score Result</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -422,42 +381,42 @@ ISO 8601 格式
     <td><span class="optional">No</span></td>
     <td><code>2026-04-14T12:00:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>评估时间</td>
+    <td>Assessment Time</td>
   </tr><tr>
     <td><code>factors</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-session/internal/handler/dto.riskfactor"><code>service-session/internal/handler/dto.RiskFactor</code></a></p></td>
+    <td>array of<br/><p>See <a href="#schema-dto.riskfactor"><code>dto.RiskFactor</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>因素</td>
+    <td>Factors</td>
   </tr><tr>
     <td><code>recommended_action</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>allow</code></td>
     <td style="font-size:11px"></td>
-    <td>建议</td>
+    <td>Suggestion</td>
   </tr><tr>
     <td><code>risk_level</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>low</code></td>
     <td style="font-size:11px"></td>
-    <td>等级</td>
+    <td>Level</td>
   </tr><tr>
     <td><code>risk_score</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>25</code></td>
     <td style="font-size:11px"></td>
-    <td>评分</td>
+    <td>Score</td>
   </tr><tr>
     <td><code>session_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>sess_abc123</code></td>
     <td style="font-size:11px"></td>
-    <td>会话ID</td>
+    <td>Session ID</td>
   </tr></tbody>
 </table></div>
 </section>

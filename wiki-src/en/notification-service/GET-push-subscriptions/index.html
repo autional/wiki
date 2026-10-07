@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /push/subscriptions — Notification Service API | Autional</title>
-  <meta name="description" content="查询当前用户的 Web Push 订阅列表 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。">
+  <meta name="description" content="Query the current user's Web Push subscription list. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/notification-service/GET-push-subscriptions/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/notification-service/GET-push-subscriptions/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/notification-service/GET-push-subscriptions/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/notification-service/GET-push-subscriptions/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /push/subscriptions — Notification Service API | Autional">
-  <meta property="og:description" content="查询当前用户的 Web Push 订阅列表 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。">
+  <meta property="og:description" content="Query the current user's Web Push subscription list. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/notification-service/GET-push-subscriptions/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /push/subscriptions — Notification Service API | Autional">
-  <meta name="twitter:description" content="查询当前用户的 Web Push 订阅列表 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。">
+  <meta name="twitter:description" content="Query the current user's Web Push subscription list. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Notification Service", "item": "https://wiki.autional.com/notification-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /push/subscriptions"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /push/subscriptions — Notification Service API | Autional", "description": "查询当前用户的 Web Push 订阅列表 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /push/subscriptions — Notification Service API | Autional", "description": "Query the current user's Web Push subscription list. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,22 +163,110 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/notification-service/">Notification Service</a><span>›</span><span>GET /push/subscriptions</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/push/subscriptions</code></h1>
-<p class="summary">查询当前用户的 Web Push 订阅列表 参考：CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance。</p>
-<div class="meta"><span class="meta-item">通知服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Query the current user's Web Push subscription list. Reference: CAN-SPAM Act (15 U.S.C. §7701) — Commercial Email Compliance.</p>
+<div class="meta"><span class="meta-item">Notification Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>订阅列表</td><td><a href="#schema-service-notification/internal/handler/dto.pushsubscriptionlistresponse"><code>service-notification/internal/handler/dto.PushSubscriptionListResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>权限不足</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>资源未找到</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Subscription list</td><td><a href="#schema-dto.pushsubscriptionlistresponse"><code>dto.PushSubscriptionListResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>Insufficient permissions</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>Resource not found</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.pageinfo">service-core/base/dto.PageInfo</h3>
+<h3 id="schema-dto.pushsubscriptionlistresponse">dto.PushSubscriptionListResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>items</code></td>
+    <td>array of<br/><p>See <a href="#schema-dto.pushsubscriptionresponse"><code>dto.PushSubscriptionResponse</code></a></p></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Unified use of items</td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>pagination</code></td>
+    <td><code>object</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Pagination info (nested object)</td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Total count (flattened for direct reading)</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.pushsubscriptionresponse">dto.PushSubscriptionResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>created_at</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>2026-05-12T12:00:00Z</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>device_name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>Chrome on Windows</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>device_type</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>web</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>endpoint</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>https://fcm.googleapis.com/fcm/send/...</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>sub-abc123</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.pageinfo">gitee_com_linmes_authms_base_dto.PageInfo</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -225,7 +313,7 @@
     <td>TotalPages is the total number of pages</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.simpleresponse">gitee_com_linmes_authms_base_dto.SimpleResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -247,93 +335,6 @@
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-notification/internal/handler/dto.pushsubscriptionlistresponse">service-notification/internal/handler/dto.PushSubscriptionListResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>items</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-notification/internal/handler/dto.pushsubscriptionresponse"><code>service-notification/internal/handler/dto.PushSubscriptionResponse</code></a></p></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>统一使用 items</td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>pagination</code></td>
-    <td><code>object</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>分页信息（嵌套对象）</td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>total</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>总条数（平铺，便于直接读取）</td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-notification/internal/handler/dto.pushsubscriptionresponse">service-notification/internal/handler/dto.PushSubscriptionResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>created_at</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>2026-05-12T12:00:00Z</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>device_name</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>Chrome on Windows</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>device_type</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>web</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>endpoint</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>https://fcm.googleapis.com/fcm/send/...</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>id</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>sub-abc123</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr></tbody>

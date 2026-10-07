@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /communication/rate-limits — Communication Service API | Autional</title>
-  <meta name="description" content="基于当前配置的服务商返回短信、邮件、推送等渠道的速率限制配置（每分钟/每小时最大发送量），用于客户端发送前的流量控制参考。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta name="description" content="Returns rate limit configurations (maximum sends per minute/hour) for SMS, email, push, and other channels based on the currently configured providers, for client-side traffic control reference before sending. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/communication-service/GET-communication-rate-limits/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/communication-service/GET-communication-rate-limits/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/communication-service/GET-communication-rate-limits/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/communication-service/GET-communication-rate-limits/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /communication/rate-limits — Communication Service API | Autional">
-  <meta property="og:description" content="基于当前配置的服务商返回短信、邮件、推送等渠道的速率限制配置（每分钟/每小时最大发送量），用于客户端发送前的流量控制参考。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta property="og:description" content="Returns rate limit configurations (maximum sends per minute/hour) for SMS, email, push, and other channels based on the currently configured providers, for client-side traffic control reference before sending. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/communication-service/GET-communication-rate-limits/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /communication/rate-limits — Communication Service API | Autional">
-  <meta name="twitter:description" content="基于当前配置的服务商返回短信、邮件、推送等渠道的速率限制配置（每分钟/每小时最大发送量），用于客户端发送前的流量控制参考。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta name="twitter:description" content="Returns rate limit configurations (maximum sends per minute/hour) for SMS, email, push, and other channels based on the currently configured providers, for client-side traffic control reference before sending. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Communication Service", "item": "https://wiki.autional.com/communication-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /communication/rate-limits"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /communication/rate-limits — Communication Service API | Autional", "description": "基于当前配置的服务商返回短信、邮件、推送等渠道的速率限制配置（每分钟/每小时最大发送量），用于客户端发送前的流量控制参考。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /communication/rate-limits — Communication Service API | Autional", "description": "Returns rate limit configurations (maximum sends per minute/hour) for SMS, email, push, and other channels based on the currently configured providers, for client-side traffic control reference before sending. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/communication-service/">Communication Service</a><span>›</span><span>GET /communication/rate-limits</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/communication/rate-limits</code></h1>
-<p class="summary">基于当前配置的服务商返回短信、邮件、推送等渠道的速率限制配置（每分钟/每小时最大发送量），用于客户端发送前的流量控制参考。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。</p>
-<div class="meta"><span class="meta-item">通信服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Returns rate limit configurations (maximum sends per minute/hour) for SMS, email, push, and other channels based on the currently configured providers, for client-side traffic control reference before sending. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.</p>
+<div class="meta"><span class="meta-item">Communication Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,14 +183,14 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>渠道筛选：sms/email/push（不传返回全部）</td>
+    <td>Channel filter: sms/email/push (omit to return all)</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>查询成功，返回各渠道速率限制配置</td><td><a href="#schema-service-communication/internal/handler/dto.ratelimitsdetailresponse"><code>service-communication/internal/handler/dto.RateLimitsDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证或令牌无效</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>无权访问该资源</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Query successful, returns rate limit configurations for each channel</td><td><a href="#schema-dto.ratelimitsdetailresponse"><code>dto.RateLimitsDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated or invalid token</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>Insufficient permissions to access this resource</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
@@ -226,6 +227,66 @@
     <td></td>
   </tr></tbody>
 </table></div>
+<h3 id="schema-dto.ratelimitsdetailresponse">dto.RateLimitsDetailResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>data</code></td>
+    <td><a href="#schema-dto.ratelimitsresponse"><code>dto.RateLimitsResponse</code></a></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.ratelimitsresponse">dto.RateLimitsResponse</h3>
+<p>Rate limit configuration for each sending channel of the communication service.</p>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>email</code></td>
+    <td><a href="#schema-domain.channelratelimitdata"><code>domain.ChannelRateLimitData</code></a></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>push</code></td>
+    <td><a href="#schema-domain.channelratelimitdata"><code>domain.ChannelRateLimitData</code></a></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>sms</code></td>
+    <td><a href="#schema-domain.channelratelimitdata"><code>domain.ChannelRateLimitData</code></a></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
 <h3 id="schema-dto.simpleresponse">dto.SimpleResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -246,66 +307,6 @@
   </tr><tr>
     <td><code>timestamp</code></td>
     <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-communication/internal/handler/dto.ratelimitsdetailresponse">service-communication/internal/handler/dto.RateLimitsDetailResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>data</code></td>
-    <td><a href="#schema-service-communication/internal/handler/dto.ratelimitsresponse"><code>service-communication/internal/handler/dto.RateLimitsResponse</code></a></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-communication/internal/handler/dto.ratelimitsresponse">service-communication/internal/handler/dto.RateLimitsResponse</h3>
-<p>通信服务各发送渠道的速率限制配置</p>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>email</code></td>
-    <td><a href="#schema-domain.channelratelimitdata"><code>domain.ChannelRateLimitData</code></a></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>push</code></td>
-    <td><a href="#schema-domain.channelratelimitdata"><code>domain.ChannelRateLimitData</code></a></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>sms</code></td>
-    <td><a href="#schema-domain.channelratelimitdata"><code>domain.ChannelRateLimitData</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>

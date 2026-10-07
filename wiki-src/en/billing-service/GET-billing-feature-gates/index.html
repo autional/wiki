@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /billing/feature-gates — Billing Service API | Autional</title>
-  <meta name="description" content="获取当前认证用户的租户功能开关列表，合并套餐权益与租户级别覆盖">
+  <meta name="description" content="Get the list of feature flags for the current authenticated user's tenant, merging plan entitlements and tenant-level overrides">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/billing-service/GET-billing-feature-gates/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/billing-service/GET-billing-feature-gates/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/billing-service/GET-billing-feature-gates/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/billing-service/GET-billing-feature-gates/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /billing/feature-gates — Billing Service API | Autional">
-  <meta property="og:description" content="获取当前认证用户的租户功能开关列表，合并套餐权益与租户级别覆盖">
+  <meta property="og:description" content="Get the list of feature flags for the current authenticated user's tenant, merging plan entitlements and tenant-level overrides">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/billing-service/GET-billing-feature-gates/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /billing/feature-gates — Billing Service API | Autional">
-  <meta name="twitter:description" content="获取当前认证用户的租户功能开关列表，合并套餐权益与租户级别覆盖">
+  <meta name="twitter:description" content="Get the list of feature flags for the current authenticated user's tenant, merging plan entitlements and tenant-level overrides">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Billing Service", "item": "https://wiki.autional.com/billing-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /billing/feature-gates"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /billing/feature-gates — Billing Service API | Autional", "description": "获取当前认证用户的租户功能开关列表，合并套餐权益与租户级别覆盖", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /billing/feature-gates — Billing Service API | Autional", "description": "Get the list of feature flags for the current authenticated user's tenant, merging plan entitlements and tenant-level overrides", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,18 +163,19 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/billing-service/">Billing Service</a><span>›</span><span>GET /billing/feature-gates</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/billing/feature-gates</code></h1>
-<p class="summary">获取当前认证用户的租户功能开关列表，合并套餐权益与租户级别覆盖</p>
-<div class="meta"><span class="meta-item">计费服务 - 特性开关</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Get the list of feature flags for the current authenticated user's tenant, merging plan entitlements and tenant-level overrides</p>
+<div class="meta"><span class="meta-item">Billing Service - Feature Flags</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>功能开关列表查询成功</td><td><a href="#schema-handler.featuregateresponse"><code>handler.featureGateResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未授权</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Feature flag list query successful</td><td><a href="#schema-handler.featuregateresponse"><code>handler.featureGateResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
@@ -187,14 +188,14 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>功能描述</td>
+    <td>Feature description</td>
   </tr><tr>
     <td><code>enabled</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>当前租户是否启用</td>
+    <td>Whether enabled for current tenant</td>
   </tr><tr>
     <td><code>key</code></td>
     <td><code>string</code></td>
@@ -208,7 +209,7 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>&quot;Non-Human Identities&quot; (展示名)</td>
+    <td>Non-Human Identities (display name)</td>
   </tr></tbody>
 </table></div>
 <h3 id="schema-dto.simpleresponse">dto.SimpleResponse</h3>

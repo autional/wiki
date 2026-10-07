@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /internal/thirdparty/captcha/verify — Thirdparty Service API | Autional</title>
-  <meta name="description" content="接收用户提交的CAPTCHA令牌（PoW工作量证明计算结果或Turnstile验证Token），调用对应的验证提供者进行服务端校验，返回验证结果（是否通过、评分及错误码）">
+  <meta name="description" content="Receive the CAPTCHA token submitted by the user (PoW proof-of-work result or Turnstile verification token), call the corresponding verification provider for server-side validation, and return the verification result (pass/fail, score, and error code)">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/thirdparty-service/POST-internal-thirdparty-captcha-verify/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/thirdparty-service/POST-internal-thirdparty-captcha-verify/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/thirdparty-service/POST-internal-thirdparty-captcha-verify/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/thirdparty-service/POST-internal-thirdparty-captcha-verify/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /internal/thirdparty/captcha/verify — Thirdparty Service API | Autional">
-  <meta property="og:description" content="接收用户提交的CAPTCHA令牌（PoW工作量证明计算结果或Turnstile验证Token），调用对应的验证提供者进行服务端校验，返回验证结果（是否通过、评分及错误码）">
+  <meta property="og:description" content="Receive the CAPTCHA token submitted by the user (PoW proof-of-work result or Turnstile verification token), call the corresponding verification provider for server-side validation, and return the verification result (pass/fail, score, and error code)">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/thirdparty-service/POST-internal-thirdparty-captcha-verify/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /internal/thirdparty/captcha/verify — Thirdparty Service API | Autional">
-  <meta name="twitter:description" content="接收用户提交的CAPTCHA令牌（PoW工作量证明计算结果或Turnstile验证Token），调用对应的验证提供者进行服务端校验，返回验证结果（是否通过、评分及错误码）">
+  <meta name="twitter:description" content="Receive the CAPTCHA token submitted by the user (PoW proof-of-work result or Turnstile verification token), call the corresponding verification provider for server-side validation, and return the verification result (pass/fail, score, and error code)">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Thirdparty Service", "item": "https://wiki.autional.com/thirdparty-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /internal/thirdparty/captcha/verify"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /internal/thirdparty/captcha/verify — Thirdparty Service API | Autional", "description": "接收用户提交的CAPTCHA令牌（PoW工作量证明计算结果或Turnstile验证Token），调用对应的验证提供者进行服务端校验，返回验证结果（是否通过、评分及错误码）", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /internal/thirdparty/captcha/verify — Thirdparty Service API | Autional", "description": "Receive the CAPTCHA token submitted by the user (PoW proof-of-work result or Turnstile verification token), call the corresponding verification provider for server-side validation, and return the verification result (pass/fail, score, and error code)", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,17 +163,18 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/thirdparty-service/">Thirdparty Service</a><span>›</span><span>POST /internal/thirdparty/captcha/verify</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/internal/thirdparty/captcha/verify</code></h1>
-<p class="summary">接收用户提交的CAPTCHA令牌（PoW工作量证明计算结果或Turnstile验证Token），调用对应的验证提供者进行服务端校验，返回验证结果（是否通过、评分及错误码）</p>
-<div class="meta"><span class="meta-item">第三方验证</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Receive the CAPTCHA token submitted by the user (PoW proof-of-work result or Turnstile verification token), call the corresponding verification provider for server-side validation, and return the verification result (pass/fail, score, and error code)</p>
+<div class="meta"><span class="meta-item">Third-party Verification</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-dto.captchaverifyrequest"><code>dto.CaptchaVerifyRequest</code></a></p>
-<div id="schema-dto.captchaverifyrequest">
+<p><strong>Schema:</strong> <a href="#schema-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.captchaverifyrequest"><code>gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.CaptchaVerifyRequest</code></a></p>
+<div id="schema-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.captchaverifyrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -218,51 +219,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>验证完成，返回是否通过、评分及错误码</td><td><a href="#schema-dto.dataresponse-dto_captchaverifyresponse"><code>dto.DataResponse-dto_CaptchaVerifyResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误（缺少必填字段或不支持的验证提供者）</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>429</strong></td><td>CAPTCHA验证请求过于频繁，请稍后重试</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>验证服务不可用</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Verification completed, returns pass/fail, score, and error code</td><td><a href="#schema-dto.dataresponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_captchaverifyresponse"><code>dto.DataResponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_CaptchaVerifyResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Request parameter error (missing required fields or unsupported verification provider)</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>429</strong></td><td>CAPTCHA verification request too frequent, please retry later</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Verification service unavailable</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-dto.captchaverifyresponse">dto.CaptchaVerifyResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>action</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>error_codes</code></td>
-    <td>array of<br/><p><strong>string</strong></p></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>provider</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>score</code></td>
-    <td><code>number</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>success</code></td>
-    <td><code>boolean</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-dto.dataresponse-dto_captchaverifyresponse">dto.DataResponse-dto_CaptchaVerifyResponse</h3>
+<h3 id="schema-dto.dataresponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_captchaverifyresponse">dto.DataResponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_CaptchaVerifyResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -274,7 +235,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-dto.captchaverifyresponse"><code>dto.CaptchaVerifyResponse</code></a></td>
+    <td><a href="#schema-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.captchaverifyresponse"><code>gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.CaptchaVerifyResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -315,6 +276,46 @@
   </tr><tr>
     <td><code>timestamp</code></td>
     <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.captchaverifyresponse">gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.CaptchaVerifyResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>action</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>error_codes</code></td>
+    <td>array of<br/><p><strong>string</strong></p></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>provider</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>score</code></td>
+    <td><code>number</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>success</code></td>
+    <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>

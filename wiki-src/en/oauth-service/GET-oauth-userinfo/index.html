@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /oauth/userinfo — OAuth Service API | Autional</title>
-  <meta name="description" content="OpenID Connect UserInfo 端点。使用 Bearer Token 认证，返回扁平 UserInfo JSON（无 code/message 信封）。当 scope 包含 &quot;profile&quot; 时，从 profile-service 查询用户资料并合并到响应中。当配置了 verification-service 时，额外查询年龄分组/未成年人状态。参考：OpenID Connect Core 1.0 §5.3 (UserInfo Endpoint)。">
+  <meta name="description" content="OpenID Connect UserInfo endpoint. Uses Bearer Token authentication, returns flat UserInfo JSON (no code/message envelope). When scope includes &quot;profile&quot;, queries user profile from profile-service and merges into response. When verification-service is configured, additionally queries age group/minor ">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/oauth-service/GET-oauth-userinfo/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/oauth-service/GET-oauth-userinfo/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/oauth-service/GET-oauth-userinfo/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/oauth-service/GET-oauth-userinfo/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /oauth/userinfo — OAuth Service API | Autional">
-  <meta property="og:description" content="OpenID Connect UserInfo 端点。使用 Bearer Token 认证，返回扁平 UserInfo JSON（无 code/message 信封）。当 scope 包含 &quot;profile&quot; 时，从 profile-service 查询用户资料并合并到响应中。当配置了 verification-service 时，额外查询年龄分组/未成年人状态。参考：OpenID Connect Core 1.0 §5.3 (UserInfo Endpoint)。">
+  <meta property="og:description" content="OpenID Connect UserInfo endpoint. Uses Bearer Token authentication, returns flat UserInfo JSON (no code/message envelope). When scope includes &quot;profile&quot;, queries user profile from profile-service and merges into response. When verification-service is configured, additionally queries age group/minor ">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/oauth-service/GET-oauth-userinfo/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /oauth/userinfo — OAuth Service API | Autional">
-  <meta name="twitter:description" content="OpenID Connect UserInfo 端点。使用 Bearer Token 认证，返回扁平 UserInfo JSON（无 code/message 信封）。当 scope 包含 &quot;profile&quot; 时，从 profile-service 查询用户资料并合并到响应中。当配置了 verification-service 时，额外查询年龄分组/未成年人状态。参考：OpenID Connect Core 1.0 §5.3 (UserInfo Endpoint)。">
+  <meta name="twitter:description" content="OpenID Connect UserInfo endpoint. Uses Bearer Token authentication, returns flat UserInfo JSON (no code/message envelope). When scope includes &quot;profile&quot;, queries user profile from profile-service and merges into response. When verification-service is configured, additionally queries age group/minor ">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "OAuth Service", "item": "https://wiki.autional.com/oauth-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /oauth/userinfo"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /oauth/userinfo — OAuth Service API | Autional", "description": "OpenID Connect UserInfo 端点。使用 Bearer Token 认证，返回扁平 UserInfo JSON（无 code/message 信封）。当 scope 包含 \"profile\" 时，从 profile-service 查询用户资料并合并到响应中。当配置了 verification-service 时，额外查询年龄分组/未成年人状态。参考：OpenID Connect Core 1.0 §5.3 (UserInfo Endpoint)。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /oauth/userinfo — OAuth Service API | Autional", "description": "OpenID Connect UserInfo endpoint. Uses Bearer Token authentication, returns flat UserInfo JSON (no code/message envelope). When scope includes \"profile\", queries user profile from profile-service and merges into response. When verification-service is configured, additionally queries age group/minor ", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,13 +163,14 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/oauth-service/">OAuth Service</a><span>›</span><span>GET /oauth/userinfo</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/oauth/userinfo</code></h1>
-<p class="summary">OpenID Connect UserInfo 端点。使用 Bearer Token 认证，返回扁平 UserInfo JSON（无 code/message 信封）。当 scope 包含 &quot;profile&quot; 时，从 profile-service 查询用户资料并合并到响应中。当配置了 verification-service 时，额外查询年龄分组/未成年人状态。参考：OpenID Connect Core 1.0 §5.3 (UserInfo Endpoint)。</p>
+<p class="summary">OpenID Connect UserInfo endpoint. Uses Bearer Token authentication, returns flat UserInfo JSON (no code/message envelope). When scope includes &quot;profile&quot;, queries user profile from profile-service and merges into response. When verification-service is configured, additionally queries age group/minor status. See OpenID Connect Core 1.0 §5.3 (UserInfo Endpoint).</p>
 <div class="meta"><span class="meta-item">OAuth</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
@@ -189,12 +190,12 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>UserInfo 响应（含 sub, name, email, picture 等 OIDC 标准声明）</td><td><a href="#schema-service-oauth/internal/handler/dto.oidcuserinforesponse"><code>service-oauth/internal/handler/dto.OIDCUserInfoResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>invalid_token：Token 无效或已过期。参考：OIDC Core §5.3。</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>UserInfo response (contains OIDC standard claims such as sub, name, email, picture)</td><td><a href="#schema-dto.oidcuserinforesponse"><code>dto.OIDCUserInfoResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>invalid_token: Token is invalid or expired. See OIDC Core §5.3.</td><td><a href="#schema-dto.oautherrorresponse"><code>dto.OAuthErrorResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-oauth/internal/handler/dto.oautherrorresponse">service-oauth/internal/handler/dto.OAuthErrorResponse</h3>
-<p>OAuth标准错误响应</p>
+<h3 id="schema-dto.oautherrorresponse">dto.OAuthErrorResponse</h3>
+<p>OAuth standard error response</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -203,31 +204,31 @@
     <td><span class="optional">No</span></td>
     <td><code>invalid_request</code></td>
     <td style="font-size:11px"></td>
-    <td>错误码</td>
+    <td>Error code</td>
   </tr><tr>
     <td><code>error_description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>Missing required parameter</code></td>
     <td style="font-size:11px"></td>
-    <td>错误描述</td>
+    <td>Error description</td>
   </tr><tr>
     <td><code>error_uri</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>https://docs.example.com/errors</code></td>
     <td style="font-size:11px"></td>
-    <td>错误URI</td>
+    <td>Error URI</td>
   </tr><tr>
     <td><code>state</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>state-123</code></td>
     <td style="font-size:11px"></td>
-    <td>状态</td>
+    <td>Status</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-oauth/internal/handler/dto.oidcuserinforesponse">service-oauth/internal/handler/dto.OIDCUserInfoResponse</h3>
+<h3 id="schema-dto.oidcuserinforesponse">dto.OIDCUserInfoResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -292,7 +293,7 @@
     <td><span class="optional">No</span></td>
     <td><code>John Doe</code></td>
     <td style="font-size:11px"></td>
-    <td>OIDC Standard Claims（可选，scope=profile 时填充）</td>
+    <td>OIDC Standard Claims (optional, filled when scope=profile)</td>
   </tr><tr>
     <td><code>nickname</code></td>
     <td><code>string</code></td>
@@ -327,7 +328,7 @@
     <td><span class="optional">No</span></td>
     <td><code>usr_abc123</code></td>
     <td style="font-size:11px"></td>
-    <td>用户ID（必填）</td>
+    <td>User ID (required)</td>
   </tr><tr>
     <td><code>updated_at</code></td>
     <td><code>integer</code></td>

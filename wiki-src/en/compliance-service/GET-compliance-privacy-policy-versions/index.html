@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /compliance/privacy/policy/versions — Compliance Service API | Autional</title>
-  <meta name="description" content="公开端点：获取隐私政策所有版本历史记录">
+  <meta name="description" content="Public endpoint: Get all version history of privacy policy">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/compliance-service/GET-compliance-privacy-policy-versions/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/compliance-service/GET-compliance-privacy-policy-versions/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/compliance-service/GET-compliance-privacy-policy-versions/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/compliance-service/GET-compliance-privacy-policy-versions/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /compliance/privacy/policy/versions — Compliance Service API | Autional">
-  <meta property="og:description" content="公开端点：获取隐私政策所有版本历史记录">
+  <meta property="og:description" content="Public endpoint: Get all version history of privacy policy">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/compliance-service/GET-compliance-privacy-policy-versions/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /compliance/privacy/policy/versions — Compliance Service API | Autional">
-  <meta name="twitter:description" content="公开端点：获取隐私政策所有版本历史记录">
+  <meta name="twitter:description" content="Public endpoint: Get all version history of privacy policy">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Compliance Service", "item": "https://wiki.autional.com/compliance-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /compliance/privacy/policy/versions"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /compliance/privacy/policy/versions — Compliance Service API | Autional", "description": "公开端点：获取隐私政策所有版本历史记录", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /compliance/privacy/policy/versions — Compliance Service API | Autional", "description": "Public endpoint: Get all version history of privacy policy", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/compliance-service/">Compliance Service</a><span>›</span><span>GET /compliance/privacy/policy/versions</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/compliance/privacy/policy/versions</code></h1>
-<p class="summary">公开端点：获取隐私政策所有版本历史记录</p>
-<div class="meta"><span class="meta-item">合规管理 - Trust Center</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Public endpoint: Get all version history of privacy policy</p>
+<div class="meta"><span class="meta-item">Compliance Management - Trust Center</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,7 +183,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>租户ID</td>
+    <td>Tenant ID</td>
   </tr><tr>
     <td><code>page</code></td>
     <td><code>query</code></td>
@@ -191,7 +192,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>页码</td>
+    <td>Page number</td>
   </tr><tr>
     <td><code>page_size</code></td>
     <td><code>query</code></td>
@@ -200,18 +201,18 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>每页条数</td>
+    <td>Items per page</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>版本历史列表</td><td><a href="#schema-service-compliance/internal/handler/dto.privacypolicylistresponse"><code>service-compliance/internal/handler/dto.PrivacyPolicyListResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Version history list</td><td><a href="#schema-dto.privacypolicylistresponse"><code>dto.PrivacyPolicyListResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-compliance/internal/handler/dto.privacypolicylistresponse">service-compliance/internal/handler/dto.PrivacyPolicyListResponse</h3>
+<h3 id="schema-dto.privacypolicylistresponse">dto.PrivacyPolicyListResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -223,11 +224,11 @@
     <td></td>
   </tr><tr>
     <td><code>items</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-compliance/internal/handler/dto.privacypolicyversionitem"><code>service-compliance/internal/handler/dto.PrivacyPolicyVersionItem</code></a></p></td>
+    <td>array of<br/><p>See <a href="#schema-dto.privacypolicyversionitem"><code>dto.PrivacyPolicyVersionItem</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>统一使用 items</td>
+    <td>Use items uniformly</td>
   </tr><tr>
     <td><code>message</code></td>
     <td><code>string</code></td>
@@ -241,7 +242,7 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>分页信息（嵌套对象）</td>
+    <td>Pagination information (nested object)</td>
   </tr><tr>
     <td><code>timestamp</code></td>
     <td><code>string</code></td>
@@ -255,11 +256,11 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>总条数（平铺，便于直接读取）</td>
+    <td>Total count (flat, for direct reading)</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-compliance/internal/handler/dto.privacypolicyversionitem">service-compliance/internal/handler/dto.PrivacyPolicyVersionItem</h3>
-<p>隐私政策版本历史记录（公开）</p>
+<h3 id="schema-dto.privacypolicyversionitem">dto.PrivacyPolicyVersionItem</h3>
+<p>Privacy policy version history (public)</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -268,31 +269,31 @@
     <td><span class="optional">No</span></td>
     <td><code>2026-04-15T00:00:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>生效时间</td>
+    <td>Effective time</td>
   </tr><tr>
     <td><code>published_at</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>2026-04-01T00:00:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>发布时间</td>
+    <td>Published time</td>
   </tr><tr>
     <td><code>summary</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>新增数据传输附录</code></td>
+    <td><code>Added data transfer appendix</code></td>
     <td style="font-size:11px"></td>
-    <td>摘要</td>
+    <td>Summary</td>
   </tr><tr>
     <td><code>version</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>2.0</code></td>
     <td style="font-size:11px"></td>
-    <td>版本号</td>
+    <td>Version number</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-core/base/dto.pageinfo">service-core/base/dto.PageInfo</h3>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.pageinfo">gitee_com_linmes_authms_base_dto.PageInfo</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>

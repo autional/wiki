@@ -29,7 +29,9 @@ at `/` and an Astro sitemap-index instead.
 
 Usage:
     python scripts/sync-wiki.py --lang zh
-    python scripts/sync-wiki.py --lang en [--out <dir>]
+    # en: the raw html comes from the reference portal's en specs (see gen-wiki-en.py)
+    python scripts/gen-wiki-en.py                 # prints the raw html dir
+    python scripts/sync-wiki.py --lang en --src <that dir> [--out <dir>]
 """
 
 import argparse
@@ -180,6 +182,16 @@ ZH_CHROME_TRANSLATIONS = [
 ]
 
 
+# en-only normalization: the generator's own pages carry zh-flavored lang
+# attributes (`<html lang="zh-CN">` + language metas); the en corpus must be
+# en-US throughout (zh keeps them as-is).
+EN_CHROME_ADDITIONS = [
+    ('<html lang="zh-CN">', '<html lang="en-US">'),
+    ('content="zh-CN"', 'content="en-US"'),
+    ('hreflang="zh"', 'hreflang="en"'),
+]
+
+
 def replacements_for(lang: str) -> list:
     shared = _shared_replacements("cn" if lang == "zh" else "com")
     if lang == "zh":
@@ -188,7 +200,7 @@ def replacements_for(lang: str) -> list:
         # (its ` API | Autional</title>` pattern depends on the AuthMS→Autional
         # rename having happened already).
         return shared + ZH_CHROME_TRANSLATIONS
-    return shared
+    return shared + EN_CHROME_ADDITIONS
 
 
 # A quote right after `href="/` means a replacement ate the closing quote and
@@ -223,6 +235,12 @@ EN_RESIDUALS = COMMON_RESIDUALS + [
     "tianv",
     "AuthMS",
     "autional.cn",
+    # zh-flavored head attributes that EN_CHROME_ADDITIONS must have rewritten
+    # ("zh-CN" bare is legitimate page CONTENT, e.g. the communication templates
+    # locale parameter — only the attribute forms are gate-worthy).
+    'lang="zh-CN"',
+    'content="zh-CN"',
+    'hreflang="zh"',
 ]
 
 
@@ -253,14 +271,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Sync API wiki HTML per language")
     parser.add_argument("--lang", choices=["zh", "en"], required=True, help="target language corpus")
     parser.add_argument("--out", default=None, help="output dir (default: wiki-src/<lang>)")
+    parser.add_argument("--src", default=AUTH_WIKI, help=f"source html dir (default: {AUTH_WIKI})")
     args = parser.parse_args()
 
     lang = args.lang
     wiki_src = args.out or os.path.join(REPO_ROOT, "wiki-src", lang)
+    auth_wiki = args.src
 
-    if not os.path.isdir(AUTH_WIKI):
-        print(f"ERROR: source not found: {AUTH_WIKI}")
-        print("Run first: python scripts/generate/generate_api_wiki.py --html")
+    if not os.path.isdir(auth_wiki):
+        print(f"ERROR: source not found: {auth_wiki}")
+        print("Run first: python scripts/generate/generate_api_wiki.py --html (zh)")
+        print("      or: python scripts/gen-wiki-en.py (en, from reference specs)")
         return 1
 
     os.makedirs(wiki_src, exist_ok=True)
@@ -269,10 +290,10 @@ def main() -> int:
     skipped = 0
     written = set()
 
-    for root, _dirs, files in os.walk(AUTH_WIKI):
+    for root, _dirs, files in os.walk(auth_wiki):
         # The generator nests everything under `api/`; `wiki-src/<lang>/` is already
         # the docs root, so that segment must be dropped (not doubled).
-        rel = os.path.relpath(root, AUTH_WIKI)
+        rel = os.path.relpath(root, auth_wiki)
         parts = [] if rel == "." else rel.split(os.sep)
         if parts[:1] == ["api"]:
             parts = parts[1:]

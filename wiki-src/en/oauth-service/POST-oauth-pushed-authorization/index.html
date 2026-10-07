@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /oauth/pushed-authorization — OAuth Service API | Autional</title>
-  <meta name="description" content="OAuth 2.0 推送授权请求端点（PAR）。客户端将授权参数提前推送到授权服务器，获取 request_uri 后在授权请求中使用。返回扁平 JSON（无 code/message 信封）。参考：RFC 9126 (Pushed Authorization Requests)。">
+  <meta name="description" content="OAuth 2.0 Pushed Authorization Request endpoint (PAR). Client pushes authorization parameters to authorization server in advance, obtains request_uri to use in authorization request. Returns flat JSON (no code/message envelope). Reference: RFC 9126 (Pushed Authorization Requests).">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/oauth-service/POST-oauth-pushed-authorization/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/oauth-service/POST-oauth-pushed-authorization/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/oauth-service/POST-oauth-pushed-authorization/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/oauth-service/POST-oauth-pushed-authorization/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /oauth/pushed-authorization — OAuth Service API | Autional">
-  <meta property="og:description" content="OAuth 2.0 推送授权请求端点（PAR）。客户端将授权参数提前推送到授权服务器，获取 request_uri 后在授权请求中使用。返回扁平 JSON（无 code/message 信封）。参考：RFC 9126 (Pushed Authorization Requests)。">
+  <meta property="og:description" content="OAuth 2.0 Pushed Authorization Request endpoint (PAR). Client pushes authorization parameters to authorization server in advance, obtains request_uri to use in authorization request. Returns flat JSON (no code/message envelope). Reference: RFC 9126 (Pushed Authorization Requests).">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/oauth-service/POST-oauth-pushed-authorization/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /oauth/pushed-authorization — OAuth Service API | Autional">
-  <meta name="twitter:description" content="OAuth 2.0 推送授权请求端点（PAR）。客户端将授权参数提前推送到授权服务器，获取 request_uri 后在授权请求中使用。返回扁平 JSON（无 code/message 信封）。参考：RFC 9126 (Pushed Authorization Requests)。">
+  <meta name="twitter:description" content="OAuth 2.0 Pushed Authorization Request endpoint (PAR). Client pushes authorization parameters to authorization server in advance, obtains request_uri to use in authorization request. Returns flat JSON (no code/message envelope). Reference: RFC 9126 (Pushed Authorization Requests).">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "OAuth Service", "item": "https://wiki.autional.com/oauth-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /oauth/pushed-authorization"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /oauth/pushed-authorization — OAuth Service API | Autional", "description": "OAuth 2.0 推送授权请求端点（PAR）。客户端将授权参数提前推送到授权服务器，获取 request_uri 后在授权请求中使用。返回扁平 JSON（无 code/message 信封）。参考：RFC 9126 (Pushed Authorization Requests)。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /oauth/pushed-authorization — OAuth Service API | Autional", "description": "OAuth 2.0 Pushed Authorization Request endpoint (PAR). Client pushes authorization parameters to authorization server in advance, obtains request_uri to use in authorization request. Returns flat JSON (no code/message envelope). Reference: RFC 9126 (Pushed Authorization Requests).", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,17 +163,18 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/oauth-service/">OAuth Service</a><span>›</span><span>POST /oauth/pushed-authorization</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/oauth/pushed-authorization</code></h1>
-<p class="summary">OAuth 2.0 推送授权请求端点（PAR）。客户端将授权参数提前推送到授权服务器，获取 request_uri 后在授权请求中使用。返回扁平 JSON（无 code/message 信封）。参考：RFC 9126 (Pushed Authorization Requests)。</p>
+<p class="summary">OAuth 2.0 Pushed Authorization Request endpoint (PAR). Client pushes authorization parameters to authorization server in advance, obtains request_uri to use in authorization request. Returns flat JSON (no code/message envelope). Reference: RFC 9126 (Pushed Authorization Requests).</p>
 <div class="meta"><span class="meta-item">OAuth</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-oauth/internal/handler/dto.pushedauthorizationrequest"><code>service-oauth/internal/handler/dto.PushedAuthorizationRequest</code></a></p>
-<div id="schema-service-oauth/internal/handler/dto.pushedauthorizationrequest">
+<p><strong>Schema:</strong> <a href="#schema-dto.pushedauthorizationrequest"><code>dto.PushedAuthorizationRequest</code></a></p>
+<div id="schema-dto.pushedauthorizationrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -182,77 +183,77 @@
     <td><span class="required">Yes</span></td>
     <td><code>app-123</code></td>
     <td style="font-size:11px"></td>
-    <td>客户端ID</td>
+    <td>Client ID</td>
   </tr><tr>
     <td><code>redirect_uri</code></td>
     <td><code>string</code></td>
     <td><span class="required">Yes</span></td>
     <td><code>https://app.example.com/callback</code></td>
     <td style="font-size:11px"></td>
-    <td>回调URI</td>
+    <td>Redirect URI</td>
   </tr><tr>
     <td><code>response_type</code></td>
     <td><code>string</code></td>
     <td><span class="required">Yes</span></td>
     <td><code>code</code></td>
     <td style="font-size:11px"></td>
-    <td>响应类型</td>
+    <td>Response type</td>
   </tr><tr>
     <td><code>scope</code></td>
     <td><code>string</code></td>
     <td><span class="required">Yes</span></td>
     <td><code>openid profile</code></td>
     <td style="font-size:11px"></td>
-    <td>范围</td>
+    <td>Scope</td>
   </tr><tr>
     <td><code>authorization_details</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-oauth/internal/handler/dto.authorizationdetaildto"><code>service-oauth/internal/handler/dto.AuthorizationDetailDTO</code></a></p></td>
+    <td>array of<br/><p>See <a href="#schema-dto.authorizationdetaildto"><code>dto.AuthorizationDetailDTO</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>RAR授权详情</td>
+    <td>RAR authorization details</td>
   </tr><tr>
     <td><code>client_secret</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>secret_abc123</code></td>
     <td style="font-size:11px"></td>
-    <td>客户端密钥</td>
+    <td>Client secret</td>
   </tr><tr>
     <td><code>code_challenge</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>E9Melhoa2Ow...</code></td>
     <td style="font-size:11px"></td>
-    <td>代码挑战</td>
+    <td>Code challenge</td>
   </tr><tr>
     <td><code>code_challenge_method</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>S256</code></td>
     <td style="font-size:11px"></td>
-    <td>挑战方法</td>
+    <td>Challenge method</td>
   </tr><tr>
     <td><code>nonce</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>nonce-123</code></td>
     <td style="font-size:11px"></td>
-    <td>随机数</td>
+    <td>Nonce</td>
   </tr><tr>
     <td><code>resources</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>资源</td>
+    <td>Resource</td>
   </tr><tr>
     <td><code>state</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>state-123</code></td>
     <td style="font-size:11px"></td>
-    <td>状态</td>
+    <td>State</td>
   </tr></tbody>
 </table></div>
 </div>
@@ -260,11 +261,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>201</strong></td><td>PAR 响应（含 request_uri 和 expires_in）</td><td><a href="#schema-service-oauth/internal/handler/dto.pushedauthorizationresponse"><code>service-oauth/internal/handler/dto.PushedAuthorizationResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>invalid_request：请求参数缺失或无效。参考：RFC 9126。</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>invalid_client：客户端认证失败。参考：RFC 9126。</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>server_error：存储授权请求失败。参考：RFC 9126。</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>201</strong></td><td>PAR response (includes request_uri and expires_in)</td><td><a href="#schema-dto.pushedauthorizationresponse"><code>dto.PushedAuthorizationResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>invalid_request: request parameters missing or invalid. Reference: RFC 9126.</td><td><a href="#schema-dto.oautherrorresponse"><code>dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>invalid_client: client authentication failed. Reference: RFC 9126.</td><td><a href="#schema-dto.oautherrorresponse"><code>dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>server_error: failed to store authorization request. Reference: RFC 9126.</td><td><a href="#schema-dto.oautherrorresponse"><code>dto.OAuthErrorResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-oauth/internal/handler/dto.authorizationdetaildto">service-oauth/internal/handler/dto.AuthorizationDetailDTO</h3>
+<h3 id="schema-dto.authorizationdetaildto">dto.AuthorizationDetailDTO</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -273,46 +274,46 @@
     <td><span class="optional">No</span></td>
     <td><code>['[&quot;list_accounts&quot;', '&quot;read_balances&quot;]']</code></td>
     <td style="font-size:11px"></td>
-    <td>操作</td>
+    <td>Operation</td>
   </tr><tr>
     <td><code>constraints</code></td>
     <td><code>object</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>扩展约束</td>
+    <td>Extension constraints</td>
   </tr><tr>
     <td><code>data_types</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
     <td><span class="optional">No</span></td>
     <td><code>['[&quot;account_details&quot;', '&quot;balances&quot;]']</code></td>
     <td style="font-size:11px"></td>
-    <td>数据类型</td>
+    <td>Data type</td>
   </tr><tr>
     <td><code>identifier</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>account-12345</code></td>
     <td style="font-size:11px"></td>
-    <td>标识符</td>
+    <td>Identifier</td>
   </tr><tr>
     <td><code>locations</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
     <td><span class="optional">No</span></td>
     <td><code>['[&quot;https://example.com/accounts&quot;]']</code></td>
     <td style="font-size:11px"></td>
-    <td>位置</td>
+    <td>Location</td>
   </tr><tr>
     <td><code>type</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>account_information</code></td>
     <td style="font-size:11px"></td>
-    <td>授权类型</td>
+    <td>Grant type</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-oauth/internal/handler/dto.oautherrorresponse">service-oauth/internal/handler/dto.OAuthErrorResponse</h3>
-<p>OAuth标准错误响应</p>
+<h3 id="schema-dto.oautherrorresponse">dto.OAuthErrorResponse</h3>
+<p>OAuth standard error response</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -321,32 +322,32 @@
     <td><span class="optional">No</span></td>
     <td><code>invalid_request</code></td>
     <td style="font-size:11px"></td>
-    <td>错误码</td>
+    <td>Error code</td>
   </tr><tr>
     <td><code>error_description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>Missing required parameter</code></td>
     <td style="font-size:11px"></td>
-    <td>错误描述</td>
+    <td>Error description</td>
   </tr><tr>
     <td><code>error_uri</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>https://docs.example.com/errors</code></td>
     <td style="font-size:11px"></td>
-    <td>错误URI</td>
+    <td>Error URI</td>
   </tr><tr>
     <td><code>state</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>state-123</code></td>
     <td style="font-size:11px"></td>
-    <td>状态</td>
+    <td>Status</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-oauth/internal/handler/dto.pushedauthorizationresponse">service-oauth/internal/handler/dto.PushedAuthorizationResponse</h3>
-<p>PAR响应</p>
+<h3 id="schema-dto.pushedauthorizationresponse">dto.PushedAuthorizationResponse</h3>
+<p>PAR response</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -355,14 +356,14 @@
     <td><span class="optional">No</span></td>
     <td><code>90</code></td>
     <td style="font-size:11px"></td>
-    <td>过期秒数</td>
+    <td>Expires in seconds</td>
   </tr><tr>
     <td><code>request_uri</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>urn:example:request_uri:xxx</code></td>
     <td style="font-size:11px"></td>
-    <td>请求URI</td>
+    <td>Request URI</td>
   </tr></tbody>
 </table></div>
 </section>

@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /internal/communication/send — Communication Service API | Autional</title>
-  <meta name="description" content="提供给内部微服务调用的统一消息发送接口。支持短信、邮件、推送三种渠道，支持模板发送和内容直发两种模式。创建真实发送记录到数据库并异步尝试发送。使用 InternalAPIKeyAuth 认证。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta name="description" content="Unified message sending interface for internal microservice calls. Supports SMS, email, and push channels, and both template-based and direct content sending modes. Creates real send records in the database and attempts asynchronous sending. Uses InternalAPIKeyAuth authentication. References: ePriva">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/communication-service/POST-internal-communication-send/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/communication-service/POST-internal-communication-send/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/communication-service/POST-internal-communication-send/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/communication-service/POST-internal-communication-send/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /internal/communication/send — Communication Service API | Autional">
-  <meta property="og:description" content="提供给内部微服务调用的统一消息发送接口。支持短信、邮件、推送三种渠道，支持模板发送和内容直发两种模式。创建真实发送记录到数据库并异步尝试发送。使用 InternalAPIKeyAuth 认证。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta property="og:description" content="Unified message sending interface for internal microservice calls. Supports SMS, email, and push channels, and both template-based and direct content sending modes. Creates real send records in the database and attempts asynchronous sending. Uses InternalAPIKeyAuth authentication. References: ePriva">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/communication-service/POST-internal-communication-send/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /internal/communication/send — Communication Service API | Autional">
-  <meta name="twitter:description" content="提供给内部微服务调用的统一消息发送接口。支持短信、邮件、推送三种渠道，支持模板发送和内容直发两种模式。创建真实发送记录到数据库并异步尝试发送。使用 InternalAPIKeyAuth 认证。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta name="twitter:description" content="Unified message sending interface for internal microservice calls. Supports SMS, email, and push channels, and both template-based and direct content sending modes. Creates real send records in the database and attempts asynchronous sending. Uses InternalAPIKeyAuth authentication. References: ePriva">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Communication Service", "item": "https://wiki.autional.com/communication-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /internal/communication/send"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /internal/communication/send — Communication Service API | Autional", "description": "提供给内部微服务调用的统一消息发送接口。支持短信、邮件、推送三种渠道，支持模板发送和内容直发两种模式。创建真实发送记录到数据库并异步尝试发送。使用 InternalAPIKeyAuth 认证。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /internal/communication/send — Communication Service API | Autional", "description": "Unified message sending interface for internal microservice calls. Supports SMS, email, and push channels, and both template-based and direct content sending modes. Creates real send records in the database and attempts asynchronous sending. Uses InternalAPIKeyAuth authentication. References: ePriva", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,17 +163,18 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/communication-service/">Communication Service</a><span>›</span><span>POST /internal/communication/send</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/internal/communication/send</code></h1>
-<p class="summary">提供给内部微服务调用的统一消息发送接口。支持短信、邮件、推送三种渠道，支持模板发送和内容直发两种模式。创建真实发送记录到数据库并异步尝试发送。使用 InternalAPIKeyAuth 认证。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。</p>
-<div class="meta"><span class="meta-item">通信服务</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Unified message sending interface for internal microservice calls. Supports SMS, email, and push channels, and both template-based and direct content sending modes. Creates real send records in the database and attempts asynchronous sending. Uses InternalAPIKeyAuth authentication. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.</p>
+<div class="meta"><span class="meta-item">Communication Service</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-communication/internal/handler/dto.internalsendrequest"><code>service-communication/internal/handler/dto.InternalSendRequest</code></a></p>
-<div id="schema-service-communication/internal/handler/dto.internalsendrequest">
+<p><strong>Schema:</strong> <a href="#schema-dto.internalsendrequest"><code>dto.InternalSendRequest</code></a></p>
+<div id="schema-dto.internalsendrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -194,7 +195,7 @@
     <td><code>content</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>您的验证码是123456</code></td>
+    <td><code>Your verification code is 123456.</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -208,7 +209,7 @@
     <td><code>subject</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>账户激活</code></td>
+    <td><code>Account activation</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -239,37 +240,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>消息已入队/发送，返回消息ID和状态</td><td><a href="#schema-service-communication/internal/handler/dto.internalsenddetailresponse"><code>service-communication/internal/handler/dto.InternalSendDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Message queued/sent, returns message ID and status</td><td><a href="#schema-dto.internalsenddetailresponse"><code>dto.InternalSendDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-dto.simpleresponse">dto.SimpleResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-communication/internal/handler/dto.internalsenddetailresponse">service-communication/internal/handler/dto.InternalSendDetailResponse</h3>
+<h3 id="schema-dto.internalsenddetailresponse">dto.InternalSendDetailResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -281,7 +256,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-communication/internal/handler/dto.internalsendresponse"><code>service-communication/internal/handler/dto.InternalSendResponse</code></a></td>
+    <td><a href="#schema-dto.internalsendresponse"><code>dto.InternalSendResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -302,8 +277,8 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-communication/internal/handler/dto.internalsendresponse">service-communication/internal/handler/dto.InternalSendResponse</h3>
-<p>内部统一发送接口的响应信息</p>
+<h3 id="schema-dto.internalsendresponse">dto.InternalSendResponse</h3>
+<p>Response information for the internal unified sending interface.</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -332,6 +307,32 @@
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>user@example.com</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.simpleresponse">dto.SimpleResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr></tbody>

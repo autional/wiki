@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /admin/tenants/{tenant_id}/data-classification — Tenant Service API | Autional</title>
-  <meta name="description" content="更新指定租户的数据分类分级配置，支持自定义敏感数据等级与保护策略">
+  <meta name="description" content="Update the data classification and grading configuration for a specified tenant, supporting custom sensitive data levels and protection policies">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/tenant-service/POST-admin-tenants-tenant_id-data-classification/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/tenant-service/POST-admin-tenants-tenant_id-data-classification/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/tenant-service/POST-admin-tenants-tenant_id-data-classification/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/tenant-service/POST-admin-tenants-tenant_id-data-classification/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /admin/tenants/{tenant_id}/data-classification — Tenant Service API | Autional">
-  <meta property="og:description" content="更新指定租户的数据分类分级配置，支持自定义敏感数据等级与保护策略">
+  <meta property="og:description" content="Update the data classification and grading configuration for a specified tenant, supporting custom sensitive data levels and protection policies">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/tenant-service/POST-admin-tenants-tenant_id-data-classification/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /admin/tenants/{tenant_id}/data-classification — Tenant Service API | Autional">
-  <meta name="twitter:description" content="更新指定租户的数据分类分级配置，支持自定义敏感数据等级与保护策略">
+  <meta name="twitter:description" content="Update the data classification and grading configuration for a specified tenant, supporting custom sensitive data levels and protection policies">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Tenant Service", "item": "https://wiki.autional.com/tenant-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /admin/tenants/{tenant_id}/data-classification"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/tenants/{tenant_id}/data-classification — Tenant Service API | Autional", "description": "更新指定租户的数据分类分级配置，支持自定义敏感数据等级与保护策略", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/tenants/{tenant_id}/data-classification — Tenant Service API | Autional", "description": "Update the data classification and grading configuration for a specified tenant, supporting custom sensitive data levels and protection policies", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,41 +163,42 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/tenant-service/">Tenant Service</a><span>›</span><span>POST /admin/tenants/{tenant_id}/data-classification</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/admin/tenants/{tenant_id}/data-classification</code></h1>
-<p class="summary">更新指定租户的数据分类分级配置，支持自定义敏感数据等级与保护策略</p>
-<div class="meta"><span class="meta-item">租户服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Update the data classification and grading configuration for a specified tenant, supporting custom sensitive data levels and protection policies</p>
+<div class="meta"><span class="meta-item">Tenant Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
-    <td><code>tenant_id</code></td>
+    <td><code>id</code></td>
     <td><code>path</code></td>
     <td><code>string</code></td>
     <td><span class="required">Yes</span></td>
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>租户ID</td>
+    <td>Tenant ID</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-tenant/internal/handler/dto.updatedataclassificationrequest"><code>service-tenant/internal/handler/dto.UpdateDataClassificationRequest</code></a></p>
-<div id="schema-service-tenant/internal/handler/dto.updatedataclassificationrequest">
+<p><strong>Schema:</strong> <a href="#schema-dto.updatedataclassificationrequest"><code>dto.UpdateDataClassificationRequest</code></a></p>
+<div id="schema-dto.updatedataclassificationrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>classifications</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-tenant/internal/handler/dto.dataclassification"><code>service-tenant/internal/handler/dto.DataClassification</code></a></p></td>
+    <td>array of<br/><p>See <a href="#schema-dto.dataclassification"><code>dto.DataClassification</code></a></p></td>
     <td><span class="required">Yes</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>分类列表</td>
+    <td>Classification list</td>
   </tr></tbody>
 </table></div>
 </div>
@@ -205,38 +206,12 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>更新成功</td><td><a href="#schema-service-tenant/internal/handler/dto.dataclassificationdetailresponse"><code>service-tenant/internal/handler/dto.DataClassificationDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>权限不足</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>409</strong></td><td>资源冲突</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Update successful</td><td><a href="#schema-dto.dataclassificationdetailresponse"><code>dto.DataClassificationDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>Insufficient permissions</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>409</strong></td><td>Resource conflict</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-tenant/internal/handler/dto.dataclassification">service-tenant/internal/handler/dto.DataClassification</h3>
-<p>数据分类项</p>
+<h3 id="schema-dto.dataclassification">dto.DataClassification</h3>
+<p>Data classification item</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -245,31 +220,31 @@
     <td><span class="optional">No</span></td>
     <td><code>#FF0000</code></td>
     <td style="font-size:11px"></td>
-    <td>颜色</td>
+    <td>Color</td>
   </tr><tr>
     <td><code>description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>机密数据</code></td>
+    <td><code>Confidential data</code></td>
     <td style="font-size:11px"></td>
-    <td>描述</td>
+    <td>Description</td>
   </tr><tr>
     <td><code>label</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>机密</code></td>
+    <td><code>Confidential</code></td>
     <td style="font-size:11px"></td>
-    <td>标签</td>
+    <td>Tag</td>
   </tr><tr>
     <td><code>level</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>confidential</code></td>
     <td style="font-size:11px"></td>
-    <td>级别</td>
+    <td>Level</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-tenant/internal/handler/dto.dataclassificationdetailresponse">service-tenant/internal/handler/dto.DataClassificationDetailResponse</h3>
+<h3 id="schema-dto.dataclassificationdetailresponse">dto.DataClassificationDetailResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -281,7 +256,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-tenant/internal/handler/dto.dataclassificationresponse"><code>service-tenant/internal/handler/dto.DataClassificationResponse</code></a></td>
+    <td><a href="#schema-dto.dataclassificationresponse"><code>dto.DataClassificationResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -302,31 +277,57 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-tenant/internal/handler/dto.dataclassificationresponse">service-tenant/internal/handler/dto.DataClassificationResponse</h3>
-<p>租户数据分类分级配置</p>
+<h3 id="schema-dto.dataclassificationresponse">dto.DataClassificationResponse</h3>
+<p>Tenant data classification configuration</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>classifications</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-tenant/internal/handler/dto.dataclassification"><code>service-tenant/internal/handler/dto.DataClassification</code></a></p></td>
+    <td>array of<br/><p>See <a href="#schema-dto.dataclassification"><code>dto.DataClassification</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>分类列表</td>
+    <td>Classification list</td>
   </tr><tr>
     <td><code>tenant_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>tnt_abc123</code></td>
     <td style="font-size:11px"></td>
-    <td>租户ID</td>
+    <td>Tenant ID</td>
   </tr><tr>
     <td><code>updated_at</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>2026-04-10T14:20:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>更新时间</td>
+    <td>Update time</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.simpleresponse">gitee_com_linmes_authms_base_dto.SimpleResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
   </tr></tbody>
 </table></div>
 </section>

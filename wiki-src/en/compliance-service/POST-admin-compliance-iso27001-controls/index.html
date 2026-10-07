@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /admin/compliance/iso27001/controls — Compliance Service API | Autional</title>
-  <meta name="description" content="创建一条ISO27001安全控制项的记录">
+  <meta name="description" content="Create an ISO27001 security control item record">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/compliance-service/POST-admin-compliance-iso27001-controls/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/compliance-service/POST-admin-compliance-iso27001-controls/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/compliance-service/POST-admin-compliance-iso27001-controls/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/compliance-service/POST-admin-compliance-iso27001-controls/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /admin/compliance/iso27001/controls — Compliance Service API | Autional">
-  <meta property="og:description" content="创建一条ISO27001安全控制项的记录">
+  <meta property="og:description" content="Create an ISO27001 security control item record">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/compliance-service/POST-admin-compliance-iso27001-controls/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /admin/compliance/iso27001/controls — Compliance Service API | Autional">
-  <meta name="twitter:description" content="创建一条ISO27001安全控制项的记录">
+  <meta name="twitter:description" content="Create an ISO27001 security control item record">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Compliance Service", "item": "https://wiki.autional.com/compliance-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /admin/compliance/iso27001/controls"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/compliance/iso27001/controls — Compliance Service API | Autional", "description": "创建一条ISO27001安全控制项的记录", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/compliance/iso27001/controls — Compliance Service API | Autional", "description": "Create an ISO27001 security control item record", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,17 +163,18 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/compliance-service/">Compliance Service</a><span>›</span><span>POST /admin/compliance/iso27001/controls</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/admin/compliance/iso27001/controls</code></h1>
-<p class="summary">创建一条ISO27001安全控制项的记录</p>
-<div class="meta"><span class="meta-item">合规管理 - ISO27001</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Create an ISO27001 security control item record</p>
+<div class="meta"><span class="meta-item">Compliance Management - ISO27001</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-compliance/internal/handler/dto.createiso27001controlrequest"><code>service-compliance/internal/handler/dto.CreateISO27001ControlRequest</code></a></p>
-<div id="schema-service-compliance/internal/handler/dto.createiso27001controlrequest">
+<p><strong>Schema:</strong> <a href="#schema-dto.createiso27001controlrequest"><code>dto.CreateISO27001ControlRequest</code></a></p>
+<div id="schema-dto.createiso27001controlrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -187,21 +188,21 @@
     <td><code>name</code></td>
     <td><code>string</code></td>
     <td><span class="required">Yes</span></td>
-    <td><code>信息安全策略</code></td>
+    <td><code>Information security policy</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
     <td><code>category</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>组织控制</code></td>
+    <td><code>Organizational controls</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
     <td><code>description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>应定义并批准信息安全策略</code></td>
+    <td><code>Information security policy should be defined and approved</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -225,11 +226,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>201</strong></td><td>created</td><td><a href="#schema-service-compliance/internal/handler/dto.iso27001controlitemresponse"><code>service-compliance/internal/handler/dto.ISO27001ControlItemResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>bad request</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>201</strong></td><td>created</td><td><a href="#schema-dto.iso27001controlitemresponse"><code>dto.ISO27001ControlItemResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>bad request</td><td><a href="#schema-dto.errorresponse"><code>dto.ErrorResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-compliance/internal/handler/dto.errorresponse">service-compliance/internal/handler/dto.ErrorResponse</h3>
+<h3 id="schema-dto.errorresponse">dto.ErrorResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -248,62 +249,62 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-compliance/internal/handler/dto.iso27001controlitem">service-compliance/internal/handler/dto.ISO27001ControlItem</h3>
-<p>ISO 27001安全控制项</p>
+<h3 id="schema-dto.iso27001controlitem">dto.ISO27001ControlItem</h3>
+<p>ISO 27001 security control items</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>category</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>组织安全</code></td>
+    <td><code>Organizational security</code></td>
     <td style="font-size:11px"></td>
-    <td>类别</td>
+    <td>Category</td>
   </tr><tr>
     <td><code>control_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>A.5.1.1</code></td>
     <td style="font-size:11px"></td>
-    <td>控制ID</td>
+    <td>Control ID</td>
   </tr><tr>
     <td><code>control_name</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>信息安全策略</code></td>
+    <td><code>Information security policy</code></td>
     <td style="font-size:11px"></td>
-    <td>控制名称</td>
+    <td>Control name</td>
   </tr><tr>
     <td><code>evidence_url</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>https://docs.example.com/...</code></td>
     <td style="font-size:11px"></td>
-    <td>证据</td>
+    <td>Evidence</td>
   </tr><tr>
     <td><code>id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>01JQ...</code></td>
     <td style="font-size:11px"></td>
-    <td>主键ID</td>
+    <td>Primary key ID</td>
   </tr><tr>
     <td><code>last_reviewed</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>2026-04-01T00:00:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>审查时间</td>
+    <td>Review time</td>
   </tr><tr>
     <td><code>status</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>implemented</code></td>
     <td style="font-size:11px"></td>
-    <td>状态</td>
+    <td>Status</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-compliance/internal/handler/dto.iso27001controlitemresponse">service-compliance/internal/handler/dto.ISO27001ControlItemResponse</h3>
+<h3 id="schema-dto.iso27001controlitemresponse">dto.ISO27001ControlItemResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -315,7 +316,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-compliance/internal/handler/dto.iso27001controlitem"><code>service-compliance/internal/handler/dto.ISO27001ControlItem</code></a></td>
+    <td><a href="#schema-dto.iso27001controlitem"><code>dto.ISO27001ControlItem</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>

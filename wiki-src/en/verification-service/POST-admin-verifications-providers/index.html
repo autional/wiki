@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /admin/verifications/providers — Verification Service API | Autional</title>
-  <meta name="description" content="为指定验证通道（OCR/核验/活体）创建身份验证提供方配置，包含优先级和JSON配置项。配置后可被服务用于选择验证服务提供商">
+  <meta name="description" content="Create an identity verification provider configuration for a specified verification channel (OCR/Verify/Liveness), including priority and JSON configuration. After configuration, it can be used by the service to select a verification service provider.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/verification-service/POST-admin-verifications-providers/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/verification-service/POST-admin-verifications-providers/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/verification-service/POST-admin-verifications-providers/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/verification-service/POST-admin-verifications-providers/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /admin/verifications/providers — Verification Service API | Autional">
-  <meta property="og:description" content="为指定验证通道（OCR/核验/活体）创建身份验证提供方配置，包含优先级和JSON配置项。配置后可被服务用于选择验证服务提供商">
+  <meta property="og:description" content="Create an identity verification provider configuration for a specified verification channel (OCR/Verify/Liveness), including priority and JSON configuration. After configuration, it can be used by the service to select a verification service provider.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/verification-service/POST-admin-verifications-providers/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /admin/verifications/providers — Verification Service API | Autional">
-  <meta name="twitter:description" content="为指定验证通道（OCR/核验/活体）创建身份验证提供方配置，包含优先级和JSON配置项。配置后可被服务用于选择验证服务提供商">
+  <meta name="twitter:description" content="Create an identity verification provider configuration for a specified verification channel (OCR/Verify/Liveness), including priority and JSON configuration. After configuration, it can be used by the service to select a verification service provider.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Verification Service", "item": "https://wiki.autional.com/verification-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /admin/verifications/providers"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/verifications/providers — Verification Service API | Autional", "description": "为指定验证通道（OCR/核验/活体）创建身份验证提供方配置，包含优先级和JSON配置项。配置后可被服务用于选择验证服务提供商", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/verifications/providers — Verification Service API | Autional", "description": "Create an identity verification provider configuration for a specified verification channel (OCR/Verify/Liveness), including priority and JSON configuration. After configuration, it can be used by the service to select a verification service provider.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,17 +163,18 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/verification-service/">Verification Service</a><span>›</span><span>POST /admin/verifications/providers</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/admin/verifications/providers</code></h1>
-<p class="summary">为指定验证通道（OCR/核验/活体）创建身份验证提供方配置，包含优先级和JSON配置项。配置后可被服务用于选择验证服务提供商</p>
-<div class="meta"><span class="meta-item">验证服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Create an identity verification provider configuration for a specified verification channel (OCR/Verify/Liveness), including priority and JSON configuration. After configuration, it can be used by the service to select a verification service provider.</p>
+<div class="meta"><span class="meta-item">Verification Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-verification/internal/handler/dto.createproviderconfigrequest"><code>service-verification/internal/handler/dto.CreateProviderConfigRequest</code></a></p>
-<div id="schema-service-verification/internal/handler/dto.createproviderconfigrequest">
+<p><strong>Schema:</strong> <a href="#schema-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.createproviderconfigrequest"><code>gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.CreateProviderConfigRequest</code></a></p>
+<div id="schema-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.createproviderconfigrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -211,11 +212,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>201</strong></td><td>配置创建成功</td><td><a href="#schema-dto.dataresponse-service-verification/internal/handler/dto/providerconfigresponse"><code>dto.DataResponse-service-verification/internal/handler/dto/ProviderConfigResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证或令牌无效</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>权限不足</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>资源不存在</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>201</strong></td><td>Configuration created successfully</td><td><a href="#schema-dto.dataresponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_providerconfigresponse"><code>dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_ProviderConfigResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated or invalid token</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>Insufficient permissions</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>Resource not found</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-dto.dataresponse-service-verification/internal/handler/dto/providerconfigresponse">dto.DataResponse-service-verification/internal/handler/dto/ProviderConfigResponse</h3>
+<h3 id="schema-dto.dataresponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_providerconfigresponse">dto.DataResponse-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto_ProviderConfigResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -227,7 +228,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-verification/internal/handler/dto.providerconfigresponse"><code>service-verification/internal/handler/dto.ProviderConfigResponse</code></a></td>
+    <td><a href="#schema-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.providerconfigresponse"><code>gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.ProviderConfigResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -274,7 +275,7 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-verification/internal/handler/dto.providerconfigresponse">service-verification/internal/handler/dto.ProviderConfigResponse</h3>
+<h3 id="schema-gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.providerconfigresponse">gitee_com_linmes_authms_micro-services_verification-service_internal_handler_dto.ProviderConfigResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>

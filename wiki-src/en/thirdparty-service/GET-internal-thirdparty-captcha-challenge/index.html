@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /internal/thirdparty/captcha/challenge — Thirdparty Service API | Autional</title>
-  <meta name="description" content="根据指定提供者类型生成CAPTCHA挑战数据，PoW类型返回随机挑战码和难度值，Turnstile类型返回Site Key，用于前端初始化验证组件并开始人机验证流程">
+  <meta name="description" content="Generate CAPTCHA challenge data based on the specified provider type. PoW returns a random challenge code and difficulty value; Turnstile returns a Site Key for frontend initialization of the verification component and starting the human verification process.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/thirdparty-service/GET-internal-thirdparty-captcha-challenge/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/thirdparty-service/GET-internal-thirdparty-captcha-challenge/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/thirdparty-service/GET-internal-thirdparty-captcha-challenge/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/thirdparty-service/GET-internal-thirdparty-captcha-challenge/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /internal/thirdparty/captcha/challenge — Thirdparty Service API | Autional">
-  <meta property="og:description" content="根据指定提供者类型生成CAPTCHA挑战数据，PoW类型返回随机挑战码和难度值，Turnstile类型返回Site Key，用于前端初始化验证组件并开始人机验证流程">
+  <meta property="og:description" content="Generate CAPTCHA challenge data based on the specified provider type. PoW returns a random challenge code and difficulty value; Turnstile returns a Site Key for frontend initialization of the verification component and starting the human verification process.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/thirdparty-service/GET-internal-thirdparty-captcha-challenge/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /internal/thirdparty/captcha/challenge — Thirdparty Service API | Autional">
-  <meta name="twitter:description" content="根据指定提供者类型生成CAPTCHA挑战数据，PoW类型返回随机挑战码和难度值，Turnstile类型返回Site Key，用于前端初始化验证组件并开始人机验证流程">
+  <meta name="twitter:description" content="Generate CAPTCHA challenge data based on the specified provider type. PoW returns a random challenge code and difficulty value; Turnstile returns a Site Key for frontend initialization of the verification component and starting the human verification process.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Thirdparty Service", "item": "https://wiki.autional.com/thirdparty-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /internal/thirdparty/captcha/challenge"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /internal/thirdparty/captcha/challenge — Thirdparty Service API | Autional", "description": "根据指定提供者类型生成CAPTCHA挑战数据，PoW类型返回随机挑战码和难度值，Turnstile类型返回Site Key，用于前端初始化验证组件并开始人机验证流程", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /internal/thirdparty/captcha/challenge — Thirdparty Service API | Autional", "description": "Generate CAPTCHA challenge data based on the specified provider type. PoW returns a random challenge code and difficulty value; Turnstile returns a Site Key for frontend initialization of the verification component and starting the human verification process.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/thirdparty-service/">Thirdparty Service</a><span>›</span><span>GET /internal/thirdparty/captcha/challenge</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/internal/thirdparty/captcha/challenge</code></h1>
-<p class="summary">根据指定提供者类型生成CAPTCHA挑战数据，PoW类型返回随机挑战码和难度值，Turnstile类型返回Site Key，用于前端初始化验证组件并开始人机验证流程</p>
-<div class="meta"><span class="meta-item">第三方验证</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Generate CAPTCHA challenge data based on the specified provider type. PoW returns a random challenge code and difficulty value; Turnstile returns a Site Key for frontend initialization of the verification component and starting the human verification process.</p>
+<div class="meta"><span class="meta-item">Third-party Verification</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,7 +183,7 @@
     <td><code>pow</code></td>
     <td></td>
     <td style="font-size:11px">enum: `pow`, `turnstile`</td>
-    <td>验证提供者类型（pow / turnstile）</td>
+    <td>Verification provider type (pow / turnstile)</td>
   </tr><tr>
     <td><code>scope</code></td>
     <td><code>query</code></td>
@@ -191,7 +192,7 @@
     <td><code>default</code></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>应用范围标识，用于区分不同业务页面或场景的挑战</td>
+    <td>Application scope identifier, used to distinguish challenges for different business pages or scenarios</td>
   </tr><tr>
     <td><code>difficulty</code></td>
     <td><code>query</code></td>
@@ -200,14 +201,14 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>PoW挑战难度值，数值越大计算难度越高（仅对pow类型有效）</td>
+    <td>PoW challenge difficulty value; higher values increase computational difficulty (only valid for pow type)</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>挑战生成成功，返回挑战ID、类型、挑战数据和过期时间</td><td><a href="#schema-dto.dataresponse-captcha_challenge"><code>dto.DataResponse-captcha_Challenge</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误（不支持的验证提供者类型）</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>429</strong></td><td>CAPTCHA挑战请求过于频繁，请稍后重试</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>挑战生成服务不可用</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Challenge generated successfully, returns challenge ID, type, challenge data, and expiration time</td><td><a href="#schema-dto.dataresponse-captcha_challenge"><code>dto.DataResponse-captcha_Challenge</code></a></td></tr><tr><td><strong>400</strong></td><td>Request parameter error (unsupported verification provider type)</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>429</strong></td><td>CAPTCHA challenge request too frequent, please retry later</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Challenge generation service unavailable</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
@@ -243,13 +244,6 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
-    <td><code>tenant_id</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
     <td><code>type</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
@@ -271,13 +265,6 @@
   </tr><tr>
     <td><code>difficulty</code></td>
     <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>tenant_id</code></td>
-    <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>

@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /auth/webauthn/login/begin — Identity Service API | Autional</title>
-  <meta name="description" content="生成登录挑战，返回给前端调用 navigator.credentials.get()">
+  <meta name="description" content="Generate a login challenge and return it to the frontend for calling navigator.credentials.get().">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/identity-service/POST-auth-webauthn-login-begin/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/identity-service/POST-auth-webauthn-login-begin/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/identity-service/POST-auth-webauthn-login-begin/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/identity-service/POST-auth-webauthn-login-begin/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /auth/webauthn/login/begin — Identity Service API | Autional">
-  <meta property="og:description" content="生成登录挑战，返回给前端调用 navigator.credentials.get()">
+  <meta property="og:description" content="Generate a login challenge and return it to the frontend for calling navigator.credentials.get().">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/identity-service/POST-auth-webauthn-login-begin/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /auth/webauthn/login/begin — Identity Service API | Autional">
-  <meta name="twitter:description" content="生成登录挑战，返回给前端调用 navigator.credentials.get()">
+  <meta name="twitter:description" content="Generate a login challenge and return it to the frontend for calling navigator.credentials.get().">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Identity Service", "item": "https://wiki.autional.com/identity-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /auth/webauthn/login/begin"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /auth/webauthn/login/begin — Identity Service API | Autional", "description": "生成登录挑战，返回给前端调用 navigator.credentials.get()", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /auth/webauthn/login/begin — Identity Service API | Autional", "description": "Generate a login challenge and return it to the frontend for calling navigator.credentials.get().", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,13 +163,14 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/identity-service/">Identity Service</a><span>›</span><span>POST /auth/webauthn/login/begin</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/auth/webauthn/login/begin</code></h1>
-<p class="summary">生成登录挑战，返回给前端调用 navigator.credentials.get()</p>
+<p class="summary">Generate a login challenge and return it to the frontend for calling navigator.credentials.get().</p>
 <div class="meta"><span class="meta-item">WebAuthn</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
 <p><strong>Schema:</strong> <a href="#schema-handler.beginloginrequest"><code>handler.beginLoginRequest</code></a></p>
@@ -190,11 +191,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>登录选项</td><td><a href="#schema-service-identity/internal/handler/dto.webauthnloginresponsewrapper"><code>service-identity/internal/handler/dto.WebAuthnLoginResponseWrapper</code></a></td></tr><tr><td><strong>401</strong></td><td>未授权</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务器错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Login options</td><td><a href="#schema-dto.webauthnloginresponsewrapper"><code>dto.WebAuthnLoginResponseWrapper</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td><a href="#schema-dto.simpleresponsewrapper"><code>dto.SimpleResponseWrapper</code></a></td></tr><tr><td><strong>500</strong></td><td>Server error</td><td><a href="#schema-dto.simpleresponsewrapper"><code>dto.SimpleResponseWrapper</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
+<h3 id="schema-dto.simpleresponsewrapper">dto.SimpleResponseWrapper</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -211,16 +212,9 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.webauthncredentialdescriptor">service-identity/internal/handler/dto.WebAuthnCredentialDescriptor</h3>
+<h3 id="schema-dto.webauthncredentialdescriptor">dto.WebAuthnCredentialDescriptor</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -246,12 +240,12 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.webauthnloginoptionsresponse">service-identity/internal/handler/dto.WebAuthnLoginOptionsResponse</h3>
+<h3 id="schema-dto.webauthnloginoptionsresponse">dto.WebAuthnLoginOptionsResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>allowCredentials</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-identity/internal/handler/dto.webauthncredentialdescriptor"><code>service-identity/internal/handler/dto.WebAuthnCredentialDescriptor</code></a></p></td>
+    <td>array of<br/><p>See <a href="#schema-dto.webauthncredentialdescriptor"><code>dto.WebAuthnCredentialDescriptor</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -286,19 +280,19 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.webauthnloginresponse">service-identity/internal/handler/dto.WebAuthnLoginResponse</h3>
+<h3 id="schema-dto.webauthnloginresponse">dto.WebAuthnLoginResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>publicKey</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.webauthnloginoptionsresponse"><code>service-identity/internal/handler/dto.WebAuthnLoginOptionsResponse</code></a></td>
+    <td><a href="#schema-dto.webauthnloginoptionsresponse"><code>dto.WebAuthnLoginOptionsResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.webauthnloginresponsewrapper">service-identity/internal/handler/dto.WebAuthnLoginResponseWrapper</h3>
+<h3 id="schema-dto.webauthnloginresponsewrapper">dto.WebAuthnLoginResponseWrapper</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -310,7 +304,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.webauthnloginresponse"><code>service-identity/internal/handler/dto.WebAuthnLoginResponse</code></a></td>
+    <td><a href="#schema-dto.webauthnloginresponse"><code>dto.WebAuthnLoginResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>

@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /admin/communication/templates/{template_id}/clone-to-locale — Communication Service API | Autional</title>
-  <meta name="description" content="将源模板的所有字段（名称、内容、变量等）复制一份到目标语言区域（locale），保持相同的模板编码（code）。用于快速创建多语言模板。如果目标locale已存在同名模板，返回409冲突。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta name="description" content="Copy all fields (name, content, variables, etc.) of a source template to a target locale, keeping the same template code. Used for quickly creating multilingual templates. If a template with the same name already exists in the target locale, returns 409 conflict. References: ePrivacy Directive 2002/">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/communication-service/POST-admin-communication-templates-template_id-clone-to-locale/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/communication-service/POST-admin-communication-templates-template_id-clone-to-locale/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/communication-service/POST-admin-communication-templates-template_id-clone-to-locale/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/communication-service/POST-admin-communication-templates-template_id-clone-to-locale/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /admin/communication/templates/{template_id}/clone-to-locale — Communication Service API | Autional">
-  <meta property="og:description" content="将源模板的所有字段（名称、内容、变量等）复制一份到目标语言区域（locale），保持相同的模板编码（code）。用于快速创建多语言模板。如果目标locale已存在同名模板，返回409冲突。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta property="og:description" content="Copy all fields (name, content, variables, etc.) of a source template to a target locale, keeping the same template code. Used for quickly creating multilingual templates. If a template with the same name already exists in the target locale, returns 409 conflict. References: ePrivacy Directive 2002/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/communication-service/POST-admin-communication-templates-template_id-clone-to-locale/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /admin/communication/templates/{template_id}/clone-to-locale — Communication Service API | Autional">
-  <meta name="twitter:description" content="将源模板的所有字段（名称、内容、变量等）复制一份到目标语言区域（locale），保持相同的模板编码（code）。用于快速创建多语言模板。如果目标locale已存在同名模板，返回409冲突。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta name="twitter:description" content="Copy all fields (name, content, variables, etc.) of a source template to a target locale, keeping the same template code. Used for quickly creating multilingual templates. If a template with the same name already exists in the target locale, returns 409 conflict. References: ePrivacy Directive 2002/">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Communication Service", "item": "https://wiki.autional.com/communication-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /admin/communication/templates/{template_id}/clone-to-locale"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/communication/templates/{template_id}/clone-to-locale — Communication Service API | Autional", "description": "将源模板的所有字段（名称、内容、变量等）复制一份到目标语言区域（locale），保持相同的模板编码（code）。用于快速创建多语言模板。如果目标locale已存在同名模板，返回409冲突。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/communication/templates/{template_id}/clone-to-locale — Communication Service API | Autional", "description": "Copy all fields (name, content, variables, etc.) of a source template to a target locale, keeping the same template code. Used for quickly creating multilingual templates. If a template with the same name already exists in the target locale, returns 409 conflict. References: ePrivacy Directive 2002/", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,32 +163,33 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/communication-service/">Communication Service</a><span>›</span><span>POST /admin/communication/templates/{template_id}/clone-to-locale</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/admin/communication/templates/{template_id}/clone-to-locale</code></h1>
-<p class="summary">将源模板的所有字段（名称、内容、变量等）复制一份到目标语言区域（locale），保持相同的模板编码（code）。用于快速创建多语言模板。如果目标locale已存在同名模板，返回409冲突。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。</p>
-<div class="meta"><span class="meta-item">通信服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Copy all fields (name, content, variables, etc.) of a source template to a target locale, keeping the same template code. Used for quickly creating multilingual templates. If a template with the same name already exists in the target locale, returns 409 conflict. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.</p>
+<div class="meta"><span class="meta-item">Communication Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
-    <td><code>template_id</code></td>
+    <td><code>id</code></td>
     <td><code>path</code></td>
     <td><code>string</code></td>
     <td><span class="required">Yes</span></td>
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>源模板ID</td>
+    <td>Source template ID</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-communication/internal/handler/dto.clonetemplatetolocalerequest"><code>service-communication/internal/handler/dto.CloneTemplateToLocaleRequest</code></a></p>
-<div id="schema-service-communication/internal/handler/dto.clonetemplatetolocalerequest">
+<p><strong>Schema:</strong> <a href="#schema-dto.clonetemplatetolocalerequest"><code>dto.CloneTemplateToLocaleRequest</code></a></p>
+<div id="schema-dto.clonetemplatetolocalerequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -219,37 +220,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>复制成功，返回新模板详情</td><td><a href="#schema-service-communication/internal/handler/dto.messagetemplatedetailresponse"><code>service-communication/internal/handler/dto.MessageTemplateDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证或令牌无效</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>无权访问该资源</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>源模板不存在</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>409</strong></td><td>目标语言环境已存在同名模板</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Copy successful, returns new template details</td><td><a href="#schema-dto.messagetemplatedetailresponse"><code>dto.MessageTemplateDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated or invalid token</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>Insufficient permissions to access this resource</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>Source template not found</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>409</strong></td><td>A template with the same name already exists in the target locale</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-dto.simpleresponse">dto.SimpleResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-communication/internal/handler/dto.messagetemplatedetailresponse">service-communication/internal/handler/dto.MessageTemplateDetailResponse</h3>
+<h3 id="schema-dto.messagetemplatedetailresponse">dto.MessageTemplateDetailResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -261,7 +236,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-communication/internal/handler/dto.messagetemplateresponse"><code>service-communication/internal/handler/dto.MessageTemplateResponse</code></a></td>
+    <td><a href="#schema-dto.messagetemplateresponse"><code>dto.MessageTemplateResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -282,8 +257,8 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-communication/internal/handler/dto.messagetemplateresponse">service-communication/internal/handler/dto.MessageTemplateResponse</h3>
-<p>消息模板数据</p>
+<h3 id="schema-dto.messagetemplateresponse">dto.MessageTemplateResponse</h3>
+<p>Message template data</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -304,7 +279,7 @@
     <td><code>content</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>您的验证码是{code}，5分钟内有效</code></td>
+    <td><code>Your verification code is {code}, valid for 5 minutes.</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -325,7 +300,7 @@
     <td><code>description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>用于发送登录验证码</code></td>
+    <td><code>Used to send login verification codes.</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -346,14 +321,14 @@
     <td><code>name</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>验证码模板</code></td>
+    <td><code>Verification code template</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
     <td><code>subject</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>验证码通知</code></td>
+    <td><code>Verification code notification</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -382,6 +357,32 @@
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>1</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.simpleresponse">dto.SimpleResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr></tbody>

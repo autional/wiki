@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /wallets/{user_id}/stats — Wallet Service API | Autional</title>
-  <meta name="description" content="获取指定用户的钱包统计数据">
+  <meta name="description" content="Get wallet statistics for a user.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/wallet-service/GET-wallets-user_id-stats/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/wallet-service/GET-wallets-user_id-stats/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/wallet-service/GET-wallets-user_id-stats/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/wallet-service/GET-wallets-user_id-stats/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /wallets/{user_id}/stats — Wallet Service API | Autional">
-  <meta property="og:description" content="获取指定用户的钱包统计数据">
+  <meta property="og:description" content="Get wallet statistics for a user.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/wallet-service/GET-wallets-user_id-stats/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /wallets/{user_id}/stats — Wallet Service API | Autional">
-  <meta name="twitter:description" content="获取指定用户的钱包统计数据">
+  <meta name="twitter:description" content="Get wallet statistics for a user.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Wallet Service", "item": "https://wiki.autional.com/wallet-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /wallets/{user_id}/stats"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /wallets/{user_id}/stats — Wallet Service API | Autional", "description": "获取指定用户的钱包统计数据", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /wallets/{user_id}/stats — Wallet Service API | Autional", "description": "Get wallet statistics for a user.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/wallet-service/">Wallet Service</a><span>›</span><span>GET /wallets/{user_id}/stats</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/wallets/{user_id}/stats</code></h1>
-<p class="summary">获取指定用户的钱包统计数据</p>
-<div class="meta"><span class="meta-item">钱包服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Get wallet statistics for a user.</p>
+<div class="meta"><span class="meta-item">Wallet Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,7 +183,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>用户ID</td>
+    <td>User ID</td>
   </tr><tr>
     <td><code>period</code></td>
     <td><code>query</code></td>
@@ -191,7 +192,7 @@
     <td><code>all</code></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>统计周期</td>
+    <td>Statistics period</td>
   </tr><tr>
     <td><code>start_date</code></td>
     <td><code>query</code></td>
@@ -200,7 +201,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>开始日期</td>
+    <td>Start date</td>
   </tr><tr>
     <td><code>end_date</code></td>
     <td><code>query</code></td>
@@ -209,23 +210,105 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>结束日期</td>
+    <td>End date</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-service-wallet/internal/handler/dto.walletstatsdetailresponse"><code>service-wallet/internal/handler/dto.WalletStatsDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证或令牌无效</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-dto.walletstatsdetailresponse"><code>dto.WalletStatsDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated or invalid token</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
+<h3 id="schema-dto.walletstatsdetail">dto.WalletStatsDetail</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>average_transaction</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>500.00</code></td>
+    <td style="font-size:11px"></td>
+    <td>Average transaction amount</td>
+  </tr><tr>
+    <td><code>end_date</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>2026-04-30</code></td>
+    <td style="font-size:11px"></td>
+    <td>End date</td>
+  </tr><tr>
+    <td><code>largest_transaction</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>5000.00</code></td>
+    <td style="font-size:11px"></td>
+    <td>Maximum single transaction</td>
+  </tr><tr>
+    <td><code>period</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>month</code></td>
+    <td style="font-size:11px"></td>
+    <td>Statistics period</td>
+  </tr><tr>
+    <td><code>start_date</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>2026-04-01</code></td>
+    <td style="font-size:11px"></td>
+    <td>Start date</td>
+  </tr><tr>
+    <td><code>total_deposits</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>10000.00</code></td>
+    <td style="font-size:11px"></td>
+    <td>Total deposits</td>
+  </tr><tr>
+    <td><code>total_transfers_in</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>20000.00</code></td>
+    <td style="font-size:11px"></td>
+    <td>Total transfers in</td>
+  </tr><tr>
+    <td><code>total_transfers_out</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>15000.00</code></td>
+    <td style="font-size:11px"></td>
+    <td>Total transfers out</td>
+  </tr><tr>
+    <td><code>total_withdrawals</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>5000.00</code></td>
+    <td style="font-size:11px"></td>
+    <td>Total withdrawals</td>
+  </tr><tr>
+    <td><code>transaction_count</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>150</code></td>
+    <td style="font-size:11px"></td>
+    <td>Transaction count</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.walletstatsdetailresponse">dto.WalletStatsDetailResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>code</code></td>
     <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>data</code></td>
+    <td><a href="#schema-dto.walletstatsdetail"><code>dto.WalletStatsDetail</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -246,94 +329,12 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-wallet/internal/handler/dto.walletstatsdetail">service-wallet/internal/handler/dto.WalletStatsDetail</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>average_transaction</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>500.00</code></td>
-    <td style="font-size:11px"></td>
-    <td>平均交易金额</td>
-  </tr><tr>
-    <td><code>end_date</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>2026-04-30</code></td>
-    <td style="font-size:11px"></td>
-    <td>结束日期</td>
-  </tr><tr>
-    <td><code>largest_transaction</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>5000.00</code></td>
-    <td style="font-size:11px"></td>
-    <td>最大单笔交易</td>
-  </tr><tr>
-    <td><code>period</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>month</code></td>
-    <td style="font-size:11px"></td>
-    <td>统计周期</td>
-  </tr><tr>
-    <td><code>start_date</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>2026-04-01</code></td>
-    <td style="font-size:11px"></td>
-    <td>开始日期</td>
-  </tr><tr>
-    <td><code>total_deposits</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>10000.00</code></td>
-    <td style="font-size:11px"></td>
-    <td>总充值</td>
-  </tr><tr>
-    <td><code>total_transfers_in</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>20000.00</code></td>
-    <td style="font-size:11px"></td>
-    <td>总转入</td>
-  </tr><tr>
-    <td><code>total_transfers_out</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>15000.00</code></td>
-    <td style="font-size:11px"></td>
-    <td>总转出</td>
-  </tr><tr>
-    <td><code>total_withdrawals</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>5000.00</code></td>
-    <td style="font-size:11px"></td>
-    <td>总提现</td>
-  </tr><tr>
-    <td><code>transaction_count</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>150</code></td>
-    <td style="font-size:11px"></td>
-    <td>交易笔数</td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-wallet/internal/handler/dto.walletstatsdetailresponse">service-wallet/internal/handler/dto.WalletStatsDetailResponse</h3>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.simpleresponse">gitee_com_linmes_authms_base_dto.SimpleResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>code</code></td>
     <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>data</code></td>
-    <td><a href="#schema-service-wallet/internal/handler/dto.walletstatsdetail"><code>service-wallet/internal/handler/dto.WalletStatsDetail</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thirdparty Service API | Autional</title>
   <meta name="description" content="Thirdparty Service API reference — 4 endpoints. Port 11023.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/thirdparty-service/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/thirdparty-service/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/thirdparty-service/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/thirdparty-service/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="Thirdparty Service API | Autional">
@@ -163,6 +163,7 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
@@ -172,7 +173,7 @@
 <p class="summary">Port 11023 &middot; 4 endpoints &middot; <a href="https://reference.autional.com/specs/thirdparty-service.json"><code>thirdparty-service.json</code></a></p>
 <div class="table-wrap"><table>
   <thead><tr><th>Method</th><th>Path</th><th>Summary</th><th></th></tr></thead>
-  <tbody><tr><td><span class="meta-item method GET">GET</span></td><td><code>/internal/thirdparty/captcha/challenge</code></td><td>获取CAPTCHA挑战</td><td><a href="/thirdparty-service/GET-internal-thirdparty-captcha-challenge/">detail →</a></td></tr><tr><td><span class="meta-item method POST">POST</span></td><td><code>/internal/thirdparty/captcha/verify</code></td><td>验证CAPTCHA令牌</td><td><a href="/thirdparty-service/POST-internal-thirdparty-captcha-verify/">detail →</a></td></tr><tr><td><span class="meta-item method POST">POST</span></td><td><code>/internal/thirdparty/export-user-data</code></td><td>GDPR 导出用户关联数据</td><td><a href="/thirdparty-service/POST-internal-thirdparty-export-user-data/">detail →</a></td></tr><tr><td><span class="meta-item method GET">GET</span></td><td><code>/internal/thirdparty/health</code></td><td>第三方验证服务健康检查</td><td><a href="/thirdparty-service/GET-internal-thirdparty-health/">detail →</a></td></tr></tbody>
+  <tbody><tr><td><span class="meta-item method GET">GET</span></td><td><code>/internal/thirdparty/captcha/challenge</code></td><td>Get CAPTCHA Challenge</td><td><a href="/thirdparty-service/GET-internal-thirdparty-captcha-challenge/">detail →</a></td></tr><tr><td><span class="meta-item method POST">POST</span></td><td><code>/internal/thirdparty/captcha/verify</code></td><td>Verify CAPTCHA Token</td><td><a href="/thirdparty-service/POST-internal-thirdparty-captcha-verify/">detail →</a></td></tr><tr><td><span class="meta-item method POST">POST</span></td><td><code>/internal/thirdparty/export-user-data</code></td><td>GDPR Export User Associated Data</td><td><a href="/thirdparty-service/POST-internal-thirdparty-export-user-data/">detail →</a></td></tr><tr><td><span class="meta-item method GET">GET</span></td><td><code>/internal/thirdparty/health</code></td><td>Third-party Verification Service Health Check</td><td><a href="/thirdparty-service/GET-internal-thirdparty-health/">detail →</a></td></tr></tbody>
 </table></div>
       <footer>
         Generated from OpenAPI specs. <a href="https://reference.autional.com/">Interactive API explorer (Scalar)</a>

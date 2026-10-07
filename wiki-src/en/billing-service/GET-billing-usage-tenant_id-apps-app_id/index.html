@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /billing/usage/{tenant_id}/apps/{app_id} — Billing Service API | Autional</title>
-  <meta name="description" content="按应用维度查询资源使用量统计（用户数、存储量、API调用次数）。默认查询近 30 天数据。">
+  <meta name="description" content="Query resource usage statistics by application dimension (user count, storage, API calls). Default queries last 30 days.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/billing-service/GET-billing-usage-tenant_id-apps-app_id/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/billing-service/GET-billing-usage-tenant_id-apps-app_id/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/billing-service/GET-billing-usage-tenant_id-apps-app_id/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/billing-service/GET-billing-usage-tenant_id-apps-app_id/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /billing/usage/{tenant_id}/apps/{app_id} — Billing Service API | Autional">
-  <meta property="og:description" content="按应用维度查询资源使用量统计（用户数、存储量、API调用次数）。默认查询近 30 天数据。">
+  <meta property="og:description" content="Query resource usage statistics by application dimension (user count, storage, API calls). Default queries last 30 days.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/billing-service/GET-billing-usage-tenant_id-apps-app_id/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /billing/usage/{tenant_id}/apps/{app_id} — Billing Service API | Autional">
-  <meta name="twitter:description" content="按应用维度查询资源使用量统计（用户数、存储量、API调用次数）。默认查询近 30 天数据。">
+  <meta name="twitter:description" content="Query resource usage statistics by application dimension (user count, storage, API calls). Default queries last 30 days.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Billing Service", "item": "https://wiki.autional.com/billing-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /billing/usage/{tenant_id}/apps/{app_id}"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /billing/usage/{tenant_id}/apps/{app_id} — Billing Service API | Autional", "description": "按应用维度查询资源使用量统计（用户数、存储量、API调用次数）。默认查询近 30 天数据。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /billing/usage/{tenant_id}/apps/{app_id} — Billing Service API | Autional", "description": "Query resource usage statistics by application dimension (user count, storage, API calls). Default queries last 30 days.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/billing-service/">Billing Service</a><span>›</span><span>GET /billing/usage/{tenant_id}/apps/{app_id}</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/billing/usage/{tenant_id}/apps/{app_id}</code></h1>
-<p class="summary">按应用维度查询资源使用量统计（用户数、存储量、API调用次数）。默认查询近 30 天数据。</p>
-<div class="meta"><span class="meta-item">计费服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Query resource usage statistics by application dimension (user count, storage, API calls). Default queries last 30 days.</p>
+<div class="meta"><span class="meta-item">Billing Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,7 +183,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>租户ID</td>
+    <td>Tenant ID</td>
   </tr><tr>
     <td><code>app_id</code></td>
     <td><code>path</code></td>
@@ -191,36 +192,36 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>应用ID</td>
+    <td>Application ID</td>
   </tr><tr>
     <td><code>start_date</code></td>
     <td><code>query</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>30天前</code></td>
+    <td><code>30 days ago</code></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>开始日期 (YYYY-MM-DD)</td>
+    <td>Start date (YYYY-MM-DD)</td>
   </tr><tr>
     <td><code>end_date</code></td>
     <td><code>query</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>今天</code></td>
+    <td><code>Today</code></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>结束日期 (YYYY-MM-DD)</td>
+    <td>End date (YYYY-MM-DD)</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>使用统计查询成功</td><td><a href="#schema-service-billing/internal/handler/dto.usagestatsdetailresponse"><code>service-billing/internal/handler/dto.UsageStatsDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><code>object</code></td></tr><tr><td><strong>401</strong></td><td>未授权</td><td><code>object</code></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><code>object</code></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Usage statistics query successful</td><td><a href="#schema-dto.usagestatsdetailresponse"><code>dto.UsageStatsDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><code>object</code></td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td><code>object</code></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><code>object</code></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-billing/internal/handler/dto.usagestatitem">service-billing/internal/handler/dto.UsageStatItem</h3>
+<h3 id="schema-dto.usagestatitem">dto.UsageStatItem</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -234,7 +235,7 @@
     <td><code>unit</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>个</code></td>
+    <td><code>units</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -246,7 +247,7 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-billing/internal/handler/dto.usagestatsdetailresponse">service-billing/internal/handler/dto.UsageStatsDetailResponse</h3>
+<h3 id="schema-dto.usagestatsdetailresponse">dto.UsageStatsDetailResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -258,7 +259,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-billing/internal/handler/dto.usagestatsresponse"><code>service-billing/internal/handler/dto.UsageStatsResponse</code></a></td>
+    <td><a href="#schema-dto.usagestatsresponse"><code>dto.UsageStatsResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -279,12 +280,12 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-billing/internal/handler/dto.usagestatsresponse">service-billing/internal/handler/dto.UsageStatsResponse</h3>
+<h3 id="schema-dto.usagestatsresponse">dto.UsageStatsResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>api_calls</code></td>
-    <td><a href="#schema-service-billing/internal/handler/dto.usagestatitem"><code>service-billing/internal/handler/dto.UsageStatItem</code></a></td>
+    <td><a href="#schema-dto.usagestatitem"><code>dto.UsageStatItem</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -312,7 +313,7 @@
     <td></td>
   </tr><tr>
     <td><code>storage</code></td>
-    <td><a href="#schema-service-billing/internal/handler/dto.usagestatitem"><code>service-billing/internal/handler/dto.UsageStatItem</code></a></td>
+    <td><a href="#schema-dto.usagestatitem"><code>dto.UsageStatItem</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -326,7 +327,7 @@
     <td></td>
   </tr><tr>
     <td><code>users</code></td>
-    <td><a href="#schema-service-billing/internal/handler/dto.usagestatitem"><code>service-billing/internal/handler/dto.UsageStatItem</code></a></td>
+    <td><a href="#schema-dto.usagestatitem"><code>dto.UsageStatItem</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>

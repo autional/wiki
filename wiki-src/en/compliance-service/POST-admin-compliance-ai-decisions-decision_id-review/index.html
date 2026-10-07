@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /admin/compliance/ai-decisions/{decision_id}/review — Compliance Service API | Autional</title>
-  <meta name="description" content="对AI决策进行人工审核">
+  <meta name="description" content="Manually review an AI decision">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/compliance-service/POST-admin-compliance-ai-decisions-decision_id-review/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/compliance-service/POST-admin-compliance-ai-decisions-decision_id-review/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/compliance-service/POST-admin-compliance-ai-decisions-decision_id-review/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/compliance-service/POST-admin-compliance-ai-decisions-decision_id-review/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /admin/compliance/ai-decisions/{decision_id}/review — Compliance Service API | Autional">
-  <meta property="og:description" content="对AI决策进行人工审核">
+  <meta property="og:description" content="Manually review an AI decision">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/compliance-service/POST-admin-compliance-ai-decisions-decision_id-review/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /admin/compliance/ai-decisions/{decision_id}/review — Compliance Service API | Autional">
-  <meta name="twitter:description" content="对AI决策进行人工审核">
+  <meta name="twitter:description" content="Manually review an AI decision">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Compliance Service", "item": "https://wiki.autional.com/compliance-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /admin/compliance/ai-decisions/{decision_id}/review"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/compliance/ai-decisions/{decision_id}/review — Compliance Service API | Autional", "description": "对AI决策进行人工审核", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/compliance/ai-decisions/{decision_id}/review — Compliance Service API | Autional", "description": "Manually review an AI decision", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,19 +163,20 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/compliance-service/">Compliance Service</a><span>›</span><span>POST /admin/compliance/ai-decisions/{decision_id}/review</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/admin/compliance/ai-decisions/{decision_id}/review</code></h1>
-<p class="summary">对AI决策进行人工审核</p>
-<div class="meta"><span class="meta-item">合规管理 - AI 审查</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Manually review an AI decision</p>
+<div class="meta"><span class="meta-item">Compliance Management - AI Review</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
-    <td><code>decision_id</code></td>
+    <td><code>id</code></td>
     <td><code>path</code></td>
     <td><code>string</code></td>
     <td><span class="required">Yes</span></td>
@@ -187,8 +188,8 @@
 </table></div>
 </section>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-compliance/internal/handler/dto.reviewaidecisionrequest"><code>service-compliance/internal/handler/dto.ReviewAIDecisionRequest</code></a></p>
-<div id="schema-service-compliance/internal/handler/dto.reviewaidecisionrequest">
+<p><strong>Schema:</strong> <a href="#schema-dto.reviewaidecisionrequest"><code>dto.ReviewAIDecisionRequest</code></a></p>
+<div id="schema-dto.reviewaidecisionrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -212,11 +213,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>success</td><td><a href="#schema-service-compliance/internal/handler/dto.aidecisionitemresponse"><code>service-compliance/internal/handler/dto.AIDecisionItemResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>bad request</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>success</td><td><a href="#schema-dto.aidecisionitemresponse"><code>dto.AIDecisionItemResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>bad request</td><td><a href="#schema-dto.errorresponse"><code>dto.ErrorResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-compliance/internal/handler/dto.aidecisionitemresponse">service-compliance/internal/handler/dto.AIDecisionItemResponse</h3>
+<h3 id="schema-dto.aidecisionitemresponse">dto.AIDecisionItemResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -228,7 +229,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-compliance/internal/handler/dto.aidecisionresponse"><code>service-compliance/internal/handler/dto.AIDecisionResponse</code></a></td>
+    <td><a href="#schema-dto.aidecisionresponse"><code>dto.AIDecisionResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -249,7 +250,7 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-compliance/internal/handler/dto.aidecisionresponse">service-compliance/internal/handler/dto.AIDecisionResponse</h3>
+<h3 id="schema-dto.aidecisionresponse">dto.AIDecisionResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -310,7 +311,7 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-compliance/internal/handler/dto.errorresponse">service-compliance/internal/handler/dto.ErrorResponse</h3>
+<h3 id="schema-dto.errorresponse">dto.ErrorResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>

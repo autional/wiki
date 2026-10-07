@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /public/auth-config/by-slug/{slug} — Identity Service API | Autional</title>
-  <meta name="description" content="根据租户名称/slug获取公开的认证配置，无需认证">
+  <meta name="description" content="Get public authentication configuration by tenant name/slug. No authentication required.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/identity-service/GET-public-auth-config-by-slug-slug/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/identity-service/GET-public-auth-config-by-slug-slug/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/identity-service/GET-public-auth-config-by-slug-slug/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/identity-service/GET-public-auth-config-by-slug-slug/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /public/auth-config/by-slug/{slug} — Identity Service API | Autional">
-  <meta property="og:description" content="根据租户名称/slug获取公开的认证配置，无需认证">
+  <meta property="og:description" content="Get public authentication configuration by tenant name/slug. No authentication required.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/identity-service/GET-public-auth-config-by-slug-slug/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /public/auth-config/by-slug/{slug} — Identity Service API | Autional">
-  <meta name="twitter:description" content="根据租户名称/slug获取公开的认证配置，无需认证">
+  <meta name="twitter:description" content="Get public authentication configuration by tenant name/slug. No authentication required.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Identity Service", "item": "https://wiki.autional.com/identity-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /public/auth-config/by-slug/{slug}"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /public/auth-config/by-slug/{slug} — Identity Service API | Autional", "description": "根据租户名称/slug获取公开的认证配置，无需认证", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /public/auth-config/by-slug/{slug} — Identity Service API | Autional", "description": "Get public authentication configuration by tenant name/slug. No authentication required.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/identity-service/">Identity Service</a><span>›</span><span>GET /public/auth-config/by-slug/{slug}</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/public/auth-config/by-slug/{slug}</code></h1>
-<p class="summary">根据租户名称/slug获取公开的认证配置，无需认证</p>
-<div class="meta"><span class="meta-item">身份认证</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Get public authentication configuration by tenant name/slug. No authentication required.</p>
+<div class="meta"><span class="meta-item">Authentication</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,52 +183,19 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>租户名称或slug</td>
+    <td>Tenant name or slug</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>认证配置</td><td><a href="#schema-service-core/base/dto.dataresponse-service-identity/internal/handler/dto/publicauthconfigresponse"><code>service-core/base/dto.DataResponse-service-identity/internal/handler/dto/PublicAuthConfigResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Authentication configuration</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.dataresponse-dto_publicauthconfigresponse"><code>gitee_com_linmes_authms_base_dto.DataResponse-dto_PublicAuthConfigResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.dataresponse-service-identity/internal/handler/dto/publicauthconfigresponse">service-core/base/dto.DataResponse-service-identity/internal/handler/dto/PublicAuthConfigResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>data</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.publicauthconfigresponse"><code>service-identity/internal/handler/dto.PublicAuthConfigResponse</code></a></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-identity/internal/handler/dto.brandinginfo">service-identity/internal/handler/dto.BrandingInfo</h3>
-<p>登录页品牌定制（Logo/主色/自定义CSS/隐私条款URL）</p>
+<h3 id="schema-dto.brandinginfo">dto.BrandingInfo</h3>
+<p>Login page branding (Logo/Primary color/Custom CSS/Privacy policy URL)</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -302,8 +270,8 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.complianceprofileinfo">service-identity/internal/handler/dto.ComplianceProfileInfo</h3>
-<p>租户选中的合规标准信息</p>
+<h3 id="schema-dto.complianceprofileinfo">dto.ComplianceProfileInfo</h3>
+<p>Tenant selected compliance standard info</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -322,8 +290,8 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.compliancewarningitem">service-identity/internal/handler/dto.ComplianceWarningItem</h3>
-<p>当前配置与合规标准之间的差距</p>
+<h3 id="schema-dto.compliancewarningitem">dto.ComplianceWarningItem</h3>
+<p>Gap between current configuration and compliance standard</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -363,8 +331,8 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.passwordpolicyresponse">service-identity/internal/handler/dto.PasswordPolicyResponse</h3>
-<p>密码策略配置</p>
+<h3 id="schema-dto.passwordpolicyresponse">dto.PasswordPolicyResponse</h3>
+<p>Password policy configuration</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -373,63 +341,42 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>是否启用CAPTCHA验证</td>
+    <td>Enable CAPTCHA verification</td>
   </tr><tr>
     <td><code>change_cooldown_minutes</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>0</code></td>
     <td style="font-size:11px"></td>
-    <td>密码修改冷却时间</td>
-  </tr><tr>
-    <td><code>check_breached_passwords</code></td>
-    <td><code>boolean</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>是否检测已泄露密码</td>
+    <td>Password change cooldown time</td>
   </tr><tr>
     <td><code>expiry_days</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>90</code></td>
     <td style="font-size:11px"></td>
-    <td>密码过期天数</td>
+    <td>Password expiration days</td>
   </tr><tr>
     <td><code>force_change_on_first_login</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>首次登录强制修改密码</td>
+    <td>Force password change on first login</td>
   </tr><tr>
     <td><code>grace_period_days</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>7</code></td>
     <td style="font-size:11px"></td>
-    <td>过期宽限天数</td>
+    <td>Expiration grace days</td>
   </tr><tr>
     <td><code>history_count</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>5</code></td>
     <td style="font-size:11px"></td>
-    <td>密码历史保留数量</td>
-  </tr><tr>
-    <td><code>identity_threshold</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>登录限速账号阈值</td>
-  </tr><tr>
-    <td><code>ip_threshold</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>登录限速IP阈值</td>
+    <td>Password history retention count</td>
   </tr><tr>
     <td><code>login_methods</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
@@ -443,14 +390,14 @@
     <td><span class="optional">No</span></td>
     <td><code>128</code></td>
     <td style="font-size:11px"></td>
-    <td>最大长度</td>
+    <td>Maximum length</td>
   </tr><tr>
     <td><code>min_length</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>8</code></td>
     <td style="font-size:11px"></td>
-    <td>最小长度</td>
+    <td>Minimum length</td>
   </tr><tr>
     <td><code>oauth_providers</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
@@ -464,42 +411,42 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>密码传输方式</td>
+    <td>Password transmission method</td>
   </tr><tr>
     <td><code>pepper_enabled</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>US-P13: 服务端Pepper加密启用</td>
+    <td>US-P13: Server-side Pepper encryption enabled</td>
   </tr><tr>
     <td><code>require_digit</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td><code>True</code></td>
     <td style="font-size:11px"></td>
-    <td>需要数字</td>
+    <td>Require digit</td>
   </tr><tr>
     <td><code>require_lower</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td><code>True</code></td>
     <td style="font-size:11px"></td>
-    <td>需要小写字母</td>
+    <td>Require lowercase letter</td>
   </tr><tr>
     <td><code>require_special</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td><code>True</code></td>
     <td style="font-size:11px"></td>
-    <td>需要特殊字符</td>
+    <td>Require special character</td>
   </tr><tr>
     <td><code>require_upper</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td><code>True</code></td>
     <td style="font-size:11px"></td>
-    <td>需要大写字母</td>
+    <td>Require uppercase letter</td>
   </tr><tr>
     <td><code>sso_providers</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
@@ -513,16 +460,16 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>是否允许Unicode密码（NFC标准化）</td>
+    <td>Allow Unicode passwords (NFC normalized)</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.publicauthconfigresponse">service-identity/internal/handler/dto.PublicAuthConfigResponse</h3>
-<p>公开认证配置，包含租户基本信息、密码策略、品牌定制</p>
+<h3 id="schema-dto.publicauthconfigresponse">dto.PublicAuthConfigResponse</h3>
+<p>Public authentication configuration, including tenant basic info, password policy, brand customization</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
     <td><code>branding</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.brandinginfo"><code>service-identity/internal/handler/dto.BrandingInfo</code></a></td>
+    <td><a href="#schema-dto.brandinginfo"><code>dto.BrandingInfo</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -550,14 +497,14 @@
     <td></td>
   </tr><tr>
     <td><code>compliance_profile</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.complianceprofileinfo"><code>service-identity/internal/handler/dto.ComplianceProfileInfo</code></a></td>
+    <td><a href="#schema-dto.complianceprofileinfo"><code>dto.ComplianceProfileInfo</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
     <td><code>compliance_warnings</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-identity/internal/handler/dto.compliancewarningitem"><code>service-identity/internal/handler/dto.ComplianceWarningItem</code></a></p></td>
+    <td>array of<br/><p>See <a href="#schema-dto.compliancewarningitem"><code>dto.ComplianceWarningItem</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -581,20 +528,6 @@
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>My Tenant</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>identity_threshold</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>ip_threshold</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -648,7 +581,7 @@
     <td></td>
   </tr><tr>
     <td><code>password_policy</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.passwordpolicyresponse"><code>service-identity/internal/handler/dto.PasswordPolicyResponse</code></a></td>
+    <td><a href="#schema-dto.passwordpolicyresponse"><code>dto.PasswordPolicyResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -711,6 +644,39 @@
     <td></td>
   </tr><tr>
     <td><code>transmission_public_key_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.dataresponse-dto_publicauthconfigresponse">gitee_com_linmes_authms_base_dto.DataResponse-dto_PublicAuthConfigResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>data</code></td>
+    <td><a href="#schema-dto.publicauthconfigresponse"><code>dto.PublicAuthConfigResponse</code></a></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>

@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /mfa/trusted-devices — MFA Service API | Autional</title>
-  <meta name="description" content="列出用户所有受信设备。参考：NIST SP 800-63B §5.1、OWASP ASVS V2.8。">
+  <meta name="description" content="List all trusted devices for the user. Reference: NIST SP 800-63B §5.1, OWASP ASVS V2.8.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/mfa-service/GET-mfa-trusted-devices/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/mfa-service/GET-mfa-trusted-devices/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/mfa-service/GET-mfa-trusted-devices/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/mfa-service/GET-mfa-trusted-devices/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /mfa/trusted-devices — MFA Service API | Autional">
-  <meta property="og:description" content="列出用户所有受信设备。参考：NIST SP 800-63B §5.1、OWASP ASVS V2.8。">
+  <meta property="og:description" content="List all trusted devices for the user. Reference: NIST SP 800-63B §5.1, OWASP ASVS V2.8.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/mfa-service/GET-mfa-trusted-devices/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /mfa/trusted-devices — MFA Service API | Autional">
-  <meta name="twitter:description" content="列出用户所有受信设备。参考：NIST SP 800-63B §5.1、OWASP ASVS V2.8。">
+  <meta name="twitter:description" content="List all trusted devices for the user. Reference: NIST SP 800-63B §5.1, OWASP ASVS V2.8.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "MFA Service", "item": "https://wiki.autional.com/mfa-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /mfa/trusted-devices"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /mfa/trusted-devices — MFA Service API | Autional", "description": "列出用户所有受信设备。参考：NIST SP 800-63B §5.1、OWASP ASVS V2.8。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /mfa/trusted-devices — MFA Service API | Autional", "description": "List all trusted devices for the user. Reference: NIST SP 800-63B §5.1, OWASP ASVS V2.8.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,22 +163,110 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/mfa-service/">MFA Service</a><span>›</span><span>GET /mfa/trusted-devices</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/mfa/trusted-devices</code></h1>
-<p class="summary">列出用户所有受信设备。参考：NIST SP 800-63B §5.1、OWASP ASVS V2.8。</p>
-<div class="meta"><span class="meta-item">多因素认证</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">List all trusted devices for the user. Reference: NIST SP 800-63B §5.1, OWASP ASVS V2.8.</p>
+<div class="meta"><span class="meta-item">Multi-Factor Authentication</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>受信设备列表</td><td><a href="#schema-service-mfa/internal/handler/dto.trusteddevicelistresponse"><code>service-mfa/internal/handler/dto.TrustedDeviceListResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>参数错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Trusted Device List</td><td><a href="#schema-dto.trusteddevicelistresponse"><code>dto.TrustedDeviceListResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid Parameters</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal Server Error</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.pageinfo">service-core/base/dto.PageInfo</h3>
+<h3 id="schema-dto.trusteddeviceitem">dto.TrustedDeviceItem</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>created_at</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>2026-05-25T08:00:00Z</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>device_name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>iPhone 15</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>td_abc123</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>ip_address</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>192.168.1.100</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>trusted_until</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>2026-06-25T08:00:00Z</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.trusteddevicelistresponse">dto.TrustedDeviceListResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>items</code></td>
+    <td>array of<br/><p>See <a href="#schema-dto.trusteddeviceitem"><code>dto.TrustedDeviceItem</code></a></p></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Use items uniformly</td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>pagination</code></td>
+    <td><code>object</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Pagination information (nested object)</td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Total count (flattened for direct reading)</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.pageinfo">gitee_com_linmes_authms_base_dto.PageInfo</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -225,7 +313,7 @@
     <td>TotalPages is the total number of pages</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.simpleresponse">gitee_com_linmes_authms_base_dto.SimpleResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -249,93 +337,6 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-mfa/internal/handler/dto.trusteddeviceitem">service-mfa/internal/handler/dto.TrustedDeviceItem</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>created_at</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>2026-05-25T08:00:00Z</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>device_name</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>iPhone 15</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>id</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>td_abc123</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>ip_address</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>192.168.1.100</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>trusted_until</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>2026-06-25T08:00:00Z</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-mfa/internal/handler/dto.trusteddevicelistresponse">service-mfa/internal/handler/dto.TrustedDeviceListResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>items</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-mfa/internal/handler/dto.trusteddeviceitem"><code>service-mfa/internal/handler/dto.TrustedDeviceItem</code></a></p></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>统一使用 items</td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>pagination</code></td>
-    <td><code>object</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>分页信息（嵌套对象）</td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>total</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>总条数（平铺，便于直接读取）</td>
   </tr></tbody>
 </table></div>
 </section>

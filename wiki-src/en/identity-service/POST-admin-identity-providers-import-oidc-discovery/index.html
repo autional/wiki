@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /admin/identity-providers/import-oidc-discovery — Identity Service API | Autional</title>
-  <meta name="description" content="从OIDC discovery URL导入身份提供商配置">
+  <meta name="description" content="Import identity provider configuration from an OIDC discovery URL">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/identity-service/POST-admin-identity-providers-import-oidc-discovery/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/identity-service/POST-admin-identity-providers-import-oidc-discovery/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/identity-service/POST-admin-identity-providers-import-oidc-discovery/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/identity-service/POST-admin-identity-providers-import-oidc-discovery/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /admin/identity-providers/import-oidc-discovery — Identity Service API | Autional">
-  <meta property="og:description" content="从OIDC discovery URL导入身份提供商配置">
+  <meta property="og:description" content="Import identity provider configuration from an OIDC discovery URL">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/identity-service/POST-admin-identity-providers-import-oidc-discovery/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /admin/identity-providers/import-oidc-discovery — Identity Service API | Autional">
-  <meta name="twitter:description" content="从OIDC discovery URL导入身份提供商配置">
+  <meta name="twitter:description" content="Import identity provider configuration from an OIDC discovery URL">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Identity Service", "item": "https://wiki.autional.com/identity-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /admin/identity-providers/import-oidc-discovery"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/identity-providers/import-oidc-discovery — Identity Service API | Autional", "description": "从OIDC discovery URL导入身份提供商配置", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/identity-providers/import-oidc-discovery — Identity Service API | Autional", "description": "Import identity provider configuration from an OIDC discovery URL", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,17 +163,18 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/identity-service/">Identity Service</a><span>›</span><span>POST /admin/identity-providers/import-oidc-discovery</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/admin/identity-providers/import-oidc-discovery</code></h1>
-<p class="summary">从OIDC discovery URL导入身份提供商配置</p>
-<div class="meta"><span class="meta-item">身份提供商</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Import identity provider configuration from an OIDC discovery URL</p>
+<div class="meta"><span class="meta-item">Identity Providers</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-identity/internal/handler/dto.importoidcdiscoveryrequest"><code>service-identity/internal/handler/dto.ImportOIDCDiscoveryRequest</code></a></p>
-<div id="schema-service-identity/internal/handler/dto.importoidcdiscoveryrequest">
+<p><strong>Schema:</strong> <a href="#schema-dto.importoidcdiscoveryrequest"><code>dto.ImportOIDCDiscoveryRequest</code></a></p>
+<div id="schema-dto.importoidcdiscoveryrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -190,37 +191,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-service-identity/internal/handler/dto.idpdetailresponse"><code>service-identity/internal/handler/dto.IDPDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Bad Request</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal Server Error</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-dto.idpdetailresponse"><code>dto.IDPDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Bad Request</td><td><a href="#schema-dto.simpleresponsewrapper"><code>dto.SimpleResponseWrapper</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td><a href="#schema-dto.simpleresponsewrapper"><code>dto.SimpleResponseWrapper</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal Server Error</td><td><a href="#schema-dto.simpleresponsewrapper"><code>dto.SimpleResponseWrapper</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-identity/internal/handler/dto.idpdetailresponse">service-identity/internal/handler/dto.IDPDetailResponse</h3>
+<h3 id="schema-dto.idpdetailresponse">dto.IDPDetailResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -232,7 +207,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.idpresponse"><code>service-identity/internal/handler/dto.IDPResponse</code></a></td>
+    <td><a href="#schema-dto.idpresponse"><code>dto.IDPResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -253,8 +228,8 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.idpresponse">service-identity/internal/handler/dto.IDPResponse</h3>
-<p>身份提供商详细信息</p>
+<h3 id="schema-dto.idpresponse">dto.IDPResponse</h3>
+<p>Identity provider details</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -263,14 +238,14 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px">extra keys: `string`</td>
-    <td>字段映射</td>
+    <td>Field mapping</td>
   </tr><tr>
     <td><code>auth_url</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>https://example.com/auth</code></td>
     <td style="font-size:11px"></td>
-    <td>授权端点</td>
+    <td>Authorization endpoint</td>
   </tr><tr>
     <td><code>client_id</code></td>
     <td><code>string</code></td>
@@ -284,119 +259,138 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>额外配置</td>
+    <td>Extra configuration</td>
   </tr><tr>
     <td><code>created_at</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>2026-01-01T00:00:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>创建时间</td>
+    <td>Created at</td>
   </tr><tr>
     <td><code>display_name</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>My OIDC Provider</code></td>
     <td style="font-size:11px"></td>
-    <td>前端展示名称</td>
+    <td>Frontend display name</td>
   </tr><tr>
     <td><code>icon_url</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>https://example.com/icon.png</code></td>
     <td style="font-size:11px"></td>
-    <td>图标URL</td>
+    <td>Icon URL</td>
   </tr><tr>
     <td><code>id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>idp_abc123</code></td>
     <td style="font-size:11px"></td>
-    <td>提供商ID</td>
+    <td>Provider ID</td>
   </tr><tr>
     <td><code>is_popular</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td><code>False</code></td>
     <td style="font-size:11px"></td>
-    <td>常用提供商</td>
+    <td>Common provider</td>
   </tr><tr>
     <td><code>is_system</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">No</span></td>
     <td><code>False</code></td>
     <td style="font-size:11px"></td>
-    <td>系统内置</td>
+    <td>System built-in</td>
   </tr><tr>
     <td><code>name</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>My OIDC Provider</code></td>
     <td style="font-size:11px"></td>
-    <td>显示名称</td>
+    <td>Display name</td>
   </tr><tr>
     <td><code>scopes</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
     <td><span class="optional">No</span></td>
     <td><code>['[openid', 'profile', 'email]']</code></td>
     <td style="font-size:11px"></td>
-    <td>权限范围</td>
+    <td>Scope</td>
   </tr><tr>
     <td><code>sort_order</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td><code>0</code></td>
     <td style="font-size:11px"></td>
-    <td>排序</td>
+    <td>Sort order</td>
   </tr><tr>
     <td><code>status</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>active</code></td>
     <td style="font-size:11px"></td>
-    <td>状态</td>
+    <td>Status</td>
   </tr><tr>
     <td><code>tenant_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>tnt_xyz789</code></td>
     <td style="font-size:11px"></td>
-    <td>租户ID</td>
+    <td>Tenant ID</td>
   </tr><tr>
     <td><code>token_url</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>https://example.com/token</code></td>
     <td style="font-size:11px"></td>
-    <td>Token端点</td>
+    <td>Token endpoint</td>
   </tr><tr>
     <td><code>type</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>custom</code></td>
     <td style="font-size:11px"></td>
-    <td>类型</td>
+    <td>Type</td>
   </tr><tr>
     <td><code>type_display_name</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>自定义</code></td>
+    <td><code>Custom</code></td>
     <td style="font-size:11px"></td>
-    <td>类型显示名称</td>
+    <td>Type display name</td>
   </tr><tr>
     <td><code>updated_at</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>2026-04-10T14:20:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>更新时间</td>
+    <td>Updated at</td>
   </tr><tr>
     <td><code>user_info_url</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>https://example.com/userinfo</code></td>
     <td style="font-size:11px"></td>
-    <td>用户信息端点</td>
+    <td>User info endpoint</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.simpleresponsewrapper">dto.SimpleResponseWrapper</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
   </tr></tbody>
 </table></div>
 </section>

@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /wallets/{user_id}/freezes — Wallet Service API | Autional</title>
-  <meta name="description" content="获取指定用户的冻结记录">
+  <meta name="description" content="Get freeze records for a user.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/wallet-service/GET-wallets-user_id-freezes/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/wallet-service/GET-wallets-user_id-freezes/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/wallet-service/GET-wallets-user_id-freezes/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/wallet-service/GET-wallets-user_id-freezes/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /wallets/{user_id}/freezes — Wallet Service API | Autional">
-  <meta property="og:description" content="获取指定用户的冻结记录">
+  <meta property="og:description" content="Get freeze records for a user.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/wallet-service/GET-wallets-user_id-freezes/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /wallets/{user_id}/freezes — Wallet Service API | Autional">
-  <meta name="twitter:description" content="获取指定用户的冻结记录">
+  <meta name="twitter:description" content="Get freeze records for a user.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Wallet Service", "item": "https://wiki.autional.com/wallet-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /wallets/{user_id}/freezes"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /wallets/{user_id}/freezes — Wallet Service API | Autional", "description": "获取指定用户的冻结记录", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /wallets/{user_id}/freezes — Wallet Service API | Autional", "description": "Get freeze records for a user.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/wallet-service/">Wallet Service</a><span>›</span><span>GET /wallets/{user_id}/freezes</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/wallets/{user_id}/freezes</code></h1>
-<p class="summary">获取指定用户的冻结记录</p>
-<div class="meta"><span class="meta-item">钱包服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Get freeze records for a user.</p>
+<div class="meta"><span class="meta-item">Wallet Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,7 +183,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>用户ID</td>
+    <td>User ID</td>
   </tr><tr>
     <td><code>status</code></td>
     <td><code>query</code></td>
@@ -191,18 +192,120 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>状态</td>
+    <td>Status</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-service-wallet/internal/handler/dto.freezerecordlistresponse"><code>service-wallet/internal/handler/dto.FreezeRecordListResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证或令牌无效</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>409</strong></td><td>余额不足</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>422</strong></td><td>金额无效</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-dto.freezerecordlistresponse"><code>dto.FreezeRecordListResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated or invalid token</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>409</strong></td><td>Insufficient balance</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>422</strong></td><td>Invalid amount</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.pageinfo">service-core/base/dto.PageInfo</h3>
+<h3 id="schema-dto.freezerecordlistresponse">dto.FreezeRecordListResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>items</code></td>
+    <td>array of<br/><p>See <a href="#schema-dto.freezerecordresponse"><code>dto.FreezeRecordResponse</code></a></p></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Use items uniformly</td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>pagination</code></td>
+    <td><code>object</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Pagination info (nested object)</td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Total count (flat for direct access)</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-dto.freezerecordresponse">dto.FreezeRecordResponse</h3>
+<p>Fund freeze record</p>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>amount</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>100.00</code></td>
+    <td style="font-size:11px"></td>
+    <td>Amount</td>
+  </tr><tr>
+    <td><code>created_at</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>2026-04-10T00:00:00Z</code></td>
+    <td style="font-size:11px"></td>
+    <td>Created</td>
+  </tr><tr>
+    <td><code>id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>frz_abc123</code></td>
+    <td style="font-size:11px"></td>
+    <td>Record ID</td>
+  </tr><tr>
+    <td><code>reason</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>Dispute freeze</code></td>
+    <td style="font-size:11px"></td>
+    <td>Reason</td>
+  </tr><tr>
+    <td><code>released_at</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>2026-04-15T00:00:00Z</code></td>
+    <td style="font-size:11px"></td>
+    <td>Unfrozen</td>
+  </tr><tr>
+    <td><code>status</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>active</code></td>
+    <td style="font-size:11px"></td>
+    <td>Status</td>
+  </tr><tr>
+    <td><code>wallet_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td><code>wlt_abc123</code></td>
+    <td style="font-size:11px"></td>
+    <td>Wallet ID</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.pageinfo">gitee_com_linmes_authms_base_dto.PageInfo</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -249,7 +352,7 @@
     <td>TotalPages is the total number of pages</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.simpleresponse">gitee_com_linmes_authms_base_dto.SimpleResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -273,108 +376,6 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-wallet/internal/handler/dto.freezerecordlistresponse">service-wallet/internal/handler/dto.FreezeRecordListResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>items</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-wallet/internal/handler/dto.freezerecordresponse"><code>service-wallet/internal/handler/dto.FreezeRecordResponse</code></a></p></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>统一使用 items</td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>pagination</code></td>
-    <td><code>object</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>分页信息（嵌套对象）</td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>total</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>总条数（平铺，便于直接读取）</td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-wallet/internal/handler/dto.freezerecordresponse">service-wallet/internal/handler/dto.FreezeRecordResponse</h3>
-<p>资金冻结记录</p>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>amount</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>100.00</code></td>
-    <td style="font-size:11px"></td>
-    <td>金额</td>
-  </tr><tr>
-    <td><code>created_at</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>2026-04-10T00:00:00Z</code></td>
-    <td style="font-size:11px"></td>
-    <td>创建</td>
-  </tr><tr>
-    <td><code>id</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>frz_abc123</code></td>
-    <td style="font-size:11px"></td>
-    <td>记录ID</td>
-  </tr><tr>
-    <td><code>reason</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>争议冻结</code></td>
-    <td style="font-size:11px"></td>
-    <td>原因</td>
-  </tr><tr>
-    <td><code>released_at</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>2026-04-15T00:00:00Z</code></td>
-    <td style="font-size:11px"></td>
-    <td>解冻</td>
-  </tr><tr>
-    <td><code>status</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>active</code></td>
-    <td style="font-size:11px"></td>
-    <td>状态</td>
-  </tr><tr>
-    <td><code>wallet_id</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>wlt_abc123</code></td>
-    <td style="font-size:11px"></td>
-    <td>钱包ID</td>
   </tr></tbody>
 </table></div>
 </section>

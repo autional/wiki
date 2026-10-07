@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /auth/oauth/{provider}/callback — Identity Service API | Autional</title>
-  <meta name="description" content="处理OAuth授权回调，获取用户信息并创建会话">
+  <meta name="description" content="Handle the OAuth authorization callback, retrieve user information, and create a session.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/identity-service/GET-auth-oauth-provider-callback/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/identity-service/GET-auth-oauth-provider-callback/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/identity-service/GET-auth-oauth-provider-callback/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/identity-service/GET-auth-oauth-provider-callback/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /auth/oauth/{provider}/callback — Identity Service API | Autional">
-  <meta property="og:description" content="处理OAuth授权回调，获取用户信息并创建会话">
+  <meta property="og:description" content="Handle the OAuth authorization callback, retrieve user information, and create a session.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/identity-service/GET-auth-oauth-provider-callback/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /auth/oauth/{provider}/callback — Identity Service API | Autional">
-  <meta name="twitter:description" content="处理OAuth授权回调，获取用户信息并创建会话">
+  <meta name="twitter:description" content="Handle the OAuth authorization callback, retrieve user information, and create a session.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Identity Service", "item": "https://wiki.autional.com/identity-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /auth/oauth/{provider}/callback"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /auth/oauth/{provider}/callback — Identity Service API | Autional", "description": "处理OAuth授权回调，获取用户信息并创建会话", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /auth/oauth/{provider}/callback — Identity Service API | Autional", "description": "Handle the OAuth authorization callback, retrieve user information, and create a session.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/identity-service/">Identity Service</a><span>›</span><span>GET /auth/oauth/{provider}/callback</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/auth/oauth/{provider}/callback</code></h1>
-<p class="summary">处理OAuth授权回调，获取用户信息并创建会话</p>
-<div class="meta"><span class="meta-item">身份认证</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Handle the OAuth authorization callback, retrieve user information, and create a session.</p>
+<div class="meta"><span class="meta-item">Authentication</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,7 +183,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>OAuth鎻愪緵鑰?</td>
+    <td>OAuth provider</td>
   </tr><tr>
     <td><code>code</code></td>
     <td><code>query</code></td>
@@ -191,7 +192,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>鎺堟潈鐮?</td>
+    <td>Authorization code</td>
   </tr><tr>
     <td><code>state</code></td>
     <td><code>query</code></td>
@@ -200,19 +201,19 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>状态参数</td>
+    <td>State parameter</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>登录成功</td><td><a href="#schema-service-identity/internal/handler/dto.oauthcallbackresponse"><code>service-identity/internal/handler/dto.OAuthCallbackResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Login successful</td><td><a href="#schema-dto.oauthcallbackresponse"><code>dto.OAuthCallbackResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-identity/internal/handler/dto.oauthcallbackresponse">service-identity/internal/handler/dto.OAuthCallbackResponse</h3>
-<p>OAuth/SSO回调响应</p>
+<h3 id="schema-dto.oauthcallbackresponse">dto.OAuthCallbackResponse</h3>
+<p>OAuth/SSO callback response</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>

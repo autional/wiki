@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /communication/template-stats — Communication Service API | Autional</title>
-  <meta name="description" content="返回当前租户各模板在最近30天内的发送量、成功投递数和失败数统计，用于模板效果分析。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta name="description" content="Returns statistics of send volume, successful deliveries, and failures for each template in the current tenant over the last 30 days, for template performance analysis. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/communication-service/GET-communication-template-stats/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/communication-service/GET-communication-template-stats/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/communication-service/GET-communication-template-stats/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/communication-service/GET-communication-template-stats/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /communication/template-stats — Communication Service API | Autional">
-  <meta property="og:description" content="返回当前租户各模板在最近30天内的发送量、成功投递数和失败数统计，用于模板效果分析。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta property="og:description" content="Returns statistics of send volume, successful deliveries, and failures for each template in the current tenant over the last 30 days, for template performance analysis. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/communication-service/GET-communication-template-stats/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /communication/template-stats — Communication Service API | Autional">
-  <meta name="twitter:description" content="返回当前租户各模板在最近30天内的发送量、成功投递数和失败数统计，用于模板效果分析。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。">
+  <meta name="twitter:description" content="Returns statistics of send volume, successful deliveries, and failures for each template in the current tenant over the last 30 days, for template performance analysis. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Communication Service", "item": "https://wiki.autional.com/communication-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /communication/template-stats"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /communication/template-stats — Communication Service API | Autional", "description": "返回当前租户各模板在最近30天内的发送量、成功投递数和失败数统计，用于模板效果分析。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /communication/template-stats — Communication Service API | Autional", "description": "Returns statistics of send volume, successful deliveries, and failures for each template in the current tenant over the last 30 days, for template performance analysis. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/communication-service/">Communication Service</a><span>›</span><span>GET /communication/template-stats</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/communication/template-stats</code></h1>
-<p class="summary">返回当前租户各模板在最近30天内的发送量、成功投递数和失败数统计，用于模板效果分析。参考：ePrivacy Directive 2002/58/EC、CAN-SPAM Act。</p>
-<div class="meta"><span class="meta-item">通信服务</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Returns statistics of send volume, successful deliveries, and failures for each template in the current tenant over the last 30 days, for template performance analysis. References: ePrivacy Directive 2002/58/EC, CAN-SPAM Act.</p>
+<div class="meta"><span class="meta-item">Communication Service</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,14 +183,14 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>渠道筛选：sms/email/push</td>
+    <td>Channel filter: sms/email/push</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>查询成功，返回各模板统计数据</td><td><a href="#schema-service-communication/internal/handler/dto.templatestatslistresponse"><code>service-communication/internal/handler/dto.TemplateStatsListResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证或令牌无效</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>无权访问该资源</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Query successful, returns statistics for each template</td><td><a href="#schema-dto.templatestatslistresponse"><code>dto.TemplateStatsListResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated or invalid token</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>Insufficient permissions to access this resource</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
@@ -266,7 +267,7 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-communication/internal/handler/dto.templatestatslistresponse">service-communication/internal/handler/dto.TemplateStatsListResponse</h3>
+<h3 id="schema-dto.templatestatslistresponse">dto.TemplateStatsListResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -278,11 +279,11 @@
     <td></td>
   </tr><tr>
     <td><code>items</code></td>
-    <td>array of<br/><p>See <a href="#schema-service-communication/internal/handler/dto.templatestatsresponse"><code>service-communication/internal/handler/dto.TemplateStatsResponse</code></a></p></td>
+    <td>array of<br/><p>See <a href="#schema-dto.templatestatsresponse"><code>dto.TemplateStatsResponse</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>统一使用 items</td>
+    <td>Unified use of items</td>
   </tr><tr>
     <td><code>message</code></td>
     <td><code>string</code></td>
@@ -296,7 +297,7 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>分页信息（嵌套对象）</td>
+    <td>Pagination information (nested object)</td>
   </tr><tr>
     <td><code>timestamp</code></td>
     <td><code>string</code></td>
@@ -310,10 +311,10 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>总条数（平铺，便于直接读取）</td>
+    <td>Total count (flattened for direct reading)</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-communication/internal/handler/dto.templatestatsresponse">service-communication/internal/handler/dto.TemplateStatsResponse</h3>
+<h3 id="schema-dto.templatestatsresponse">dto.TemplateStatsResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>

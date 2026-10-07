@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /admin/permissions — RBAC Service API | Autional</title>
-  <meta name="description" content="创建新的RBAC权限项，用于角色授权。权限编码全局唯一，支持 allow/deny 效果、资源分类和标签。参考：NIST SP 800-53 AC-2 (Account Management)、AC-6 (Least Privilege)、OWASP ASVS V1.2 (Access Control Architecture)。">
+  <meta name="description" content="Create a new RBAC permission for role authorization. Permission code must be globally unique. Supports allow/deny effect, resource category, and tags. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/rbac-service/POST-admin-permissions/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/rbac-service/POST-admin-permissions/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/rbac-service/POST-admin-permissions/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/rbac-service/POST-admin-permissions/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /admin/permissions — RBAC Service API | Autional">
-  <meta property="og:description" content="创建新的RBAC权限项，用于角色授权。权限编码全局唯一，支持 allow/deny 效果、资源分类和标签。参考：NIST SP 800-53 AC-2 (Account Management)、AC-6 (Least Privilege)、OWASP ASVS V1.2 (Access Control Architecture)。">
+  <meta property="og:description" content="Create a new RBAC permission for role authorization. Permission code must be globally unique. Supports allow/deny effect, resource category, and tags. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/rbac-service/POST-admin-permissions/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /admin/permissions — RBAC Service API | Autional">
-  <meta name="twitter:description" content="创建新的RBAC权限项，用于角色授权。权限编码全局唯一，支持 allow/deny 效果、资源分类和标签。参考：NIST SP 800-53 AC-2 (Account Management)、AC-6 (Least Privilege)、OWASP ASVS V1.2 (Access Control Architecture)。">
+  <meta name="twitter:description" content="Create a new RBAC permission for role authorization. Permission code must be globally unique. Supports allow/deny effect, resource category, and tags. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "RBAC Service", "item": "https://wiki.autional.com/rbac-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /admin/permissions"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/permissions — RBAC Service API | Autional", "description": "创建新的RBAC权限项，用于角色授权。权限编码全局唯一，支持 allow/deny 效果、资源分类和标签。参考：NIST SP 800-53 AC-2 (Account Management)、AC-6 (Least Privilege)、OWASP ASVS V1.2 (Access Control Architecture)。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /admin/permissions — RBAC Service API | Autional", "description": "Create a new RBAC permission for role authorization. Permission code must be globally unique. Supports allow/deny effect, resource category, and tags. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,17 +163,18 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/rbac-service/">RBAC Service</a><span>›</span><span>POST /admin/permissions</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/admin/permissions</code></h1>
-<p class="summary">创建新的RBAC权限项，用于角色授权。权限编码全局唯一，支持 allow/deny 效果、资源分类和标签。参考：NIST SP 800-53 AC-2 (Account Management)、AC-6 (Least Privilege)、OWASP ASVS V1.2 (Access Control Architecture)。</p>
-<div class="meta"><span class="meta-item">RBAC - 权限</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Create a new RBAC permission for role authorization. Permission code must be globally unique. Supports allow/deny effect, resource category, and tags. References: NIST SP 800-53 AC-2 (Account Management), AC-6 (Least Privilege), OWASP ASVS V1.2 (Access Control Architecture).</p>
+<div class="meta"><span class="meta-item">RBAC - Permission</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-rbac/internal/handler/dto.createpermissionrequest"><code>service-rbac/internal/handler/dto.CreatePermissionRequest</code></a></p>
-<div id="schema-service-rbac/internal/handler/dto.createpermissionrequest">
+<p><strong>Schema:</strong> <a href="#schema-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.createpermissionrequest"><code>gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CreatePermissionRequest</code></a></p>
+<div id="schema-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.createpermissionrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -239,7 +240,7 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>201</strong></td><td>权限创建成功</td><td><a href="#schema-service-core/base/dto.dataresponse-service-rbac/internal/handler/dto/permissionresponse"><code>service-core/base/dto.DataResponse-service-rbac/internal/handler/dto/PermissionResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数错误</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>403</strong></td><td>无权限（非管理员）</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>409</strong></td><td>权限编码已存在</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>201</strong></td><td>Permission created successfully</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.dataresponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_permissionresponse"><code>gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>403</strong></td><td>Forbidden (non-admin)</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>409</strong></td><td>Permission code already exists</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
@@ -252,41 +253,28 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Code 是错误代码（可选）
-用于程序识别错误类型，如 &quot;required&quot;, &quot;format&quot;, &quot;range&quot;</td>
+    <td>Code is the error code (optional) used by programs to identify error types, e.g., &quot;required&quot;, &quot;format&quot;, &quot;range&quot;</td>
   </tr><tr>
     <td><code>description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Description 是人类可读的错误描述
-应该说明违反了什么规则，如 &quot;必须是一个有效的邮箱地址&quot;</td>
+    <td>Description is a human-readable error description that should explain which rule was violated, e.g., &quot;Must be a valid email address&quot;</td>
   </tr><tr>
     <td><code>field</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Field 是错误字段的路径
-使用点号表示嵌套字段，如 &quot;user.email&quot; 或 &quot;addresses[0].city&quot;</td>
-  </tr><tr>
-    <td><code>standard</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td>Standard 是指向权威规范文档的 URI 引用
-用于告知 API 消费者具体违反哪个标准
-示例：&quot;https://www.rfc-editor.org/info/rfc5322&quot;</td>
+    <td>Field is the path to the error field, using dot notation for nested fields, e.g., &quot;user.email&quot; or &quot;addresses[0].city&quot;</td>
   </tr><tr>
     <td><code>value</code></td>
     <td><code>object</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Value 是导致错误的值（可选，开发模式下使用）
-生产环境可能不返回此字段以避免泄露敏感信息</td>
+    <td>Value is the value that caused the error (optional, used in development mode); may not be returned in production to avoid leaking sensitive information</td>
   </tr></tbody>
 </table></div>
 <h3 id="schema-dto.problem">dto.Problem</h3>
@@ -298,133 +286,108 @@
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Code 是业务错误码
-用于程序处理特定错误场景
-示例：30101001</td>
+    <td>Code is the business error code used by programs to handle specific error scenarios. Example: 30101001</td>
   </tr><tr>
     <td><code>detail</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Detail 是针对此具体错误实例的人类可读解释
-可以包含具体的错误细节，如&quot;Field 'email' is required&quot;</td>
+    <td>Detail is a human-readable explanation specific to this error instance, which may include specific error details, e.g., &quot;Field 'email' is required&quot;</td>
   </tr><tr>
     <td><code>errors</code></td>
     <td>array of<br/><p>See <a href="#schema-dto.fieldviolation"><code>dto.FieldViolation</code></a></p></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Errors 是字段级验证错误列表（扩展字段）
-遵循 Web API 标准实践，每个错误包含字段名和错误信息</td>
+    <td>Errors is a list of field-level validation errors (extension field), following Web API standard practices, each error contains the field name and error message</td>
   </tr><tr>
     <td><code>i18n_args</code></td>
     <td><code>object</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>I18nArgs 是国际化参数
-用于动态填充翻译模板</td>
+    <td>I18nArgs are internationalization parameters used to dynamically fill translation templates</td>
   </tr><tr>
     <td><code>i18n_key</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>I18nKey 是国际化键
-用于客户端本地化错误消息
-示例：&quot;error.user_not_found&quot;</td>
+    <td>I18nKey is the internationalization key used for client-side localization of error messages. Example: &quot;error.user_not_found&quot;</td>
   </tr><tr>
     <td><code>instance</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Instance 是发生问题的具体URI引用
-通常是请求的URL，可能包含查询参数
-示例：&quot;/api/v1/users?limit=invalid&quot;</td>
+    <td>Instance is the specific URI reference where the problem occurred, usually the request URL, possibly including query parameters. Example: &quot;/api/v1/users?limit=invalid&quot;</td>
   </tr><tr>
     <td><code>request_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>RequestID 是请求唯一标识
-用于日志关联和问题追踪
-示例：&quot;req_550e8400-e29b-41d4-a716-446655440000&quot;</td>
+    <td>RequestID is the unique request identifier used for log correlation and issue tracking. Example: &quot;req_550e8400-e29b-41d4-a716-446655440000&quot;</td>
   </tr><tr>
     <td><code>retry_after</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>RetryAfter 用于 429 Too Many Requests 响应
-指示客户端应在多少秒后重试请求（RFC 6585）</td>
+    <td>RetryAfter is used for 429 Too Many Requests responses, indicating how many seconds the client should wait before retrying (RFC 6585)</td>
   </tr><tr>
     <td><code>service</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Service 是服务名
-用于微服务架构中定位错误来源
-示例：&quot;auth-service&quot;</td>
+    <td>Service is the service name used in microservice architectures to locate the error source. Example: &quot;auth-service&quot;</td>
   </tr><tr>
     <td><code>span_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>SpanID 是当前 span 标识
-用于精确定位分布式链路中的当前节点</td>
+    <td>SpanID is the current span identifier used to precisely locate the current node in a distributed trace</td>
   </tr><tr>
     <td><code>status</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Status 是产生的HTTP状态码
-用于客户端区分问题类型，不随Accept-Language变化
-示例：400, 401, 403, 404, 500</td>
+    <td>Status is the HTTP status code generated, used by clients to distinguish problem types, does not change with Accept-Language. Example: 400, 401, 403, 404, 500</td>
   </tr><tr>
     <td><code>timestamp</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Timestamp 是错误发生时间
-ISO 8601 格式
-示例：&quot;2026-04-03T12:00:00Z&quot;</td>
+    <td>Timestamp is the time the error occurred, in ISO 8601 format. Example: &quot;2026-04-03T12:00:00Z&quot;</td>
   </tr><tr>
     <td><code>title</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Title 是简短、人类可读的问题类型摘要
-相同的 Type 应该始终有相同的 Title（不随实例变化）
-示例：&quot;Invalid Request Parameters&quot;</td>
+    <td>Title is a short, human-readable summary of the problem type; the same Type should always have the same Title (does not vary by instance). Example: &quot;Invalid Request Parameters&quot;</td>
   </tr><tr>
     <td><code>trace_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>TraceID 是分布式追踪标识
-遵循 W3C Trace Context 标准
-示例：&quot;00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01&quot;</td>
+    <td>TraceID is the distributed tracing identifier, following the W3C Trace Context standard. Example: &quot;00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01&quot;</td>
   </tr><tr>
     <td><code>type</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>Type 是标识问题类型的URI引用
-当该URI被解引用时，应提供人类可读的文档
-示例：&quot;https://api.example.com/errors/invalid-request&quot;</td>
+    <td>Type is a URI reference that identifies the problem type; when dereferenced, it should provide human-readable documentation. Example: &quot;https://api.example.com/errors/invalid-request&quot;</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-core/base/dto.dataresponse-service-rbac/internal/handler/dto/permissionresponse">service-core/base/dto.DataResponse-service-rbac/internal/handler/dto/PermissionResponse</h3>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.dataresponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_permissionresponse">gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_PermissionResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -436,7 +399,7 @@ ISO 8601 格式
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-rbac/internal/handler/dto.permissionresponse"><code>service-rbac/internal/handler/dto.PermissionResponse</code></a></td>
+    <td><a href="#schema-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.permissionresponse"><code>gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -457,7 +420,7 @@ ISO 8601 格式
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-rbac/internal/handler/dto.permissionresponse">service-rbac/internal/handler/dto.PermissionResponse</h3>
+<h3 id="schema-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.permissionresponse">gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.PermissionResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -466,84 +429,84 @@ ISO 8601 格式
     <td><span class="optional">No</span></td>
     <td><code>create</code></td>
     <td style="font-size:11px"></td>
-    <td>操作类型</td>
+    <td>Operation type</td>
   </tr><tr>
     <td><code>category</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>user_mgmt</code></td>
     <td style="font-size:11px"></td>
-    <td>分类</td>
+    <td>Category</td>
   </tr><tr>
     <td><code>code</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>user:create</code></td>
     <td style="font-size:11px"></td>
-    <td>权限编码</td>
+    <td>Permission code</td>
   </tr><tr>
     <td><code>created_at</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>2026-01-01T00:00:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>创建时间</td>
+    <td>Creation time</td>
   </tr><tr>
     <td><code>description</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>创建用户权限</code></td>
+    <td><code>Create user permission</code></td>
     <td style="font-size:11px"></td>
-    <td>描述</td>
+    <td>Description</td>
   </tr><tr>
     <td><code>effect</code></td>
     <td><code>object</code></td>
     <td><span class="optional">No</span></td>
     <td><code>allow</code></td>
     <td style="font-size:11px"></td>
-    <td>效果</td>
+    <td>Effect</td>
   </tr><tr>
     <td><code>id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>perm_abc123</code></td>
     <td style="font-size:11px"></td>
-    <td>权限ID</td>
+    <td>Permission ID</td>
   </tr><tr>
     <td><code>name</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>创建用户</code></td>
+    <td><code>Created by</code></td>
     <td style="font-size:11px"></td>
-    <td>权限名称</td>
+    <td>Permission name</td>
   </tr><tr>
     <td><code>resource</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>user</code></td>
     <td style="font-size:11px"></td>
-    <td>资源类型</td>
+    <td>Resource type</td>
   </tr><tr>
     <td><code>tags</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
-    <td><code>管理,账户</code></td>
+    <td><code>Management, Account</code></td>
     <td style="font-size:11px"></td>
-    <td>标签</td>
+    <td>Tags</td>
   </tr><tr>
     <td><code>tenant_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>tnt_xyz789</code></td>
     <td style="font-size:11px"></td>
-    <td>租户ID</td>
+    <td>Tenant ID</td>
   </tr><tr>
     <td><code>updated_at</code></td>
     <td><code>string</code></td>
     <td><span class="optional">No</span></td>
     <td><code>2026-04-10T14:20:00Z</code></td>
     <td style="font-size:11px"></td>
-    <td>更新时间</td>
+    <td>Update time</td>
   </tr></tbody>
 </table></div>
 <h3 id="schema-rbac.effect">rbac.Effect</h3>

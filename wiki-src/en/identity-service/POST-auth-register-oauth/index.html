@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /auth/register/oauth — Identity Service API | Autional</title>
-  <meta name="description" content="使用OAuth回调生成的pending_token完成注册，创建用户并自动绑定OAuth连接和提供商信息，返回JWT令牌。注册后的审批流程由租户的成员资格策略控制。参考：RFC 6749 §4.1、OWASP ASVS V2.2。">
+  <meta name="description" content="Complete registration using the pending_token generated from the OAuth callback, create a user and automatically link the OAuth connection and provider information, returning a JWT token. The post-registration approval process is controlled by the tenant's membership policy. References: RFC 6749 §4.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/identity-service/POST-auth-register-oauth/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/identity-service/POST-auth-register-oauth/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/identity-service/POST-auth-register-oauth/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/identity-service/POST-auth-register-oauth/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /auth/register/oauth — Identity Service API | Autional">
-  <meta property="og:description" content="使用OAuth回调生成的pending_token完成注册，创建用户并自动绑定OAuth连接和提供商信息，返回JWT令牌。注册后的审批流程由租户的成员资格策略控制。参考：RFC 6749 §4.1、OWASP ASVS V2.2。">
+  <meta property="og:description" content="Complete registration using the pending_token generated from the OAuth callback, create a user and automatically link the OAuth connection and provider information, returning a JWT token. The post-registration approval process is controlled by the tenant's membership policy. References: RFC 6749 §4.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/identity-service/POST-auth-register-oauth/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /auth/register/oauth — Identity Service API | Autional">
-  <meta name="twitter:description" content="使用OAuth回调生成的pending_token完成注册，创建用户并自动绑定OAuth连接和提供商信息，返回JWT令牌。注册后的审批流程由租户的成员资格策略控制。参考：RFC 6749 §4.1、OWASP ASVS V2.2。">
+  <meta name="twitter:description" content="Complete registration using the pending_token generated from the OAuth callback, create a user and automatically link the OAuth connection and provider information, returning a JWT token. The post-registration approval process is controlled by the tenant's membership policy. References: RFC 6749 §4.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Identity Service", "item": "https://wiki.autional.com/identity-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /auth/register/oauth"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /auth/register/oauth — Identity Service API | Autional", "description": "使用OAuth回调生成的pending_token完成注册，创建用户并自动绑定OAuth连接和提供商信息，返回JWT令牌。注册后的审批流程由租户的成员资格策略控制。参考：RFC 6749 §4.1、OWASP ASVS V2.2。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /auth/register/oauth — Identity Service API | Autional", "description": "Complete registration using the pending_token generated from the OAuth callback, create a user and automatically link the OAuth connection and provider information, returning a JWT token. The post-registration approval process is controlled by the tenant's membership policy. References: RFC 6749 §4.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,17 +163,18 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/identity-service/">Identity Service</a><span>›</span><span>POST /auth/register/oauth</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/auth/register/oauth</code></h1>
-<p class="summary">使用OAuth回调生成的pending_token完成注册，创建用户并自动绑定OAuth连接和提供商信息，返回JWT令牌。注册后的审批流程由租户的成员资格策略控制。参考：RFC 6749 §4.1、OWASP ASVS V2.2。</p>
-<div class="meta"><span class="meta-item">身份认证</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Complete registration using the pending_token generated from the OAuth callback, create a user and automatically link the OAuth connection and provider information, returning a JWT token. The post-registration approval process is controlled by the tenant's membership policy. References: RFC 6749 §4.1, OWASP ASVS V2.2.</p>
+<div class="meta"><span class="meta-item">Authentication</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-service-identity/internal/handler/dto.registerbyoauthrequest"><code>service-identity/internal/handler/dto.RegisterByOAuthRequest</code></a></p>
-<div id="schema-service-identity/internal/handler/dto.registerbyoauthrequest">
+<p><strong>Schema:</strong> <a href="#schema-dto.registerbyoauthrequest"><code>dto.RegisterByOAuthRequest</code></a></p>
+<div id="schema-dto.registerbyoauthrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -218,37 +219,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>注册成功并自动登录</td><td><a href="#schema-service-identity/internal/handler/dto.registerbyoauthresponse"><code>service-identity/internal/handler/dto.RegisterByOAuthResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数无效或pending_token已过期</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Registration successful and automatically logged in</td><td><a href="#schema-dto.registerbyoauthresponse"><code>dto.RegisterByOAuthResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters or expired pending_token</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.simpleresponse"><code>gitee_com_linmes_authms_base_dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>timestamp</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-identity/internal/handler/dto.loginbycoderesponse">service-identity/internal/handler/dto.LoginByCodeResponse</h3>
+<h3 id="schema-dto.loginbycoderesponse">dto.LoginByCodeResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -288,7 +263,7 @@
     <td></td>
   </tr><tr>
     <td><code>user</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.userinfo"><code>service-identity/internal/handler/dto.UserInfo</code></a></td>
+    <td><a href="#schema-dto.userinfo"><code>dto.UserInfo</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -302,7 +277,7 @@
     <td>User ID (redundant with User.ID for flat access)</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.registerbyoauthresponse">service-identity/internal/handler/dto.RegisterByOAuthResponse</h3>
+<h3 id="schema-dto.registerbyoauthresponse">dto.RegisterByOAuthResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -314,7 +289,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-service-identity/internal/handler/dto.loginbycoderesponse"><code>service-identity/internal/handler/dto.LoginByCodeResponse</code></a></td>
+    <td><a href="#schema-dto.loginbycoderesponse"><code>dto.LoginByCodeResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -335,8 +310,8 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-service-identity/internal/handler/dto.userinfo">service-identity/internal/handler/dto.UserInfo</h3>
-<p>用户基本信息</p>
+<h3 id="schema-dto.userinfo">dto.UserInfo</h3>
+<p>User basic information</p>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -360,13 +335,6 @@
     <td><code>usr_abc123</code></td>
     <td style="font-size:11px"></td>
     <td>User ID</td>
-  </tr><tr>
-    <td><code>last_login_at</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">No</span></td>
-    <td><code>2026-07-20T08:00:00Z</code></td>
-    <td style="font-size:11px"></td>
-    <td>Last login time</td>
   </tr><tr>
     <td><code>must_change_password</code></td>
     <td><code>boolean</code></td>
@@ -409,6 +377,32 @@
     <td><code>john.doe</code></td>
     <td style="font-size:11px"></td>
     <td>Username</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-gitee_com_linmes_authms_base_dto.simpleresponse">gitee_com_linmes_authms_base_dto.SimpleResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">No</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
   </tr></tbody>
 </table></div>
 </section>

@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SAML Service API | Autional</title>
-  <meta name="description" content="SAML Service API reference — 17 endpoints. Port 11021.">
+  <meta name="description" content="SAML Service API reference — 0 endpoints. Port 11021.">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/saml-service/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/saml-service/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/saml-service/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/saml-service/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="SAML Service API | Autional">
-  <meta property="og:description" content="SAML Service API reference — 17 endpoints. Port 11021.">
+  <meta property="og:description" content="SAML Service API reference — 0 endpoints. Port 11021.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/saml-service/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="SAML Service API | Autional">
-  <meta name="twitter:description" content="SAML Service API reference — 17 endpoints. Port 11021.">
+  <meta name="twitter:description" content="SAML Service API reference — 0 endpoints. Port 11021.">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "SAML Service"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "SAML Service API | Autional", "description": "SAML Service API reference — 17 endpoints. Port 11021.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "SAML Service API | Autional", "description": "SAML Service API reference — 0 endpoints. Port 11021.", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,33 +163,14 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><span>SAML Service</span></nav>
       <h1>SAML Service</h1>
-<p class="summary">Port 11021 &middot; 17 endpoints &middot; <a href="https://reference.autional.com/specs/saml-service.json"><code>saml-service.json</code></a></p>
-<h2 id="tag-saml">SAML</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>Method</th><th>Path</th><th>Summary</th><th></th></tr></thead>
-  <tbody><tr><td><span class="meta-item method POST">POST</span></td><td><code>/saml/{provider_id}/acs</code></td><td>断言消费服务</td><td><a href="/saml-service/POST-saml-provider_id-acs/">detail →</a></td></tr><tr><td><span class="meta-item method GET">GET</span></td><td><code>/saml/{provider_id}/login</code></td><td>SP-initiated SSO</td><td><a href="/saml-service/GET-saml-provider_id-login/">detail →</a></td></tr><tr><td><span class="meta-item method GET">GET</span></td><td><code>/saml/{provider_id}/metadata</code></td><td>获取SP元数据</td><td><a href="/saml-service/GET-saml-provider_id-metadata/">detail →</a></td></tr><tr><td><span class="meta-item method GET">GET</span></td><td><code>/saml/{provider_id}/slo</code></td><td>单点登出</td><td><a href="/saml-service/GET-saml-provider_id-slo/">detail →</a></td></tr><tr><td><span class="meta-item method GET">GET</span></td><td><code>/saml/{provider_id}/slo/sp</code></td><td>SP发起的SAML单点登出</td><td><a href="/saml-service/GET-saml-provider_id-slo-sp/">detail →</a></td></tr></tbody>
-</table></div>
-<h2 id="tag-saml - admin">SAML - Admin</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>Method</th><th>Path</th><th>Summary</th><th></th></tr></thead>
-  <tbody><tr><td><span class="meta-item method GET">GET</span></td><td><code>/admin/saml/sessions</code></td><td>查询SAML会话列表（管理端）</td><td><a href="/saml-service/GET-admin-saml-sessions/">detail →</a></td></tr><tr><td><span class="meta-item method GET">GET</span></td><td><code>/admin/saml/user-links</code></td><td>查询用户SAML绑定列表（管理端）</td><td><a href="/saml-service/GET-admin-saml-user-links/">detail →</a></td></tr><tr><td><span class="meta-item method DELETE">DELETE</span></td><td><code>/admin/saml/user-links/{user_link_id}</code></td><td>删除用户SAML绑定（管理端）</td><td><a href="/saml-service/DELETE-admin-saml-user-links-user_link_id/">detail →</a></td></tr></tbody>
-</table></div>
-<h2 id="tag-saml - 内部接口">SAML - 内部接口</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>Method</th><th>Path</th><th>Summary</th><th></th></tr></thead>
-  <tbody><tr><td><span class="meta-item method POST">POST</span></td><td><code>/internal/saml/erase-user-links</code></td><td>擦除用户SAML绑定</td><td><a href="/saml-service/POST-internal-saml-erase-user-links/">detail →</a></td></tr><tr><td><span class="meta-item method GET">GET</span></td><td><code>/internal/saml/user-links</code></td><td>查询用户SAML绑定列表</td><td><a href="/saml-service/GET-internal-saml-user-links/">detail →</a></td></tr><tr><td><span class="meta-item method DELETE">DELETE</span></td><td><code>/internal/saml/user-links/{user_link_id}</code></td><td>删除用户SAML绑定</td><td><a href="/saml-service/DELETE-internal-saml-user-links-user_link_id/">detail →</a></td></tr></tbody>
-</table></div>
-<h2 id="tag-saml 管理">SAML 管理</h2>
-<div class="table-wrap"><table>
-  <thead><tr><th>Method</th><th>Path</th><th>Summary</th><th></th></tr></thead>
-  <tbody><tr><td><span class="meta-item method GET">GET</span></td><td><code>/admin/saml/providers</code></td><td>列出SAML IdP</td><td><a href="/saml-service/GET-admin-saml-providers/">detail →</a></td></tr><tr><td><span class="meta-item method POST">POST</span></td><td><code>/admin/saml/providers</code></td><td>注册SAML IdP</td><td><a href="/saml-service/POST-admin-saml-providers/">detail →</a></td></tr><tr><td><span class="meta-item method DELETE">DELETE</span></td><td><code>/admin/saml/providers/{provider_id}</code></td><td>删除SAML IdP</td><td><a href="/saml-service/DELETE-admin-saml-providers-provider_id/">detail →</a></td></tr><tr><td><span class="meta-item method GET">GET</span></td><td><code>/admin/saml/providers/{provider_id}</code></td><td>获取SAML IdP详情</td><td><a href="/saml-service/GET-admin-saml-providers-provider_id/">detail →</a></td></tr><tr><td><span class="meta-item method PUT">PUT</span></td><td><code>/admin/saml/providers/{provider_id}</code></td><td>更新SAML IdP</td><td><a href="/saml-service/PUT-admin-saml-providers-provider_id/">detail →</a></td></tr><tr><td><span class="meta-item method PUT">PUT</span></td><td><code>/admin/saml/providers/{provider_id}/attribute-mapping</code></td><td>更新属性映射</td><td><a href="/saml-service/PUT-admin-saml-providers-provider_id-attribute-mapping/">detail →</a></td></tr></tbody>
-</table></div>
+<p class="summary">Port 11021 &middot; 0 endpoints &middot; <a href="https://reference.autional.com/specs/saml-service.json"><code>saml-service.json</code></a></p>
       <footer>
         Generated from OpenAPI specs. <a href="https://reference.autional.com/">Interactive API explorer (Scalar)</a>
         &mdash; <a href="https://wiki.autional.com/">Autional</a>

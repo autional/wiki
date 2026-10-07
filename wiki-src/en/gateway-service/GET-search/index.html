@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /search — Gateway Service API | Autional</title>
-  <meta name="description" content="跨 OpenAPI 规范与 SDK 示例资源进行模糊搜索，支持精确匹配和 Levenshtein 模糊回退">
+  <meta name="description" content="Perform fuzzy search across OpenAPI specifications and SDK example resources, supporting exact match and Levenshtein fuzzy fallback">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="zh-CN">
-  <meta name="docsearch:language" content="zh-CN">
+  <meta name="language" content="en-US">
+  <meta name="docsearch:language" content="en-US">
   <link rel="canonical" href="https://wiki.autional.com/gateway-service/GET-search/">
-  <link rel="alternate" hreflang="zh" href="https://wiki.autional.com/gateway-service/GET-search/">
+  <link rel="alternate" hreflang="en" href="https://wiki.autional.com/gateway-service/GET-search/">
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.com/gateway-service/GET-search/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /search — Gateway Service API | Autional">
-  <meta property="og:description" content="跨 OpenAPI 规范与 SDK 示例资源进行模糊搜索，支持精确匹配和 Levenshtein 模糊回退">
+  <meta property="og:description" content="Perform fuzzy search across OpenAPI specifications and SDK example resources, supporting exact match and Levenshtein fuzzy fallback">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.com/gateway-service/GET-search/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /search — Gateway Service API | Autional">
-  <meta name="twitter:description" content="跨 OpenAPI 规范与 SDK 示例资源进行模糊搜索，支持精确匹配和 Levenshtein 模糊回退">
+  <meta name="twitter:description" content="Perform fuzzy search across OpenAPI specifications and SDK example resources, supporting exact match and Levenshtein fuzzy fallback">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.com/"}, {"@type": "ListItem", "position": 3, "name": "Gateway Service", "item": "https://wiki.autional.com/gateway-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /search"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /search — Gateway Service API | Autional", "description": "跨 OpenAPI 规范与 SDK 示例资源进行模糊搜索，支持精确匹配和 Levenshtein 模糊回退", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /search — Gateway Service API | Autional", "description": "Perform fuzzy search across OpenAPI specifications and SDK example resources, supporting exact match and Levenshtein fuzzy fallback", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,14 +163,15 @@
         <a href="/hash-service-standard/" class="">Hash Service (Standard)<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">Hash Service (SM3)<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">Captcha3D Service<span class="count"></span></a>
+        <a href="/stream-service/" class="">Stream Service<span class="count"></span></a>
         <a href="/config-service/" class="">Config Service<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">Docs</a><span>›</span><a href="/">API Reference</a><span>›</span><a href="/gateway-service/">Gateway Service</a><span>›</span><span>GET /search</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/search</code></h1>
-<p class="summary">跨 OpenAPI 规范与 SDK 示例资源进行模糊搜索，支持精确匹配和 Levenshtein 模糊回退</p>
-<div class="meta"><span class="meta-item">网关 - 开发者工具</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
+<p class="summary">Perform fuzzy search across OpenAPI specifications and SDK example resources, supporting exact match and Levenshtein fuzzy fallback</p>
+<div class="meta"><span class="meta-item">Gateway - Developer Tools</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Parameters</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Name</th><th>In</th><th>Type</th><th>Required</th><th>Default</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
@@ -182,7 +183,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>搜索关键词</td>
+    <td>Search keyword</td>
   </tr><tr>
     <td><code>type</code></td>
     <td><code>query</code></td>
@@ -191,14 +192,14 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>搜索类型（api: API 端点, sdk: SDK 示例）</td>
+    <td>Search type (api: API endpoint, sdk: SDK example)</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>搜索结果列表</td><td><code>object</code></td></tr><tr><td><strong>400</strong></td><td>请求参数无效</td><td><code>object</code></td></tr><tr><td><strong>500</strong></td><td>服务器内部错误</td><td><code>object</code></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Search result list</td><td><code>object</code></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><code>object</code></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><code>object</code></td></tr></tbody>
 </table></div>
 </section>
 <div class="actions">
