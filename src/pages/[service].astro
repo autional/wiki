@@ -3,6 +3,8 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import WikiLayout from '../layouts/WikiLayout.astro';
 import { services, serviceByName } from '../data/services';
+import { CORPUS_LANG_DIR } from '../lib/site-env';
+import { rewriteRegionLinks } from '../lib/region-rewrite';
 
 export async function getStaticPaths() {
   return services.map(s => ({ params: { service: s.name } }));
@@ -12,7 +14,7 @@ const { service } = Astro.params;
 const svc = serviceByName.get(service ?? '');
 
 // Read pre-generated wiki HTML at build time
-const htmlPath = join(process.cwd(), 'wiki-src', service ?? '', 'index.html');
+const htmlPath = join(process.cwd(), 'wiki-src', CORPUS_LANG_DIR, service ?? '', 'index.html');
 let endpointHtml = '';
 let inlineStyles = '';
 let endpointCount = 0;
@@ -32,6 +34,7 @@ try {
     const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/);
     if (bodyMatch) endpointHtml = bodyMatch[1];
   }
+  endpointHtml = rewriteRegionLinks(endpointHtml);
 
   // Count unique endpoint detail links; an endpoint may repeat across tag sections.
   const detailLinks = endpointHtml.match(/href="\/[^"]+\/[A-Z]+-[^"]*"/g) ?? [];
@@ -43,7 +46,7 @@ try {
     try { jsonLdScripts.push(JSON.parse(m[1])); } catch {}
   }
 } catch {
-  endpointHtml = '<p class="text-sm text-[var(--color-text-muted)] py-20 text-center">端点尚未收录。请运行 sync-wiki-zh.py 生成文档内容。</p>';
+  endpointHtml = '<p class="text-sm text-[var(--color-text-muted)] py-20 text-center">端点尚未收录。请运行 sync-wiki.py 生成文档内容。</p>';
 }
 
 const pageTitle = svc ? `${svc.title}（${svc.name}）API 文档 — Autional` : `${service} API 文档 — Autional`;
