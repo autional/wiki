@@ -1,56 +1,10 @@
 /** @type {import('tailwindcss').Config} */
+// 原先这里内联了 primary/sky/amber 三套色阶、fontFamily 与 boxShadow，
+// 与设计系统各写一份（ui 仓库 KI-010）。现改用内置的权威 preset：
+//   @autional/tailwind-preset（npm 已发布包；2026-09 P4 起取代内置副本）。
+// 调色板由 global.css 里 import 的 profile.css（profiles/docs.css）提供，与原先内联的一致。
 module.exports = {
   content: ['./src/**/*.{astro,html,js,ts,jsx,tsx}'],
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          50: '#e9f3f9',
-          100: '#d1e5f2',
-          200: '#9ec2db',
-          300: '#6a9fbe',
-          400: '#3c779a',
-          500: '#235f84',
-          600: '#124b70',
-          700: '#003153',
-          800: '#032845',
-          900: '#021c31',
-        },
-        sky: {
-          50: '#eef9fd',
-          100: '#d6f0fa',
-          200: '#b4e3f6',
-          300: '#87ceeb',
-          400: '#59bcde',
-          500: '#3094b8',
-          600: '#24778f',
-          700: '#1f6173',
-          800: '#1d505f',
-          900: '#1d434f',
-        },
-        amber: {
-          50: '#fff8e6',
-          100: '#ffefbf',
-          200: '#ffdf80',
-          300: '#ffcf40',
-          400: '#ffc71a',
-          500: '#ffbf00',
-          600: '#d69f00',
-          700: '#a67800',
-          800: '#755400',
-          900: '#4a3500',
-        },
-      },
-      fontFamily: {
-        sans: ['"Noto Sans SC"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['"Source Han Serif SC"', 'serif'],
-      },
-      boxShadow: {
-        soft: '0 16px 40px rgba(0, 49, 83, 0.10)',
-        card: '0 20px 60px rgba(3, 20, 37, 0.08)',
-        brand: '0 32px 100px rgba(3, 20, 37, 0.12)',
-      },
-    },
-  },
+  presets: [require('@autional/tailwind-preset')],
   plugins: [],
 };

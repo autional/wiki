@@ -1,0 +1,19 @@
+---
+import { services } from '../data/services';
+
+const { current = '' } = Astro.props;
+---
+
+{services.map(s => {
+  const active = current === s.name;
+  return (
+    <a href={`/${s.name}/`} class={`group flex items-center justify-between mx-2 my-0.5 rounded-xl px-3 py-2 transition text-sm ${
+      active
+        ? 'bg-primary-700 text-white shadow-soft'
+        : 'text-neutral-600 hover:bg-primary-50 hover:text-primary-800'
+    }`}>
+      <span class="font-medium truncate">{s.title}</span>
+      {active && <span class="text-[0.6rem] opacity-60 font-mono ml-1 shrink-0">{s.port}</span>}
+    </a>
+  );
+})}

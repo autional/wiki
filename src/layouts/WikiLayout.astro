@@ -1,47 +1,20 @@
 ---
 import '../styles/global.css';
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/600.css';
-import '@fontsource/inter/700.css';
-import '@fontsource/inter/800.css';
-
-const services = [
-  { name:'identity-service', title:'Identity Service', port:11001 },
-  { name:'profile-service', title:'Profile Service', port:11002 },
-  { name:'tenant-service', title:'Tenant Service', port:11003 },
-  { name:'session-service', title:'Session Service', port:11004 },
-  { name:'mfa-service', title:'MFA Service', port:11005 },
-  { name:'oauth-service', title:'OAuth Service', port:11006 },
-  { name:'wallet-service', title:'Wallet Service', port:11011 },
-  { name:'point-service', title:'Point Service', port:11012 },
-  { name:'audit-service', title:'Audit Service', port:11013 },
-  { name:'notification-service', title:'Notification Service', port:11014 },
-  { name:'communication-service', title:'Communication Service', port:11015 },
-  { name:'storage-service', title:'Storage Service', port:11016 },
-  { name:'billing-service', title:'Billing Service', port:11017 },
-  { name:'compliance-service', title:'Compliance Service', port:11018 },
-  { name:'status-service', title:'Status Service', port:11019 },
-  { name:'secret-service', title:'Secret Service', port:11020 },
-  { name:'saml-service', title:'SAML Service', port:11021 },
-  { name:'pay-service', title:'Pay Service', port:11022 },
-  { name:'thirdparty-service', title:'Thirdparty Service', port:11023 },
-  { name:'verification-service', title:'Verification Service', port:11024 },
-  { name:'rbac-service', title:'RBAC Service', port:11025 },
-  { name:'gateway-service', title:'Gateway Service', port:11080 },
-];
+import ServiceNav from '../components/ServiceNav.astro';
 
 export interface Props {
   title?: string;
   description?: string;
   jsonLd?: Record<string, any>[];
   ogType?: string;
+  noindex?: boolean;
 }
 const {
-  title = 'Autional API Wiki',
-  description = 'Interactive API documentation with detailed endpoint specifications for all 22 Autional microservices.',
+  title = 'Autional API 知识库',
+  description = '覆盖全部 27 个 Autional 微服务的交互式 API 文档，含详尽的端点规格说明。',
   jsonLd = [],
   ogType = 'website',
+  noindex = false,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const currentSvc = Astro.url.pathname.split('/')[1] || '';
@@ -50,31 +23,39 @@ const ogImage = new URL('/og-default.png', Astro.site).href;
 const defaultJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'Autional API Wiki',
-  url: 'https://wiki.autional.com',
-  description: 'Detailed API endpoint documentation for all Autional microservices.',
-  publisher: { '@type': 'Organization', name: 'Autional', url: 'https://www.autional.com' },
+  name: 'Autional API 知识库',
+  url: 'https://wiki.autional.cn',
+  description: 'Autional 全部微服务的 API 端点文档。',
+  publisher: { '@type': 'Organization', name: 'Autional', url: 'https://www.autional.cn' },
 };
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/tokens.css" />
+    <link rel="stylesheet" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/profiles/docs.css" />
+    <link rel="icon" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/favicon-16x16.png">
+    <link rel="icon" type="image/svg+xml" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/apple-touch-icon.png">
+    <link rel="manifest" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/site.webmanifest">
+
   <title>{title}</title>
   <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex" />}
   <link rel="canonical" href={canonical.href}>
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=7">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=7">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=7">
-  <link rel="manifest" href="/site.webmanifest?v=7">
-  <meta name="theme-color" content="#003153">
+  <!-- theme-color 由浏览器消费，不经过 CSS —— 写 var() 等于没写（浏览器视作非法值直接忽略）。
+       本站此前就是 var(--color-primary-700)，实际效果是「没有 theme-color」。必须写字面量。 -->
+    <meta name="theme-color" content="#003153">
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical.href} />
   <meta property="og:type" content={ogType} />
-  <meta property="og:site_name" content="Autional API Wiki" />
+  <meta property="og:site_name" content="Autional API 知识库" />
   <meta property="og:image" content={ogImage} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -85,48 +66,175 @@ const defaultJsonLd = {
   <script type="application/ld+json" set:html={JSON.stringify(defaultJsonLd)} />
   {jsonLd.map(item => <script type="application/ld+json" set:html={JSON.stringify(item)} />)}
 </head>
-<body class="min-h-screen antialiased">
-  <!-- Top bar -->
-  <header class="sticky top-0 z-50 h-14 flex items-center justify-between px-6 border-b border-primary-100/70 bg-white/90 backdrop-blur-xl">
-    <a href="/" class="flex items-center gap-2.5 no-underline">
-      <img src="/logo-mark.svg" alt="Autional" class="h-7 w-7 object-contain">
-      <span class="text-[1.05rem] font-extrabold tracking-[-0.03em] text-primary-900">Autional</span>
-      <span class="hidden sm:inline text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-primary-400 ml-1.5">API Wiki</span>
-    </a>
-    <div class="flex items-center gap-5">
-      <a href="https://reference.autional.com" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">API Reference</a>
-      <a href="https://github.com/autional/wiki" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">GitHub</a>
-      <a href="https://www.autional.com" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">autional.com &rarr;</a>
+<body class="min-h-screen antialiased" data-pagefind-ignore={noindex ? 'all' : undefined}>
+  <!-- 顶部栏 -->
+  <header class="site-header site-header--translucent h-[var(--layout-header-height)] px-4 sm:px-6 justify-between">
+    <div class="flex items-center gap-2 min-w-0">
+      <button id="wiki-nav-toggle" type="button" class="lg:hidden -ml-1 p-1.5 rounded-lg text-primary-700 hover:bg-primary-50 transition" aria-label="打开服务列表" aria-expanded="false" aria-controls="wiki-drawer">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <a href="/" class="flex items-center gap-2.5 no-underline min-w-0">
+        <img src="/logo-mark.svg" alt="" class="h-7 w-7 object-contain">
+        <span class="text-[1.05rem] font-extrabold tracking-[var(--letter-spacing-heading-lg)] text-primary-900">Autional</span>
+        <span class="hidden sm:inline text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-primary-400 ml-1.5">API 知识库</span>
+      </a>
+    </div>
+    <div class="flex items-center gap-3 sm:gap-5 shrink-0">
+      <a href="https://reference.autional.cn" class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition">API 参考</a>
+      <a href="https://github.com/autional-cn/wiki" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">GitHub</a>
+      <a href="https://www.autional.cn" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">autional.cn &rarr;</a>
     </div>
   </header>
 
   <div class="flex h-[calc(100vh-56px)] overflow-hidden">
-    <!-- Sidebar -->
-    <aside class="w-60 shrink-0 border-r border-primary-100/50 bg-white overflow-y-auto">
+    <!-- 侧边栏（桌面） -->
+    <aside class="hidden lg:block w-60 shrink-0 border-r border-primary-100/50 bg-white overflow-y-auto">
       <div class="sticky top-0 bg-white/95 backdrop-blur border-b border-primary-100/50 px-4 py-3 z-10">
-        <span class="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500">Services</span>
+        <button type="button" data-search-open class="flex items-center gap-2 w-full rounded-xl border border-primary-100 bg-neutral-50/50 px-3 py-2 text-sm text-[var(--color-text-muted)] hover:border-primary-300 hover:text-neutral-500 transition">
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
+          </svg>
+          <span class="flex-1 text-left">搜索端点…</span>
+          <kbd class="text-[0.6rem] font-mono border border-primary-100 rounded-xs px-1.5 py-0.5 bg-white">/</kbd>
+        </button>
+        <div class="mt-2.5 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500">服务列表</div>
       </div>
       <nav class="py-2">
-        {services.map(s => {
-          const active = currentSvc === s.name;
-          return (
-            <a href={`/${s.name}/`} class={`group flex items-center justify-between mx-2 my-0.5 rounded-xl px-3 py-2 transition text-sm ${
-              active
-                ? 'bg-primary-700 text-white shadow-soft'
-                : 'text-neutral-600 hover:bg-primary-50 hover:text-primary-800'
-            }`}>
-              <span class="font-medium truncate">{s.title}</span>
-              {active && <span class="text-[0.6rem] opacity-60 font-mono ml-1 shrink-0">{s.port}</span>}
-            </a>
-          );
-        })}
+        <ServiceNav current={currentSvc} />
       </nav>
     </aside>
 
-    <!-- Main content area -->
-    <div class="flex-1 flex overflow-hidden bg-neutral-50/50">
+    <!-- 主内容区 -->
+    <div class="flex-1 flex overflow-hidden bg-neutral-50/50" data-pagefind-body>
       <slot />
     </div>
   </div>
+
+  <!-- 移动端服务列表抽屉 -->
+  <div id="wiki-drawer" class="fixed inset-0 z-[var(--z-fixed)] lg:hidden hidden">
+    <div data-drawer-close class="absolute inset-0 bg-primary-900/40 backdrop-blur-sm"></div>
+    <div class="absolute inset-y-0 left-0 w-72 max-w-[85vw] bg-white shadow-card flex flex-col">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-primary-100/50">
+        <span class="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500">服务列表</span>
+        <button type="button" data-drawer-close class="p-1.5 -mr-1 rounded-lg text-primary-500 hover:bg-primary-50 transition" aria-label="关闭服务列表">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+      <div class="px-4 pt-3">
+        <button type="button" data-search-open class="flex items-center gap-2 w-full rounded-xl border border-primary-100 bg-neutral-50/50 px-3 py-2 text-sm text-[var(--color-text-muted)] hover:border-primary-300 hover:text-neutral-500 transition">
+          <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
+          </svg>
+          <span class="flex-1 text-left">搜索端点…</span>
+        </button>
+      </div>
+      <nav class="py-2 overflow-y-auto">
+        <ServiceNav current={currentSvc} />
+      </nav>
+    </div>
+  </div>
+
+  <!-- 搜索弹层（Pagefind UI 在首次打开时懒加载） -->
+  <div id="wiki-search-modal" class="fixed inset-0 z-[var(--z-modal)] hidden">
+    <div data-search-close class="absolute inset-0 bg-primary-900/40 backdrop-blur-sm"></div>
+    <div class="relative mx-auto mt-[var(--layout-hero-offset)] w-[92vw] max-w-2xl bg-white rounded-md shadow-card border border-primary-100 overflow-hidden">
+      <div class="flex items-center justify-between px-4 py-2.5 border-b border-primary-100/50">
+        <span class="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500">搜索</span>
+        <button type="button" data-search-close class="p-1.5 -mr-1 rounded-lg text-primary-500 hover:bg-primary-50 transition" aria-label="关闭搜索">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+      <div id="wiki-search-ui" class="px-4 pb-4 max-h-[70vh] overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <script>
+    const drawer = document.getElementById('wiki-drawer');
+    const navToggle = document.getElementById('wiki-nav-toggle');
+    const modal = document.getElementById('wiki-search-modal');
+    const searchMount = document.getElementById('wiki-search-ui');
+
+    const lockBody = (open: boolean) => { document.body.style.overflow = open ? 'hidden' : ''; };
+    const setDrawer = (open: boolean) => {
+      if (!drawer || !navToggle) return;
+      drawer.classList.toggle('hidden', !open);
+      navToggle.setAttribute('aria-expanded', String(open));
+      lockBody(open);
+    };
+    const setModal = (open: boolean) => {
+      modal?.classList.toggle('hidden', !open);
+      lockBody(open);
+    };
+
+    navToggle?.addEventListener('click', () => {
+      setDrawer(drawer?.classList.contains('hidden') ?? false);
+    });
+    drawer?.querySelectorAll('[data-drawer-close]').forEach(el => el.addEventListener('click', () => setDrawer(false)));
+    modal?.querySelectorAll('[data-search-close]').forEach(el => el.addEventListener('click', () => setModal(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        setDrawer(false);
+        setModal(false);
+      }
+    });
+
+    let pagefindReady = false;
+    const loadAsset = (url: string, as: 'css' | 'js') => new Promise<void>((resolve, reject) => {
+      const el = as === 'css'
+        ? Object.assign(document.createElement('link'), { rel: 'stylesheet', href: url })
+        : Object.assign(document.createElement('script'), { src: url });
+      el.addEventListener('load', () => resolve());
+      el.addEventListener('error', () => reject(new Error(`failed to load ${url}`)));
+      document.head.appendChild(el);
+    });
+
+    async function openSearch() {
+      setDrawer(false);
+      setModal(true);
+      if (!pagefindReady) {
+        try {
+          await loadAsset('/pagefind/pagefind-ui.css', 'css');
+          await loadAsset('/pagefind/pagefind-ui.js', 'js');
+          pagefindReady = true;
+          // @ts-expect-error PagefindUI 由 /pagefind/pagefind-ui.js 挂到 window
+          new window.PagefindUI({
+            element: '#wiki-search-ui',
+            showSubResults: true,
+            translations: {
+              placeholder: '搜索端点、服务或字段…',
+              zero_results: '未找到与 [SEARCH_TERM] 相关的内容',
+              many_results: '[COUNT] 条结果（[SEARCH_TERM]）',
+              one_result: '1 条结果（[SEARCH_TERM]）',
+              searching: '搜索中…',
+              clear_search: '清除',
+              load_more: '加载更多结果',
+            },
+          });
+        } catch {
+          if (searchMount) {
+            searchMount.innerHTML = '<p class="py-6 text-center text-sm text-[var(--color-text-muted)]">搜索索引仅在构建产物中可用：请以 <code>pnpm build</code> 后的站点访问。</p>';
+          }
+          return;
+        }
+      }
+      searchMount?.querySelector('input')?.focus();
+    }
+
+    document.querySelectorAll('[data-search-open]').forEach(el => el.addEventListener('click', () => { void openSearch(); }));
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== '/' || e.defaultPrevented) return;
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+      if (!modal?.classList.contains('hidden')) return;
+      e.preventDefault();
+      void openSearch();
+    });
+  </script>
 </body>
 </html>

@@ -1,151 +1,48 @@
+/* 令牌与组件层由 npm 已发布包交付：@autional/tailwind-preset（Tailwind preset，其 tokens.css 为转发）
+   与 @autional/tokens（tokens.css / profiles/*.css / primitives.css / fonts）。
+
+   2026-09 P4：本站点原先各存一份 packages/tailwind-preset/ 内置副本（由 ui 仓库的 pnpm sync:consumers
+   生成），那是「拷贝而非依赖」；副本已删除，改为直接依赖已发布的 npm 包。字体随之由 @autional/tokens
+   下发——其 tokens.css 内的 @font-face 以相对路径引用同一个包里的 fonts/。
+
+   本站点此前与 docs/developer/reference 同一形态（ui 仓库 KI-010）：没有 packages/ 目录、
+   不 import 任何令牌，在 tailwind.config.cjs 里内联 primary/sky/amber 三套色阶，
+   并用 @apply 重写了 .brand-*（5 个）与 .docs-nav-link / .docs-prose（共 7 组）组件类。
+   这些全部由 primitives.css 提供，原先的重写已删除；调色板由 profile.css
+   （= profiles/docs.css）提供，与原内联的一致。
+
+   本站点专有的 .wiki-detail-content 部分原样保留在下方——primitives.css 不提供它。 */
+
+/* 令牌与 profile 由 <head> 里的 CDN <link> 提供（单一来源）。
+   primitives **不能**同样从 CDN 加载：它内部是 Tailwind 的 @layer base / @layer components 片段，
+   而 Tailwind 处理它们时会按层**重新定位**（base 段落到 preflight 之后）。当成普通外部样式表加载时，
+   整个文件都排在站点 bundle 之前，base 段落于是落到 preflight **之前**——
+   preflight 的 body { line-height: inherit } 反过来盖掉 primitives 的 body { line-height: var(--line-height-body-md) }，
+   实测整页偏移：developer-home 3.025% / docs 3.035% / wiki 4.478%。
+   所以它继续走 bundler @import，让 Tailwind 按它本来的语义安放。详见 scripts/build-cdn.mjs 的摊平说明。 */
+@import '@autional/tokens/primitives.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    @apply bg-slate-950 text-neutral-900 antialiased;
-    background-image:
-      radial-gradient(circle at top left, rgba(135, 206, 235, 0.14), transparent 28%),
-      radial-gradient(circle at top right, rgba(255, 191, 0, 0.06), transparent 22%),
-      linear-gradient(180deg, #f8fbfe 0%, #ffffff 26%, #f7fafd 100%);
-  }
-
-  ::selection {
-    background: rgba(135, 206, 235, 0.35);
-    color: #003153;
-  }
-}
-
 @layer components {
-  .brand-shell {
-    @apply rounded-[28px] border border-white/70 bg-white/90 shadow-brand backdrop-blur-xl;
-  }
-
-  .brand-card {
-    @apply rounded-3xl border border-primary-100/90 bg-white/95 shadow-card backdrop-blur-sm;
-  }
-
-  .brand-button-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary-700 px-6 py-3 text-sm font-semibold text-white shadow-soft transition duration-200 hover:-translate-y-0.5 hover:bg-primary-600;
-  }
-
-  .brand-button-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-primary-200 bg-white/90 px-6 py-3 text-sm font-semibold text-primary-700 transition duration-200 hover:-translate-y-0.5 hover:border-primary-300 hover:bg-sky-50;
-  }
-
-  .brand-kicker {
-    @apply inline-flex items-center gap-2 rounded-full border border-primary-100 bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-primary-700 shadow-soft;
-  }
-
-  .docs-nav-link {
-    @apply block rounded-2xl px-4 py-3 text-sm font-medium text-neutral-600 transition hover:bg-primary-50 hover:text-primary-700;
-  }
-
-  .docs-nav-link[data-active="true"] {
-    @apply bg-primary-700 text-white shadow-soft;
-  }
-
-  .docs-prose > :first-child {
-    margin-top: 0;
-  }
-
-  .docs-prose h1 {
-    @apply mt-2 text-4xl font-extrabold tracking-[-0.05em] text-primary-900 sm:text-5xl;
-  }
-
-  .docs-prose h2 {
-    @apply mt-10 text-2xl font-bold tracking-[-0.03em] text-primary-900;
-  }
-
-  .docs-prose h3 {
-    @apply mt-8 text-xl font-semibold text-primary-900;
-  }
-
-  .docs-prose p {
-    @apply mt-4 text-base leading-8 text-neutral-600;
-  }
-
-  .docs-prose ul,
-  .docs-prose ol {
-    @apply mt-4 space-y-2 pl-6 text-sm leading-7 text-neutral-600;
-  }
-
-  .docs-prose li::marker {
-    color: #235f84;
-  }
-
-  .docs-prose a {
-    @apply font-medium text-primary-700 underline decoration-primary-200 underline-offset-4;
-  }
-
-  .docs-prose pre {
-    @apply mt-5 overflow-x-auto rounded-[24px] bg-slate-950 px-5 py-4 text-sm leading-7 text-slate-100 shadow-[0_24px_60px_rgba(3,20,37,0.18)];
-  }
-
-  .docs-prose code:not(pre code) {
-    @apply rounded-lg bg-primary-50 px-1.5 py-0.5 text-[0.92em] text-primary-800;
-  }
-
-  .docs-prose table {
-    @apply mt-5 w-full overflow-hidden rounded-[24px] border border-primary-100 bg-white text-left text-sm shadow-soft;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-
-  .docs-prose thead tr {
-    @apply bg-primary-900 text-white;
-  }
-
-  .docs-prose th,
-  .docs-prose td {
-    @apply border-b border-primary-100 px-4 py-3 align-top;
-  }
-
-  .docs-prose tbody tr:last-child td {
-    border-bottom: none;
-  }
-
-  .docs-prose blockquote {
-    @apply mt-5 rounded-2xl border border-sky-100 bg-sky-50/80 px-5 py-4 text-sm leading-7 text-neutral-700;
-  }
-
-  /* ── Wiki detail content (injected from generated API docs) ── */
   .wiki-detail-content {
-    /* Brand-aligned CSS variable overrides */
-    --c-primary: #124b70;
-    --c-primary-bg: #e9f3f9;
-    --c-bg: #ffffff;
-    --c-bg2: #f8fafc;
-    --c-text: #0f172a;
-    --c-text2: #475569;
-    --c-border: #d1e5f2;
-    --c-code-bg: #e9f3f9;
-    --c-tag-bg: #d6f0fa;
-    --c-tag-text: #1d434f;
-    --c-method-get: #059669;
-    --c-method-post: #124b70;
-    --c-method-put: #d97706;
-    --c-method-delete: #dc2626;
-    --c-method-patch: #7c3aed;
-    --c-deprecated: #dc2626;
-    --c-deprecated-bg: #fef2f2;
-
+    /* 这里原先有 17 个 --c-* 局部变量（--c-primary / --c-bg / --c-method-* 等）。
+       全站检索 var(--c- 命中 0 处——是死代码，已删除。
+       其中大部分值本来就是本站加载的 docs profile 色阶（例如原来的 --c-primary: #124b70
+       就等于 profile 的 primary-600），所以下面改为直接消费令牌，亮色下渲染零变化。 */
     max-width: 860px;
     font-family: "Noto Sans SC", Inter, ui-sans-serif, system-ui, sans-serif;
     line-height: 1.7;
-    color: #334155;
+    color: var(--color-neutral-800);
   }
 
   .wiki-detail-content h1 {
     font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: -0.03em;
-    color: #003153;
+    color: var(--color-primary-700);
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
@@ -155,8 +52,8 @@
 
   .wiki-detail-content h1 code.path {
     font-weight: 500;
-    color: #124b70;
-    background: #e9f3f9;
+    color: var(--color-primary-600);
+    background: var(--color-primary-50);
     padding: 0.125rem 0.5rem;
     border-radius: 6px;
   }
@@ -165,17 +62,17 @@
     font-size: 1.25rem;
     font-weight: 600;
     letter-spacing: -0.02em;
-    color: #003153;
+    color: var(--color-primary-700);
     margin-top: 2.25rem;
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid #d1e5f2;
+    border-bottom: 1px solid var(--color-primary-100);
   }
 
   .wiki-detail-content h3 {
     font-size: 1.05rem;
     font-weight: 600;
-    color: #032845;
+    color: var(--color-primary-800);
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
   }
@@ -183,7 +80,7 @@
   .wiki-detail-content h4 {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #334155;
+    color: var(--color-neutral-800);
     margin-top: 1rem;
     margin-bottom: 0.375rem;
   }
@@ -191,12 +88,12 @@
   .wiki-detail-content p {
     margin: 0.5rem 0;
     line-height: 1.75;
-    color: #475569;
+    color: var(--color-neutral-700);
   }
 
   .wiki-detail-content .summary {
     font-size: 0.95rem;
-    color: #475569;
+    color: var(--color-neutral-700);
     margin: 0.5rem 0 1rem;
     line-height: 1.7;
   }
@@ -214,8 +111,8 @@
     font-weight: 600;
     padding: 0.15rem 0.625rem;
     border-radius: 999px;
-    border: 1px solid #d1e5f2;
-    color: #475569;
+    border: 1px solid var(--color-primary-100);
+    color: var(--color-neutral-700);
     background: #ffffff;
     text-transform: uppercase;
     letter-spacing: 0.03em;
@@ -231,8 +128,8 @@
   }
 
   .wiki-detail-content .meta-item.POST {
-    color: #124b70;
-    border-color: #124b70;
+    color: var(--color-primary-600);
+    border-color: var(--color-primary-600);
   }
 
   .wiki-detail-content .meta-item.PUT {
@@ -241,8 +138,8 @@
   }
 
   .wiki-detail-content .meta-item.DELETE {
-    color: #dc2626;
-    border-color: #dc2626;
+    color: var(--color-danger-text);
+    border-color: var(--color-danger-text);
   }
 
   .wiki-detail-content .meta-item.PATCH {
@@ -256,8 +153,18 @@
   }
 
   .wiki-detail-content .meta-item.authenticated {
-    color: #124b70;
-    border-color: #124b70;
+    color: var(--color-primary-600);
+    border-color: var(--color-primary-600);
+  }
+
+  /* Mobile: horizontal scroll container wrapped around every table by sync-wiki-zh.py */
+  .wiki-detail-content .table-wrap {
+    overflow-x: auto;
+    margin: 0.75rem 0 1.5rem;
+  }
+
+  .wiki-detail-content .table-wrap table {
+    margin: 0;
   }
 
   /* Tables (parameters, responses, schemas) */
@@ -269,17 +176,17 @@
     font-size: 0.8rem;
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid #d1e5f2;
+    border: 1px solid var(--color-primary-100);
     box-shadow: 0 8px 20px rgba(0, 49, 83, 0.06);
   }
 
   .wiki-detail-content thead tr {
-    background: #003153;
+    background: var(--color-primary-700);
     color: #ffffff;
   }
 
   .wiki-detail-content th {
-    background: #003153;
+    background: var(--color-primary-700);
     color: #ffffff;
     text-align: left;
     padding: 0.55rem 0.75rem;
@@ -300,7 +207,7 @@
 
   .wiki-detail-content td {
     padding: 0.55rem 0.75rem;
-    border-bottom: 1px solid #d1e5f2;
+    border-bottom: 1px solid var(--color-primary-100);
     vertical-align: top;
     background: #ffffff;
   }
@@ -310,13 +217,13 @@
   }
 
   .wiki-detail-content tbody tr:hover td {
-    background: #e9f3f9;
+    background: var(--color-primary-50);
   }
 
   .wiki-detail-content td code {
     font-size: 0.72rem;
-    background: #e9f3f9;
-    color: #124b70;
+    background: var(--color-primary-50);
+    color: var(--color-primary-600);
     padding: 0.1rem 0.4rem;
     border-radius: 4px;
     white-space: nowrap;
@@ -329,15 +236,15 @@
   }
 
   .wiki-detail-content p code {
-    background: #e9f3f9;
-    color: #124b70;
+    background: var(--color-primary-50);
+    color: var(--color-primary-600);
     padding: 0.1rem 0.4rem;
     border-radius: 4px;
   }
 
   /* Links */
   .wiki-detail-content a {
-    color: #124b70;
+    color: var(--color-primary-600);
     text-decoration: none;
     font-weight: 500;
   }
@@ -345,39 +252,39 @@
   .wiki-detail-content a:hover {
     text-decoration: underline;
     text-underline-offset: 3px;
-    text-decoration-color: #9ec2db;
+    text-decoration-color: var(--color-primary-200);
   }
 
   /* Deprecated banner */
   .wiki-detail-content .deprecated-banner {
     background: #fef2f2;
-    border: 1px solid #dc2626;
+    border: 1px solid var(--color-danger-text);
     border-radius: 10px;
     padding: 0.75rem 1rem;
     margin: 1rem 0;
-    color: #dc2626;
+    color: var(--color-danger-text);
     font-weight: 600;
     font-size: 0.85rem;
   }
 
   /* Required / Optional labels */
   .wiki-detail-content .required {
-    color: #dc2626;
+    color: var(--color-danger-text);
     font-weight: 600;
     font-size: 0.7rem;
     text-transform: uppercase;
   }
 
   .wiki-detail-content .optional {
-    color: #94a3b8;
+    color: var(--color-text-disabled);
     font-size: 0.7rem;
     text-transform: uppercase;
   }
 
   /* Table of contents */
   .wiki-detail-content .toc {
-    background: #f8fafc;
-    border: 1px solid #d1e5f2;
+    background: var(--color-neutral-50);
+    border: 1px solid var(--color-primary-100);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     margin: 1rem 0;
@@ -415,25 +322,25 @@
   }
 
   .wiki-detail-content .btn-primary {
-    background: #003153;
+    background: var(--color-primary-700);
     color: #ffffff;
     box-shadow: 0 8px 20px rgba(0, 49, 83, 0.08);
   }
 
   .wiki-detail-content .btn-primary:hover {
-    background: #124b70;
+    background: var(--color-primary-600);
     transform: translateY(-1px);
     text-decoration: none;
   }
 
   .wiki-detail-content .btn-outline {
-    border: 1px solid #d1e5f2;
-    color: #334155;
+    border: 1px solid var(--color-primary-100);
+    color: var(--color-neutral-800);
     background: #ffffff;
   }
 
   .wiki-detail-content .btn-outline:hover {
-    background: #e9f3f9;
+    background: var(--color-primary-50);
     text-decoration: none;
   }
 
@@ -443,11 +350,23 @@
   }
 
   .wiki-detail-content table.schema-table thead tr {
-    background: #032845;
+    background: var(--color-primary-800);
   }
 
   /* Section spacing */
   .wiki-detail-content section {
     margin-bottom: 0.5rem;
+  }
+
+  /* Pagefind UI theming (assets load lazily on first search open) */
+  #wiki-search-ui {
+    --pagefind-ui-primary: var(--color-primary-700);
+    --pagefind-ui-text: var(--color-neutral-800);
+    --pagefind-ui-background: #ffffff;
+    --pagefind-ui-border: var(--color-primary-100);
+    --pagefind-ui-tag: var(--color-primary-50);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 10px;
+    --pagefind-ui-font: inherit;
   }
 }

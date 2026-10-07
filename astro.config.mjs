@@ -4,6 +4,6 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   output: 'static',
-  site: 'https://wiki.autional.com',
+  site: 'https://wiki.autional.cn',
   integrations: [tailwind(), sitemap()],
 });

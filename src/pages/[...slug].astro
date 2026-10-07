@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import WikiLayout from '../layouts/WikiLayout.astro';
 
 export async function getStaticPaths() {
-  const apiDir = join(process.cwd(), 'public/wiki/api');
+  const apiDir = join(process.cwd(), 'wiki-src');
   const slugs: string[] = [];
 
   function scan(dir: string, base: string) {
@@ -23,8 +23,8 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const htmlPath = join(process.cwd(), 'public/wiki/api', slug ?? '', 'index.html');
-let pageTitle = slug?.split('/').pop() || 'API Wiki';
+const htmlPath = join(process.cwd(), 'wiki-src', slug ?? '', 'index.html');
+let pageTitle = slug?.split('/').pop() || 'API 文档';
 let description = '';
 let mainContent = '';
 let inlineStyles = '';
@@ -51,20 +51,13 @@ try {
     if (bodyMatch) mainContent = bodyMatch[1];
   }
 
-  // Fix broken URLs in pre-generated HTML (generator bugs in backend)
-  mainContent = mainContent
-    .replace(/https:\/\/docs\.autional\.com\/reference([a-z])/g, 'https://reference.autional.com/$1')
-    .replace(/https:\/\/docs\.autional\.com\/referencespecs\//g, 'https://reference.autional.com/specs/')
-    .replace(/"https:\/\/docs\.autional\.com\/reference"/g, '"https://reference.autional.com"')
-    .replace(/https:\/\/autional\.com/g, 'https://www.autional.com');
-
   const jsonLdRe = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;
   let m;
   while ((m = jsonLdRe.exec(html)) !== null) {
     try { jsonLdScripts.push(JSON.parse(m[1])); } catch {}
   }
 } catch {
-  mainContent = `<p class="text-neutral-500">Content not found for: ${slug}</p>`;
+  mainContent = `<p class="text-neutral-500">未找到内容：${slug}</p>`;
 }
 
 const isEndpointDetail = (slug?.split('/').length || 0) > 1;
@@ -77,7 +70,7 @@ const isEndpointDetail = (slug?.split('/').length || 0) > 1;
   ogType={isEndpointDetail ? 'article' : 'website'}
 >
   <div class="flex-1 overflow-y-auto bg-neutral-50/50">
-    <div class="wiki-rendered px-8 py-10 max-w-4xl">
+    <div class="wiki-rendered px-4 md:px-8 py-10 max-w-4xl">
       {inlineStyles && <style set:html={inlineStyles} />}
       <div class="wiki-content" set:html={mainContent} />
     </div>
