@@ -1,0 +1,117 @@
+{
+  "lang": {
+    "switchToEn": "Switch to English",
+    "switchToZh": "Switch to Chinese"
+  },
+  "layout": {
+    "meta": {
+      "title": "Autional API Wiki",
+      "description": "Interactive API documentation covering all 27 Autional microservices, with detailed endpoint specifications."
+    },
+    "brandSubtitle": "API Wiki",
+    "jsonLd": {
+      "name": "Autional API Wiki",
+      "description": "API endpoint documentation for all Autional microservices."
+    },
+    "aria": {
+      "openServices": "Open service list",
+      "closeServices": "Close service list"
+    },
+    "chrome": {
+      "reference": "API Reference",
+      "github": "GitHub"
+    },
+    "search": {
+      "placeholder": "Search endpoints…",
+      "title": "Search"
+    }
+  },
+  "pagefind": {
+    "placeholder": "Search endpoints, services, or fields…",
+    "zeroResults": "No results for [SEARCH_TERM]",
+    "manyResults": "[COUNT] results ([SEARCH_TERM])",
+    "oneResult": "1 result ([SEARCH_TERM])",
+    "searching": "Searching…",
+    "clearSearch": "Clear",
+    "loadMore": "Load more results",
+    "unavailable": "Search index is only available in built output: visit the site after pnpm build."
+  },
+  "index": {
+    "meta": {
+      "title": "API Wiki — Autional",
+      "description": "Endpoint documentation for all 27 Autional microservices. Browse 1,400+ API endpoint specifications with request/response schemas."
+    },
+    "title": "API Wiki",
+    "lead": "Endpoint documentation for all {count} microservices. Select a service to browse its API reference.",
+    "kicker": "OpenAPI 3.0",
+    "serviceCount": "{count} services",
+    "browse": "Browse endpoints →"
+  },
+  "service": {
+    "meta": {
+      "title": "{title} ({name}) API Docs — Autional",
+      "titleFallback": "{name} API Docs — Autional",
+      "description": "{title} ({name}) API reference: {count} endpoints with request parameters, request bodies, and response schemas. Service port {port}.",
+      "descriptionFallback": "API endpoint documentation for the Autional {name} service."
+    },
+    "endpointsCount": "{count} endpoints",
+    "notIndexed": "Endpoints not yet indexed. Run sync-wiki.py to generate docs.",
+    "notFound": "Content not found for: {slug}"
+  },
+  "notFound": {
+    "meta": {
+      "title": "Page Not Found — Autional API Wiki",
+      "description": "The page you requested does not exist or has been moved. Continue browsing API documentation from the entry points below."
+    },
+    "kicker": "404",
+    "title": "Page Not Found",
+    "lead": "The page you requested does not exist or has been moved. Check the URL, or continue from the entry points below; you can also browse other API docs from the navigation menu.",
+    "links": [
+      {
+        "label": "API Wiki Home",
+        "description": "Browse endpoint documentation for all 27 microservices."
+      },
+      {
+        "label": "Identity Service",
+        "description": "All endpoints for login, registration, MFA, and identity management."
+      },
+      {
+        "label": "Tenant Service",
+        "description": "All endpoints for tenant, member, and application management."
+      },
+      {
+        "label": "Audit Service",
+        "description": "All endpoints for audit logs, anomaly detection, and SIEM integration."
+      }
+    ]
+  },
+  "services": {
+    "identity-service": "Identity Service",
+    "profile-service": "Profile Service",
+    "tenant-service": "Tenant Service",
+    "session-service": "Session Service",
+    "mfa-service": "MFA Service",
+    "oauth-service": "OAuth Service",
+    "wallet-service": "Wallet Service",
+    "point-service": "Point Service",
+    "audit-service": "Audit Service",
+    "notification-service": "Notification Service",
+    "communication-service": "Communication Service",
+    "storage-service": "Storage Service",
+    "billing-service": "Billing Service",
+    "compliance-service": "Compliance Service",
+    "status-service": "Status Service",
+    "secret-service": "Secret Service",
+    "saml-service": "SAML Service",
+    "pay-service": "Pay Service",
+    "thirdparty-service": "Thirdparty Service",
+    "verification-service": "Verification Service",
+    "rbac-service": "RBAC Service",
+    "gateway-service": "Gateway Service",
+    "hash-service-standard": "Hash Service (Standard)",
+    "hash-service-sm": "Hash Service (SM3)",
+    "captcha3d-service": "Captcha3D Service",
+    "config-service": "Config Service",
+    "stream-service": "Stream Service"
+  }
+}

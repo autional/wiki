@@ -1,0 +1,117 @@
+{
+  "lang": {
+    "switchToEn": "切换至英文",
+    "switchToZh": "切换至中文"
+  },
+  "layout": {
+    "meta": {
+      "title": "Autional API 知识库",
+      "description": "覆盖全部 27 个 Autional 微服务的交互式 API 文档，含详尽的端点规格说明。"
+    },
+    "brandSubtitle": "API 知识库",
+    "jsonLd": {
+      "name": "Autional API 知识库",
+      "description": "Autional 全部微服务的 API 端点文档。"
+    },
+    "aria": {
+      "openServices": "打开服务列表",
+      "closeServices": "关闭服务列表"
+    },
+    "chrome": {
+      "reference": "API 参考",
+      "github": "GitHub"
+    },
+    "search": {
+      "placeholder": "搜索端点…",
+      "title": "搜索"
+    }
+  },
+  "pagefind": {
+    "placeholder": "搜索端点、服务或字段…",
+    "zeroResults": "未找到与 [SEARCH_TERM] 相关的内容",
+    "manyResults": "[COUNT] 条结果（[SEARCH_TERM]）",
+    "oneResult": "1 条结果（[SEARCH_TERM]）",
+    "searching": "搜索中…",
+    "clearSearch": "清除",
+    "loadMore": "加载更多结果",
+    "unavailable": "搜索索引仅在构建产物中可用：请以 pnpm build 后的站点访问。"
+  },
+  "index": {
+    "meta": {
+      "title": "API 知识库 — Autional",
+      "description": "覆盖全部 27 个 Autional 微服务的端点文档，可浏览 1400+ API 端点规格与请求/响应结构。"
+    },
+    "title": "API 知识库",
+    "lead": "覆盖全部 {count} 个微服务的端点文档。选择一个服务即可浏览其 API 参考。",
+    "kicker": "OpenAPI 3.0",
+    "serviceCount": "{count} 个服务",
+    "browse": "浏览端点 →"
+  },
+  "service": {
+    "meta": {
+      "title": "{title}（{name}）API 文档 — Autional",
+      "titleFallback": "{name} API 文档 — Autional",
+      "description": "{title}（{name}）API 参考：共 {count} 个端点，含请求参数、请求体与响应结构说明。服务端口 {port}。",
+      "descriptionFallback": "Autional {name} 服务的 API 端点文档。"
+    },
+    "endpointsCount": "{count} 个端点",
+    "notIndexed": "端点尚未收录。请运行 sync-wiki.py 生成文档内容。",
+    "notFound": "未找到内容：{slug}"
+  },
+  "notFound": {
+    "meta": {
+      "title": "页面未找到 — Autional API 知识库",
+      "description": "你访问的页面不存在或已被移动。请从站内入口继续浏览其他 API 文档。"
+    },
+    "kicker": "404",
+    "title": "页面未找到",
+    "lead": "你访问的页面不存在或已被移动。请检查链接是否正确，或从下方入口继续浏览；也可以通过导航菜单访问其他 API 文档。",
+    "links": [
+      {
+        "label": "API 知识库首页",
+        "description": "浏览全部 27 个微服务的端点文档入口。"
+      },
+      {
+        "label": "身份服务",
+        "description": "登录、注册、MFA 与身份管理的全部端点。"
+      },
+      {
+        "label": "租户服务",
+        "description": "租户、成员与应用管理的全部端点。"
+      },
+      {
+        "label": "审计服务",
+        "description": "审计日志、异常检测与 SIEM 对接的全部端点。"
+      }
+    ]
+  },
+  "services": {
+    "identity-service": "身份服务",
+    "profile-service": "用户资料服务",
+    "tenant-service": "租户服务",
+    "session-service": "会话服务",
+    "mfa-service": "多因素认证服务",
+    "oauth-service": "OAuth 服务",
+    "wallet-service": "钱包服务",
+    "point-service": "积分服务",
+    "audit-service": "审计服务",
+    "notification-service": "通知服务",
+    "communication-service": "通信服务",
+    "storage-service": "存储服务",
+    "billing-service": "计费服务",
+    "compliance-service": "合规服务",
+    "status-service": "状态服务",
+    "secret-service": "密钥服务",
+    "saml-service": "SAML 服务",
+    "pay-service": "支付服务",
+    "thirdparty-service": "第三方服务",
+    "verification-service": "身份验证服务",
+    "rbac-service": "RBAC 服务",
+    "gateway-service": "网关服务",
+    "hash-service-standard": "密码哈希服务",
+    "hash-service-sm": "国密哈希服务",
+    "captcha3d-service": "3D 验证码服务",
+    "config-service": "配置中心服务",
+    "stream-service": "实时事件流服务"
+  }
+}
