@@ -2,6 +2,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import WikiLayout from '../layouts/WikiLayout.astro';
+import { t } from '../i18n';
 import { CORPUS_LANG_DIR } from '../lib/site-env';
 import { rewriteRegionLinks } from '../lib/region-rewrite';
 
@@ -26,7 +27,7 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 const htmlPath = join(process.cwd(), 'wiki-src', CORPUS_LANG_DIR, slug ?? '', 'index.html');
-let pageTitle = slug?.split('/').pop() || 'API 文档';
+let pageTitle = slug?.split('/').pop() || t('layout.meta.title');
 let description = '';
 let mainContent = '';
 let inlineStyles = '';
@@ -60,7 +61,7 @@ try {
     try { jsonLdScripts.push(JSON.parse(m[1])); } catch {}
   }
 } catch {
-  mainContent = `<p class="text-neutral-500">未找到内容：${slug}</p>`;
+  mainContent = `<p class="text-neutral-500">${t('service.notFound', { slug: slug ?? '' })}</p>`;
 }
 
 const isEndpointDetail = (slug?.split('/').length || 0) > 1;

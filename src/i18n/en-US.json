@@ -43,9 +43,10 @@
       "description": "Endpoint documentation for all 27 Autional microservices. Browse 1,400+ API endpoint specifications with request/response schemas."
     },
     "title": "API Wiki",
-    "lead": "Endpoint documentation for all {count} microservices. Select a service to browse its API reference.",
+    "leadA": "Endpoint documentation for all ",
+    "leadB": " microservices. Select a service to browse its API reference.",
     "kicker": "OpenAPI 3.0",
-    "serviceCount": "{count} services",
+    "serviceCountSuffix": " services",
     "browse": "Browse endpoints →"
   },
   "service": {
@@ -55,7 +56,7 @@
       "description": "{title} ({name}) API reference: {count} endpoints with request parameters, request bodies, and response schemas. Service port {port}.",
       "descriptionFallback": "API endpoint documentation for the Autional {name} service."
     },
-    "endpointsCount": "{count} endpoints",
+    "endpointsCountSuffix": " endpoints",
     "notIndexed": "Endpoints not yet indexed. Run sync-wiki.py to generate docs.",
     "notFound": "Content not found for: {slug}"
   },

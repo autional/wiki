@@ -43,9 +43,10 @@
       "description": "覆盖全部 27 个 Autional 微服务的端点文档，可浏览 1400+ API 端点规格与请求/响应结构。"
     },
     "title": "API 知识库",
-    "lead": "覆盖全部 {count} 个微服务的端点文档。选择一个服务即可浏览其 API 参考。",
+    "leadA": "覆盖全部 ",
+    "leadB": " 个微服务的端点文档。选择一个服务即可浏览其 API 参考。",
     "kicker": "OpenAPI 3.0",
-    "serviceCount": "{count} 个服务",
+    "serviceCountSuffix": " 个服务",
     "browse": "浏览端点 →"
   },
   "service": {
@@ -55,7 +56,7 @@
       "description": "{title}（{name}）API 参考：共 {count} 个端点，含请求参数、请求体与响应结构说明。服务端口 {port}。",
       "descriptionFallback": "Autional {name} 服务的 API 端点文档。"
     },
-    "endpointsCount": "{count} 个端点",
+    "endpointsCountSuffix": " 个端点",
     "notIndexed": "端点尚未收录。请运行 sync-wiki.py 生成文档内容。",
     "notFound": "未找到内容：{slug}"
   },

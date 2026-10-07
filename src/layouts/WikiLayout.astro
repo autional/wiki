@@ -54,8 +54,8 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
   <meta name="description" content={description} />
   {noindex && <meta name="robots" content="noindex" />}
   <link rel="canonical" href={canonical.href}>
-  <!-- theme-color 由浏览器消费，不经过 CSS —— 写 var() 等于没写（浏览器视作非法值直接忽略）。
-       本站此前就是 var(--color-primary-700)，实际效果是「没有 theme-color」。必须写字面量。 -->
+  <!-- theme-color is consumed by the browser, not CSS: var() is dropped as an invalid
+       value (the site previously wrote var(--color-primary-700), i.e. no theme-color). Must be a literal. -->
     <meta name="theme-color" content="#003153">
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
@@ -73,7 +73,7 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
   {jsonLd.map(item => <script type="application/ld+json" set:html={JSON.stringify(item)} />)}
 </head>
 <body class="min-h-screen antialiased" data-pagefind-ignore={noindex ? 'all' : undefined}>
-  <!-- 顶部栏 -->
+  <!-- header -->
   <header class="site-header site-header--translucent h-[var(--layout-header-height)] px-4 sm:px-6 justify-between">
     <div class="flex items-center gap-2 min-w-0">
       <button id="wiki-nav-toggle" type="button" class="lg:hidden -ml-1 p-1.5 rounded-lg text-primary-700 hover:bg-primary-50 transition" aria-label={t('layout.aria.openServices')} data-i18n-aria-label="layout.aria.openServices" aria-expanded="false" aria-controls="wiki-drawer">
@@ -96,7 +96,7 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
   </header>
 
   <div class="flex h-[calc(100vh-56px)] overflow-hidden">
-    <!-- 侧边栏（桌面） -->
+    <!-- desktop sidebar -->
     <aside class="hidden lg:block w-60 shrink-0 border-r border-primary-100/50 bg-white overflow-y-auto">
       <div class="sticky top-0 bg-white/95 backdrop-blur border-b border-primary-100/50 px-4 py-3 z-10">
         <button type="button" data-search-open class="flex items-center gap-2 w-full rounded-xl border border-primary-100 bg-neutral-50/50 px-3 py-2 text-sm text-[var(--color-text-muted)] hover:border-primary-300 hover:text-neutral-500 transition">
@@ -113,13 +113,13 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
       </nav>
     </aside>
 
-    <!-- 主内容区 -->
+    <!-- main content -->
     <div class="flex-1 flex overflow-hidden bg-neutral-50/50" data-pagefind-body>
       <slot />
     </div>
   </div>
 
-  <!-- 移动端服务列表抽屉 -->
+  <!-- mobile service drawer -->
   <div id="wiki-drawer" class="fixed inset-0 z-[var(--z-fixed)] lg:hidden hidden">
     <div data-drawer-close class="absolute inset-0 bg-primary-900/40 backdrop-blur-sm"></div>
     <div class="absolute inset-y-0 left-0 w-72 max-w-[85vw] bg-white shadow-card flex flex-col">
@@ -145,7 +145,7 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
     </div>
   </div>
 
-  <!-- 搜索弹层（Pagefind UI 在首次打开时懒加载） -->
+  <!-- search modal (Pagefind UI lazy-loads on first open) -->
   <div id="wiki-search-modal" class="fixed inset-0 z-[var(--z-modal)] hidden">
     <div data-search-close class="absolute inset-0 bg-primary-900/40 backdrop-blur-sm"></div>
     <div class="relative mx-auto mt-[var(--layout-hero-offset)] w-[92vw] max-w-2xl bg-white rounded-md shadow-card border border-primary-100 overflow-hidden">

@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import WikiLayout from '../layouts/WikiLayout.astro';
 import { services, serviceByName } from '../data/services';
+import { t } from '../i18n';
 import { CORPUS_LANG_DIR } from '../lib/site-env';
 import { rewriteRegionLinks } from '../lib/region-rewrite';
 
@@ -12,6 +13,7 @@ export async function getStaticPaths() {
 
 const { service } = Astro.params;
 const svc = serviceByName.get(service ?? '');
+const svcTitle = svc ? t(`services.${svc.name}`) : service;
 
 // Read pre-generated wiki HTML at build time
 const htmlPath = join(process.cwd(), 'wiki-src', CORPUS_LANG_DIR, service ?? '', 'index.html');
@@ -46,21 +48,23 @@ try {
     try { jsonLdScripts.push(JSON.parse(m[1])); } catch {}
   }
 } catch {
-  endpointHtml = '<p class="text-sm text-[var(--color-text-muted)] py-20 text-center">端点尚未收录。请运行 sync-wiki.py 生成文档内容。</p>';
+  endpointHtml = `<p class="text-sm text-[var(--color-text-muted)] py-20 text-center">${t('service.notIndexed')}</p>`;
 }
 
-const pageTitle = svc ? `${svc.title}（${svc.name}）API 文档 — Autional` : `${service} API 文档 — Autional`;
+const pageTitle = svc
+  ? t('service.meta.title', { title: svcTitle ?? '', name: svc.name })
+  : t('service.meta.titleFallback', { name: service ?? '' });
 const description = svc
-  ? `${svc.title}（${svc.name}）API 参考：共 ${endpointCount} 个端点，含请求参数、请求体与响应结构说明。服务端口 ${svc.port}。`
-  : `Autional ${service} 服务的 API 端点文档。`;
+  ? t('service.meta.description', { title: svcTitle ?? '', name: svc.name, count: endpointCount, port: svc.port })
+  : t('service.meta.descriptionFallback', { name: service ?? '' });
 ---
 
 <WikiLayout title={pageTitle} description={description} jsonLd={jsonLdScripts}>
   <div class="flex-1 overflow-y-auto bg-neutral-50/50">
     <div class="sticky top-0 bg-white/95 backdrop-blur border-b border-primary-100/50 px-4 py-3 z-10">
       <div class="flex items-center justify-between">
-        <span class="text-sm font-semibold text-primary-900 truncate">{svc?.title ?? service}</span>
-        <span class="text-[0.65rem] font-mono font-medium text-primary-400 shrink-0">{endpointCount} 个端点</span>
+        <span class="text-sm font-semibold text-primary-900 truncate" data-i18n={svc ? `services.${svc.name}` : undefined}>{svcTitle}</span>
+        <span class="text-[0.65rem] font-mono font-medium text-primary-400 shrink-0"><span>{endpointCount}</span><span data-i18n="service.endpointsCountSuffix">{t('service.endpointsCountSuffix')}</span></span>
       </div>
     </div>
     <div class="wiki-content px-4 md:px-8 py-10 max-w-4xl">
