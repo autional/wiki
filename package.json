@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "gen-static": "node scripts/gen-static.mjs",
     "check-i18n": "node scripts/check-i18n.mjs",
-    "prebuild": "node scripts/check-i18n.mjs",
-    "predev": "node scripts/check-i18n.mjs",
+    "prebuild": "node scripts/gen-static.mjs && node scripts/check-i18n.mjs",
+    "predev": "node scripts/gen-static.mjs && node scripts/check-i18n.mjs",
     "dev": "astro dev --port 4435",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview --port 4435"

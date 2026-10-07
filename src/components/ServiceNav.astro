@@ -1,5 +1,6 @@
 ---
 import { services } from '../data/services';
+import { t } from '../i18n';
 
 const { current = '' } = Astro.props;
 ---
@@ -12,7 +13,7 @@ const { current = '' } = Astro.props;
         ? 'bg-primary-700 text-white shadow-soft'
         : 'text-neutral-600 hover:bg-primary-50 hover:text-primary-800'
     }`}>
-      <span class="font-medium truncate">{s.title}</span>
+      <span class="font-medium truncate" data-i18n={`services.${s.name}`}>{t(`services.${s.name}`)}</span>
       {active && <span class="text-[0.6rem] opacity-60 font-mono ml-1 shrink-0">{s.port}</span>}
     </a>
   );

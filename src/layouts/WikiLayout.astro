@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 import ServiceNav from '../components/ServiceNav.astro';
+import { t } from '../i18n';
+import { LOCALE, SITE_URL, SITE_ROOT_DOMAIN, brotherUrl, cdnAsset, GITHUB_REPO_URL } from '../lib/site-env';
 
 export interface Props {
   title?: string;
@@ -10,8 +12,8 @@ export interface Props {
   noindex?: boolean;
 }
 const {
-  title = 'Autional API 知识库',
-  description = '覆盖全部 27 个 Autional 微服务的交互式 API 文档，含详尽的端点规格说明。',
+  title = t('layout.meta.title'),
+  description = t('layout.meta.description'),
   jsonLd = [],
   ogType = 'website',
   noindex = false,
@@ -23,26 +25,30 @@ const ogImage = new URL('/og-default.png', Astro.site).href;
 const defaultJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'Autional API 知识库',
-  url: 'https://wiki.autional.cn',
-  description: 'Autional 全部微服务的 API 端点文档。',
-  publisher: { '@type': 'Organization', name: 'Autional', url: 'https://www.autional.cn' },
+  name: t('layout.jsonLd.name'),
+  url: SITE_URL,
+  description: t('layout.jsonLd.description'),
+  publisher: { '@type': 'Organization', name: 'Autional', url: brotherUrl('www') },
 };
+
+// 切换按钮展示目标语言（本区默认 zh → EN；en → 中文）；初始态与服务端一致，客户端脚本按当前语言重算。
+const targetLang = LOCALE === 'zh-CN' ? 'en' : 'zh';
+const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switchToZh');
 ---
 
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang={LOCALE}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/tokens.css" />
-    <link rel="stylesheet" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/profiles/docs.css" />
-    <link rel="icon" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/favicon.ico" sizes="any">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/favicon-16x16.png">
-    <link rel="icon" type="image/svg+xml" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/favicon.svg">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/apple-touch-icon.png">
-    <link rel="manifest" href="https://cdn.autional.cn/ui/v0.1.0-rc.f0db1b97/icons/site.webmanifest">
+    <link rel="stylesheet" href={cdnAsset('tokens.css')} />
+    <link rel="stylesheet" href={cdnAsset('profiles/docs.css')} />
+    <link rel="icon" href={cdnAsset('icons/favicon.ico')} sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href={cdnAsset('icons/favicon-32x32.png')}>
+    <link rel="icon" type="image/png" sizes="16x16" href={cdnAsset('icons/favicon-16x16.png')}>
+    <link rel="icon" type="image/svg+xml" href={cdnAsset('icons/favicon.svg')}>
+    <link rel="apple-touch-icon" sizes="180x180" href={cdnAsset('icons/apple-touch-icon.png')}>
+    <link rel="manifest" href={cdnAsset('icons/site.webmanifest')}>
 
   <title>{title}</title>
   <meta name="description" content={description} />
@@ -55,7 +61,7 @@ const defaultJsonLd = {
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical.href} />
   <meta property="og:type" content={ogType} />
-  <meta property="og:site_name" content="Autional API 知识库" />
+  <meta property="og:site_name" content={t('layout.meta.title')} />
   <meta property="og:image" content={ogImage} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -70,7 +76,7 @@ const defaultJsonLd = {
   <!-- 顶部栏 -->
   <header class="site-header site-header--translucent h-[var(--layout-header-height)] px-4 sm:px-6 justify-between">
     <div class="flex items-center gap-2 min-w-0">
-      <button id="wiki-nav-toggle" type="button" class="lg:hidden -ml-1 p-1.5 rounded-lg text-primary-700 hover:bg-primary-50 transition" aria-label="打开服务列表" aria-expanded="false" aria-controls="wiki-drawer">
+      <button id="wiki-nav-toggle" type="button" class="lg:hidden -ml-1 p-1.5 rounded-lg text-primary-700 hover:bg-primary-50 transition" aria-label={t('layout.aria.openServices')} data-i18n-aria-label="layout.aria.openServices" aria-expanded="false" aria-controls="wiki-drawer">
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
           <path d="M4 6h16M4 12h16M4 18h16" />
         </svg>
@@ -78,13 +84,14 @@ const defaultJsonLd = {
       <a href="/" class="flex items-center gap-2.5 no-underline min-w-0">
         <img src="/logo-mark.svg" alt="" class="h-7 w-7 object-contain">
         <span class="text-[1.05rem] font-extrabold tracking-[var(--letter-spacing-heading-lg)] text-primary-900">Autional</span>
-        <span class="hidden sm:inline text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-primary-400 ml-1.5">API 知识库</span>
+        <span class="hidden sm:inline text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-primary-400 ml-1.5" data-i18n="layout.brandSubtitle">{t('layout.brandSubtitle')}</span>
       </a>
     </div>
     <div class="flex items-center gap-3 sm:gap-5 shrink-0">
-      <a href="https://reference.autional.cn" class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition">API 参考</a>
-      <a href="https://github.com/autional-cn/wiki" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">GitHub</a>
-      <a href="https://www.autional.cn" class="text-xs font-medium text-primary-500 hover:text-primary-700 transition">autional.cn &rarr;</a>
+      <a href={brotherUrl('reference')} class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition" data-i18n="layout.chrome.reference">{t('layout.chrome.reference')}</a>
+      <a href={GITHUB_REPO_URL} class="text-xs font-medium text-primary-500 hover:text-primary-700 transition" data-i18n="layout.chrome.github">{t('layout.chrome.github')}</a>
+      <a href={brotherUrl('www')} class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition">{SITE_ROOT_DOMAIN} &rarr;</a>
+      <button type="button" data-lang-switch data-lang-target={targetLang} title={targetLangLabel} aria-label={targetLangLabel} class="text-xs font-medium text-primary-500 hover:text-primary-700 transition border border-primary-100 rounded-lg px-2 py-1">{targetLang === 'en' ? 'EN' : '中文'}</button>
     </div>
   </header>
 
@@ -96,10 +103,10 @@ const defaultJsonLd = {
           <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
           </svg>
-          <span class="flex-1 text-left">搜索端点…</span>
+          <span class="flex-1 text-left" data-i18n="layout.search.placeholder">{t('layout.search.placeholder')}</span>
           <kbd class="text-[0.6rem] font-mono border border-primary-100 rounded-xs px-1.5 py-0.5 bg-white">/</kbd>
         </button>
-        <div class="mt-2.5 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500">服务列表</div>
+        <div class="mt-2.5 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500" data-i18n="layout.servicesTitle">{t('layout.servicesTitle')}</div>
       </div>
       <nav class="py-2">
         <ServiceNav current={currentSvc} />
@@ -117,8 +124,8 @@ const defaultJsonLd = {
     <div data-drawer-close class="absolute inset-0 bg-primary-900/40 backdrop-blur-sm"></div>
     <div class="absolute inset-y-0 left-0 w-72 max-w-[85vw] bg-white shadow-card flex flex-col">
       <div class="flex items-center justify-between px-4 py-3 border-b border-primary-100/50">
-        <span class="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500">服务列表</span>
-        <button type="button" data-drawer-close class="p-1.5 -mr-1 rounded-lg text-primary-500 hover:bg-primary-50 transition" aria-label="关闭服务列表">
+        <span class="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500" data-i18n="layout.servicesTitle">{t('layout.servicesTitle')}</span>
+        <button type="button" data-drawer-close class="p-1.5 -mr-1 rounded-lg text-primary-500 hover:bg-primary-50 transition" aria-label={t('layout.aria.closeServices')} data-i18n-aria-label="layout.aria.closeServices">
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <path d="M6 6l12 12M18 6L6 18" />
           </svg>
@@ -129,7 +136,7 @@ const defaultJsonLd = {
           <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
           </svg>
-          <span class="flex-1 text-left">搜索端点…</span>
+          <span class="flex-1 text-left" data-i18n="layout.search.placeholder">{t('layout.search.placeholder')}</span>
         </button>
       </div>
       <nav class="py-2 overflow-y-auto">
@@ -143,8 +150,8 @@ const defaultJsonLd = {
     <div data-search-close class="absolute inset-0 bg-primary-900/40 backdrop-blur-sm"></div>
     <div class="relative mx-auto mt-[var(--layout-hero-offset)] w-[92vw] max-w-2xl bg-white rounded-md shadow-card border border-primary-100 overflow-hidden">
       <div class="flex items-center justify-between px-4 py-2.5 border-b border-primary-100/50">
-        <span class="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500">搜索</span>
-        <button type="button" data-search-close class="p-1.5 -mr-1 rounded-lg text-primary-500 hover:bg-primary-50 transition" aria-label="关闭搜索">
+        <span class="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-primary-500" data-i18n="layout.search.title">{t('layout.search.title')}</span>
+        <button type="button" data-search-close class="p-1.5 -mr-1 rounded-lg text-primary-500 hover:bg-primary-50 transition" aria-label={t('layout.aria.closeServices')} data-i18n-aria-label="layout.aria.closeServices">
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <path d="M6 6l12 12M18 6L6 18" />
           </svg>
@@ -155,6 +162,11 @@ const defaultJsonLd = {
   </div>
 
   <script>
+    // 语言交换（B2 单源机制）+ 抽屉/搜索弹层/Pagefind（wiki 站特有交互）。
+    import { LANG_EVENT, currentLang, otherLang, restoreLang, setLang, translate } from '../i18n';
+
+    type LangCode = 'zh' | 'en';
+
     const drawer = document.getElementById('wiki-drawer');
     const navToggle = document.getElementById('wiki-nav-toggle');
     const modal = document.getElementById('wiki-search-modal');
@@ -184,7 +196,22 @@ const defaultJsonLd = {
       }
     });
 
+    // ── Pagefind 搜索（懒加载；语言切换后实例按新语言重建）──────────────
+    const ATTRS = ['alt', 'aria-label', 'title'];
+
+    const pagefindTranslations = (lang: LangCode) => ({
+      placeholder: translate(lang, 'pagefind.placeholder'),
+      zero_results: translate(lang, 'pagefind.zeroResults'),
+      many_results: translate(lang, 'pagefind.manyResults'),
+      one_result: translate(lang, 'pagefind.oneResult'),
+      searching: translate(lang, 'pagefind.searching'),
+      clear_search: translate(lang, 'pagefind.clearSearch'),
+      load_more: translate(lang, 'pagefind.loadMore'),
+    });
+
     let pagefindReady = false;
+    let pagefindLang: LangCode | null = null;
+
     const loadAsset = (url: string, as: 'css' | 'js') => new Promise<void>((resolve, reject) => {
       const el = as === 'css'
         ? Object.assign(document.createElement('link'), { rel: 'stylesheet', href: url })
@@ -194,6 +221,19 @@ const defaultJsonLd = {
       document.head.appendChild(el);
     });
 
+    const mountPagefind = () => {
+      if (!searchMount) return;
+      searchMount.innerHTML = '';
+      const lang = currentLang();
+      // @ts-expect-error PagefindUI 由 /pagefind/pagefind-ui.js 挂到 window
+      new window.PagefindUI({
+        element: '#wiki-search-ui',
+        showSubResults: true,
+        translations: pagefindTranslations(lang),
+      });
+      pagefindLang = lang;
+    };
+
     async function openSearch() {
       setDrawer(false);
       setModal(true);
@@ -202,39 +242,64 @@ const defaultJsonLd = {
           await loadAsset('/pagefind/pagefind-ui.css', 'css');
           await loadAsset('/pagefind/pagefind-ui.js', 'js');
           pagefindReady = true;
-          // @ts-expect-error PagefindUI 由 /pagefind/pagefind-ui.js 挂到 window
-          new window.PagefindUI({
-            element: '#wiki-search-ui',
-            showSubResults: true,
-            translations: {
-              placeholder: '搜索端点、服务或字段…',
-              zero_results: '未找到与 [SEARCH_TERM] 相关的内容',
-              many_results: '[COUNT] 条结果（[SEARCH_TERM]）',
-              one_result: '1 条结果（[SEARCH_TERM]）',
-              searching: '搜索中…',
-              clear_search: '清除',
-              load_more: '加载更多结果',
-            },
-          });
         } catch {
           if (searchMount) {
-            searchMount.innerHTML = '<p class="py-6 text-center text-sm text-[var(--color-text-muted)]">搜索索引仅在构建产物中可用：请以 <code>pnpm build</code> 后的站点访问。</p>';
+            searchMount.innerHTML = `<p class="py-6 text-center text-sm text-[var(--color-text-muted)]">${translate(currentLang(), 'pagefind.unavailable')}</p>`;
           }
           return;
         }
       }
+      if (pagefindLang !== currentLang()) mountPagefind();
       searchMount?.querySelector('input')?.focus();
     }
 
     document.querySelectorAll('[data-search-open]').forEach(el => el.addEventListener('click', () => { void openSearch(); }));
     document.addEventListener('keydown', (e) => {
       if (e.key !== '/' || e.defaultPrevented) return;
-      const t = e.target as HTMLElement | null;
-      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable)) return;
       if (!modal?.classList.contains('hidden')) return;
       e.preventDefault();
       void openSearch();
     });
+
+    // ── 语言切换（chrome 重写；语料页主体保持区域默认语言不动）─────────
+    const updateSwitch = () => {
+      const lang = currentLang();
+      const target = otherLang(lang);
+      document.querySelectorAll('[data-lang-switch]').forEach((el) => {
+        el.textContent = target === 'en' ? 'EN' : '中文';
+        const label = translate(lang, target === 'en' ? 'lang.switchToEn' : 'lang.switchToZh');
+        el.setAttribute('title', label);
+        el.setAttribute('aria-label', label);
+        el.setAttribute('data-lang-target', target);
+      });
+    };
+
+    const applyChrome = () => {
+      const lang = currentLang();
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        if (key) el.textContent = translate(lang, key);
+      });
+      for (const attr of ATTRS) {
+        document.querySelectorAll(`[data-i18n-${attr}]`).forEach((el) => {
+          const key = el.getAttribute(`data-i18n-${attr}`);
+          if (key) el.setAttribute(attr, translate(lang, key));
+        });
+      }
+      updateSwitch();
+      if (pagefindReady && pagefindLang !== lang) mountPagefind();
+    };
+
+    document.querySelectorAll('[data-lang-switch]').forEach((el) => {
+      el.addEventListener('click', () => setLang(otherLang(currentLang())));
+    });
+
+    window.addEventListener(LANG_EVENT, applyChrome);
+    // 采纳已存偏好（若有）后统一重写一次；restoreLang 内部走 setLang → 事件，此处兜底无偏好路径。
+    restoreLang();
+    applyChrome();
   </script>
 </body>
 </html>

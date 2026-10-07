@@ -21,6 +21,7 @@
       "reference": "API Reference",
       "github": "GitHub"
     },
+    "servicesTitle": "Services",
     "search": {
       "placeholder": "Search endpoints…",
       "title": "Search"
