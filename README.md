@@ -32,6 +32,10 @@ REGION=com SITE_URL=https://wiki.autional.com DEFAULT_LANG=en FALLBACK_LANG=en C
 
 Services without a spec render the portal's "not yet indexed" fallback.
 
+## 已知覆盖缺口（待管线重跑·已登记）
+
+`wiki-src/zh/` 现存语料落后于 zh 规范：约 44 个 admin 端点（如 billing `GET /admin/billing/alerts`、notification 模板/统计、storage 回收站、communication dashboard、pay admin、point risk-score）尚无页面。**修法**：在 monorepo 重跑 `python scripts/generate/generate_api_wiki.py --html` → `python scripts/sync-wiki.py --lang zh` 后提交本仓。`wiki-src/en/` 的覆盖同步受 reference 侧 en 规范落后影响（见 reference 仓 README「en 端点覆盖落后」）。
+
 ## Deploy
 
 Push to `main` — Vercel auto-deploys. Projects: `wiki` (com) / `cn-wiki` (cn)；env 按项目分别注入。
