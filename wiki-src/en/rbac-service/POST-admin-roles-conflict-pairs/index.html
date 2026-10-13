@@ -173,8 +173,8 @@
 <p class="summary">Create a new Separation of Duties (SoD) conflict pair, specifying two mutually exclusive roles (e.g., approver and operator cannot be the same person). After creation, the system automatically detects and prevents conflicts during role assignment. References: NIST SP 800-53 AC-5 (Separation of Duties).</p>
 <div class="meta"><span class="meta-item">RBAC - SoD</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.createconflictpairrequest"><code>gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.CreateConflictPairRequest</code></a></p>
-<div id="schema-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.createconflictpairrequest">
+<p><strong>Schema:</strong> <a href="#schema-gitee_com_autional_micro-services_rbac-service_internal_handler_dto.createconflictpairrequest"><code>gitee_com_autional_micro-services_rbac-service_internal_handler_dto.CreateConflictPairRequest</code></a></p>
+<div id="schema-gitee_com_autional_micro-services_rbac-service_internal_handler_dto.createconflictpairrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -205,7 +205,7 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>201</strong></td><td>Conflict pair created successfully</td><td><a href="#schema-gitee_com_linmes_authms_base_dto.dataresponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_conflictpairresponse"><code>gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ConflictPairResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>403</strong></td><td>Forbidden (non-admin)</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>404</strong></td><td>Role not found</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>409</strong></td><td>Conflict pair already exists</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>201</strong></td><td>Conflict pair created successfully</td><td><a href="#schema-gitee_com_autional_base_dto.dataresponse-gitee_com_autional_micro-services_rbac-service_internal_handler_dto_conflictpairresponse"><code>gitee_com_autional_base_dto.DataResponse-gitee_com_autional_micro-services_rbac-service_internal_handler_dto_ConflictPairResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>403</strong></td><td>Forbidden (non-admin)</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>404</strong></td><td>Role not found</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>409</strong></td><td>Conflict pair already exists</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
@@ -352,7 +352,7 @@
     <td>Type is a URI reference that identifies the problem type; when dereferenced, it should provide human-readable documentation. Example: &quot;https://api.example.com/errors/invalid-request&quot;</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-gitee_com_linmes_authms_base_dto.dataresponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_conflictpairresponse">gitee_com_linmes_authms_base_dto.DataResponse-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto_ConflictPairResponse</h3>
+<h3 id="schema-gitee_com_autional_base_dto.dataresponse-gitee_com_autional_micro-services_rbac-service_internal_handler_dto_conflictpairresponse">gitee_com_autional_base_dto.DataResponse-gitee_com_autional_micro-services_rbac-service_internal_handler_dto_ConflictPairResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -364,7 +364,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.conflictpairresponse"><code>gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ConflictPairResponse</code></a></td>
+    <td><a href="#schema-gitee_com_autional_micro-services_rbac-service_internal_handler_dto.conflictpairresponse"><code>gitee_com_autional_micro-services_rbac-service_internal_handler_dto.ConflictPairResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -385,7 +385,7 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.conflictpairresponse">gitee_com_linmes_authms_micro-services_rbac-service_internal_handler_dto.ConflictPairResponse</h3>
+<h3 id="schema-gitee_com_autional_micro-services_rbac-service_internal_handler_dto.conflictpairresponse">gitee_com_autional_micro-services_rbac-service_internal_handler_dto.ConflictPairResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>

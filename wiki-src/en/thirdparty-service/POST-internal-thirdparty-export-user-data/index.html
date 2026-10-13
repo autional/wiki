@@ -173,8 +173,8 @@
 <p class="summary">Internal service call to export all data associated with the specified user in third-party services (CAPTCHA verification records, SMS records, payment records) for GDPR data export compliance. The current thirdparty-service is a stateless proxy service with no persistent user data; all logs are empty.</p>
 <div class="meta"><span class="meta-item">Third-party Verification</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.exportuserdatarequest"><code>gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.ExportUserDataRequest</code></a></p>
-<div id="schema-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.exportuserdatarequest">
+<p><strong>Schema:</strong> <a href="#schema-gitee_com_autional_micro-services_thirdparty-service_internal_dto.exportuserdatarequest"><code>gitee_com_autional_micro-services_thirdparty-service_internal_dto.ExportUserDataRequest</code></a></p>
+<div id="schema-gitee_com_autional_micro-services_thirdparty-service_internal_dto.exportuserdatarequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -191,11 +191,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>User data export result</td><td><a href="#schema-dto.dataresponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_exportuserdataresponse"><code>dto.DataResponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_ExportUserDataResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Request parameter error (missing required fields such as user_id)</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>User data export result</td><td><a href="#schema-dto.dataresponse-gitee_com_autional_micro-services_thirdparty-service_internal_dto_exportuserdataresponse"><code>dto.DataResponse-gitee_com_autional_micro-services_thirdparty-service_internal_dto_ExportUserDataResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Request parameter error (missing required fields such as user_id)</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthenticated</td><td><a href="#schema-dto.simpleresponse"><code>dto.SimpleResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-dto.dataresponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_exportuserdataresponse">dto.DataResponse-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto_ExportUserDataResponse</h3>
+<h3 id="schema-dto.dataresponse-gitee_com_autional_micro-services_thirdparty-service_internal_dto_exportuserdataresponse">dto.DataResponse-gitee_com_autional_micro-services_thirdparty-service_internal_dto_ExportUserDataResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -207,7 +207,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.exportuserdataresponse"><code>gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.ExportUserDataResponse</code></a></td>
+    <td><a href="#schema-gitee_com_autional_micro-services_thirdparty-service_internal_dto.exportuserdataresponse"><code>gitee_com_autional_micro-services_thirdparty-service_internal_dto.ExportUserDataResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -254,7 +254,7 @@
     <td></td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.exportuserdataresponse">gitee_com_linmes_authms_micro-services_thirdparty-service_internal_dto.ExportUserDataResponse</h3>
+<h3 id="schema-gitee_com_autional_micro-services_thirdparty-service_internal_dto.exportuserdataresponse">gitee_com_autional_micro-services_thirdparty-service_internal_dto.ExportUserDataResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>

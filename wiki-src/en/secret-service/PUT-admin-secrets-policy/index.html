@@ -173,8 +173,8 @@
 <p class="summary">Create or update the current tenant's key management policy configuration. Supports configuring auto-rotation period, minimum key length, version retention count, and other parameters.</p>
 <div class="meta"><span class="meta-item">Secret Service</span> <span class="meta-item auth authenticated">`ApiKeyAuth`, `bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>Request Body</h2>
-<p><strong>Schema:</strong> <a href="#schema-gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto.secretpolicyrequest"><code>gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto.SecretPolicyRequest</code></a></p>
-<div id="schema-gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto.secretpolicyrequest">
+<p><strong>Schema:</strong> <a href="#schema-gitee_com_autional_micro-services_secret-service_internal_handler_dto.secretpolicyrequest"><code>gitee_com_autional_micro-services_secret-service_internal_handler_dto.SecretPolicyRequest</code></a></p>
+<div id="schema-gitee_com_autional_micro-services_secret-service_internal_handler_dto.secretpolicyrequest">
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -226,11 +226,11 @@
 <section><h2>Responses</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>Status</th><th>Description</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>Updated policy</td><td><a href="#schema-dto.dataresponse-gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto_secretpolicyresponse"><code>dto.DataResponse-gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto_SecretPolicyResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>403</strong></td><td>Forbidden</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>404</strong></td><td>Resource not found</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>Updated policy</td><td><a href="#schema-dto.dataresponse-gitee_com_autional_micro-services_secret-service_internal_handler_dto_secretpolicyresponse"><code>dto.DataResponse-gitee_com_autional_micro-services_secret-service_internal_handler_dto_SecretPolicyResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>Invalid request parameters</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>Unauthorized</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>403</strong></td><td>Forbidden</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>404</strong></td><td>Resource not found</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>Internal server error</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>Referenced Schemas</h2>
-<h3 id="schema-dto.dataresponse-gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto_secretpolicyresponse">dto.DataResponse-gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto_SecretPolicyResponse</h3>
+<h3 id="schema-dto.dataresponse-gitee_com_autional_micro-services_secret-service_internal_handler_dto_secretpolicyresponse">dto.DataResponse-gitee_com_autional_micro-services_secret-service_internal_handler_dto_SecretPolicyResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
@@ -242,7 +242,7 @@
     <td></td>
   </tr><tr>
     <td><code>data</code></td>
-    <td><a href="#schema-gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto.secretpolicyresponse"><code>gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto.SecretPolicyResponse</code></a></td>
+    <td><a href="#schema-gitee_com_autional_micro-services_secret-service_internal_handler_dto.secretpolicyresponse"><code>gitee_com_autional_micro-services_secret-service_internal_handler_dto.SecretPolicyResponse</code></a></td>
     <td><span class="optional">No</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -406,7 +406,7 @@
     <td>Type is a URI reference that identifies the problem type. When dereferenced, it should provide human-readable documentation. Example: &quot;https://api.example.com/errors/invalid-request&quot;.</td>
   </tr></tbody>
 </table></div>
-<h3 id="schema-gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto.secretpolicyresponse">gitee_com_linmes_authms_micro-services_secret-service_internal_handler_dto.SecretPolicyResponse</h3>
+<h3 id="schema-gitee_com_autional_micro-services_secret-service_internal_handler_dto.secretpolicyresponse">gitee_com_autional_micro-services_secret-service_internal_handler_dto.SecretPolicyResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Example</th><th>Constraints</th><th>Description</th></tr></thead>
   <tbody><tr>
