@@ -163,6 +163,7 @@
         <a href="/hash-service-standard/" class="">密码哈希服务<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">国密哈希服务<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">3D 验证码服务<span class="count"></span></a>
+        <a href="/stream-service/" class="">实时事件流服务<span class="count"></span></a>
         <a href="/config-service/" class="">配置中心服务<span class="count"></span></a>
       </nav>
     </aside>
@@ -678,6 +679,21 @@ ISO 8601 格式
   </tr><tr>
     <td><code>domain</code></td>
     <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>featured</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Featured 运营精选标记（品牌选择页默认展示位）。additive：无 omitempty，
+避免字段是否存在随值变化（auth 消费者忽略未知字段，零影响）。</td>
+  </tr><tr>
+    <td><code>featured_sort</code></td>
+    <td><code>integer</code></td>
     <td><span class="optional">否</span></td>
     <td></td>
     <td style="font-size:11px"></td>

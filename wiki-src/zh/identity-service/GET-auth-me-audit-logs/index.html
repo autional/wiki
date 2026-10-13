@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GET /auth/me/audit-logs — 身份服务 API 文档 — Autional</title>
-  <meta name="description" content="分页查询当前用户的操作审计日志，支持按时间范围和操作类型筛选">
+  <meta name="description" content="分页查询当前用户的操作审计日志，支持按时间范围、操作类型、关键词与状态语义筛选">
   <meta name="robots" content="index, follow">
   <meta name="language" content="zh-CN">
   <meta name="docsearch:language" content="zh-CN">
@@ -13,15 +13,15 @@
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.cn/identity-service/GET-auth-me-audit-logs/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="GET /auth/me/audit-logs — 身份服务 API | Autional">
-  <meta property="og:description" content="分页查询当前用户的操作审计日志，支持按时间范围和操作类型筛选">
+  <meta property="og:description" content="分页查询当前用户的操作审计日志，支持按时间范围、操作类型、关键词与状态语义筛选">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.cn/identity-service/GET-auth-me-audit-logs/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="GET /auth/me/audit-logs — 身份服务 API | Autional">
-  <meta name="twitter:description" content="分页查询当前用户的操作审计日志，支持按时间范围和操作类型筛选">
+  <meta name="twitter:description" content="分页查询当前用户的操作审计日志，支持按时间范围、操作类型、关键词与状态语义筛选">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.cn/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.cn/"}, {"@type": "ListItem", "position": 3, "name": "身份服务", "item": "https://wiki.autional.cn/identity-service/"}, {"@type": "ListItem", "position": 4, "name": "GET /auth/me/audit-logs"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /auth/me/audit-logs — 身份服务 API | Autional", "description": "分页查询当前用户的操作审计日志，支持按时间范围和操作类型筛选", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "GET /auth/me/audit-logs — 身份服务 API | Autional", "description": "分页查询当前用户的操作审计日志，支持按时间范围、操作类型、关键词与状态语义筛选", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -163,13 +163,14 @@
         <a href="/hash-service-standard/" class="">密码哈希服务<span class="count"></span></a>
         <a href="/hash-service-sm/" class="">国密哈希服务<span class="count"></span></a>
         <a href="/captcha3d-service/" class="">3D 验证码服务<span class="count"></span></a>
+        <a href="/stream-service/" class="">实时事件流服务<span class="count"></span></a>
         <a href="/config-service/" class="">配置中心服务<span class="count"></span></a>
       </nav>
     </aside>
     <main>
       <nav class="breadcrumb"><a href="/">文档</a><span>›</span><a href="https://reference.autional.cn">API 参考</a><span>›</span><a href="/identity-service/">身份服务</a><span>›</span><span>GET /auth/me/audit-logs</span></nav>
       <h1><span class="meta-item method GET">GET</span> <code class="path">/auth/me/audit-logs</code></h1>
-<p class="summary">分页查询当前用户的操作审计日志，支持按时间范围和操作类型筛选</p>
+<p class="summary">分页查询当前用户的操作审计日志，支持按时间范围、操作类型、关键词与状态语义筛选</p>
 <div class="meta"><span class="meta-item">身份认证</span> <span class="meta-item auth authenticated">`bearerAuth`</span> <span class="meta-item">application/json</span></div>
 <section><h2>请求参数</h2>
 <div class="table-wrap"><table>
@@ -219,6 +220,24 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td>操作类型</td>
+  </tr><tr>
+    <td><code>keyword</code></td>
+    <td><code>query</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>关键词（IP/设备/详情）</td>
+  </tr><tr>
+    <td><code>status_class</code></td>
+    <td><code>query</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>状态语义筛选 success/failure</td>
   </tr></tbody>
 </table></div>
 </section>
@@ -382,7 +401,7 @@
     <td><span class="optional">否</span></td>
     <td><code>success</code></td>
     <td style="font-size:11px"></td>
-    <td>Status</td>
+    <td>状态：success/failed；空串=未知（ADR-06）</td>
   </tr><tr>
     <td><code>tenant_id</code></td>
     <td><code>string</code></td>
