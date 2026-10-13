@@ -27,7 +27,7 @@ REGION=com SITE_URL=https://wiki.autional.com DEFAULT_LANG=en FALLBACK_LANG=en C
 
 `wiki-src/<lang>/` is the build-time content source for the Astro pages and is committed (Vercel builds from this repo). It lives outside `public/`, so the raw mirror never reaches `dist/`; legacy `/wiki/api/**` URLs are 301-redirected to the clean routes by `vercel.json`.
 
-- **zh** — generated in the AuthMS monorepo: `python scripts/generate/generate_api_wiki.py --html`, then normalized and copied into `wiki-src/zh/` by `python scripts/sync-wiki.py --lang zh`.
+- **zh** — generated in the Autional monorepo: `python scripts/generate/generate_api_wiki.py --html`, then normalized and copied into `wiki-src/zh/` by `python scripts/sync-wiki.py --lang zh`.
 - **en** — regenerated from the reference portal's English specs by `python scripts/gen-wiki-en.py` (runs the same generator against `reference/public/specs/*-en.json`), then normalized and copied into `wiki-src/en/` by `python scripts/sync-wiki.py --lang en --src <gen-wiki-en html dir>`.
 
 Services without a spec render the portal's "not yet indexed" fallback.

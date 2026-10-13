@@ -57,7 +57,7 @@
       "descriptionFallback": "Autional {name} 服务的 API 端点文档。"
     },
     "endpointsCountSuffix": " 个端点",
-    "notIndexed": "端点尚未收录。请运行 sync-wiki.py 生成文档内容。",
+    "notIndexed": "该服务的端点文档尚未收录。",
     "notFound": "未找到内容：{slug}"
   },
   "notFound": {

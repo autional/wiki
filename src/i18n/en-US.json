@@ -57,7 +57,7 @@
       "descriptionFallback": "API endpoint documentation for the Autional {name} service."
     },
     "endpointsCountSuffix": " endpoints",
-    "notIndexed": "Endpoints not yet indexed. Run sync-wiki.py to generate docs.",
+    "notIndexed": "The endpoint reference for this service is not available yet.",
     "notFound": "Content not found for: {slug}"
   },
   "notFound": {
