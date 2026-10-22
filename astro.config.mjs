@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
+import tailwindcss from '@tailwindcss/vite';
 import { readBuildEnv } from './scripts/env.mjs';
 
 // ── 构建期区域环境（B2 单源双区；契约见 23 执行卡 §2）────────────────────────
@@ -15,11 +15,12 @@ const {
 } = readBuildEnv();
 
 export default defineConfig({
-  integrations: [tailwind(), sitemap()],
+  integrations: [sitemap()],
   output: 'static',
   site: ENV_SITE_URL,
   base: '/',
   vite: {
+    plugins: [tailwindcss()],
     define: {
       'import.meta.env.PUBLIC_REGION': JSON.stringify(ENV_REGION),
       'import.meta.env.PUBLIC_SITE_URL': JSON.stringify(ENV_SITE_URL),

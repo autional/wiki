@@ -60,12 +60,12 @@ const resolve = (lang: Lang, key: string): unknown => {
 };
 
 /** 取词单点（构建期，.astro frontmatter 用）：字符串缺省，`{ returnObjects: true }` 取数组/对象。 */
-export function t(key: string, options: { returnObjects: true } & Params): unknown;
+export function t(key: string, options: { returnObjects: true; [param: string]: string | number | true }): unknown;
 export function t(key: string, options?: Params): string;
-export function t(key: string, options?: Params & { returnObjects?: boolean }): unknown {
+export function t(key: string, options?: Record<string, unknown>): unknown {
   const value = resolve(envDefaultLang, key);
   if (options?.returnObjects) return value;
-  return interpolate(String(value), options);
+  return interpolate(String(value), options as Params | undefined);
 }
 
 /** 客户端取词（WikiLayout 内联脚本用）：按当前语言取字符串。 */
