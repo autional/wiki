@@ -1,7 +1,7 @@
 # Autional API Wiki Portal
 
 **Sites**: [wiki.autional.com](https://wiki.autional.com) (com) / [wiki.autional.cn](https://wiki.autional.cn) (cn)
-**Stack**: Astro 5 + Tailwind 3.4
+**Stack**: Astro 7 + Tailwind 4（2026-10-22 由 Astro 5 / Tailwind 3.4 抬版，CVE-2026-114127/114128）
 **Repository**: [github.com/autional/wiki](https://github.com/autional/wiki)
 
 API reference wiki: generated HTML for every endpoint of every service, rendered by Astro.
@@ -36,6 +36,18 @@ Services without a spec render the portal's "not yet indexed" fallback.
 
 - **2026-10-13 已重跑 zh 语料**（`generate_api_wiki.py --html` → `sync-wiki.py --lang zh`）：补齐 48 个缺失 admin 端点页（billing alerts、notification 模板/统计、storage、communication dashboard、pay/point admin 等）、侧栏补 `stream-service`、按最新 swagger 更新服务页端点计数与内容、移除 1 个已下线端点（identity role-activation approve → revoke）。语料无品牌残留。
 - `wiki-src/en/` 的覆盖受 reference 侧 en 规范落后影响（en 为人工英文快照，见 reference 仓 README「en 端点覆盖落后」）；英文语料随 en 规范重生成。
+
+## 内文样式层（改样式前必读）
+
+语料 HTML 由 `src/pages/[service].astro` / `src/pages/[...slug].astro` 在构建期读出 `<main>` 内容、用 `set:html` 注入页面。内文样式**只有一个来源**：`src/styles/global.css` 里挂在 `.wiki-detail-content` 下的规则（约 48 条，覆盖 h1–h4 / p / a / code / table / meta pill / 面包屑 / 按钮组）。
+
+三条硬约束：
+
+1. **容器类名必须是 `wiki-detail-content`**。改成别的名字不会报错，构建、`astro check`、`check-i18n` 全绿，但内文会退化成无样式纯文本。2026-07-02 的 SSG 改造曾把它写成 `wiki-content`，漂移到 2026-10-27 才被肉眼发现。
+2. **不要注入语料自带的 `<style>`**。那是按「独立页面」写死的样式（`:root` 变量、`*{margin:0;padding:0}` 全局重置、裸 `h1/h2/table` 选择器），注入后会泄漏到站点 chrome（顶栏、侧栏、正文字体）。2026-10-22 Tailwind 3→4 后更致命：v4 的 utility 在原生 `@layer` 里，**无层样式永远压过带层样式（与特异度无关）**，一个 `*{padding:0}` 就能让全站内容区 padding 归零。
+3. **语料新增 class 要同步补规则**。语料生成器（`generate_api_wiki.py` / `gen-wiki-en.py`）产出的 class 若在 `.wiki-detail-content` 下没有对应规则，就会渲染成裸元素；`.breadcrumb` 就是这样补上的。
+
+排查法：打开页面执行 `getComputedStyle(document.querySelector('.wiki-detail-content')).padding`——正常是 `40px 32px`（桌面）；若为 `0px`，先找有没有无层 `<style>` 注入（`document.styleSheets` 里 `href === null` 的表），或临时把它 `disabled = true` 看是否恢复。
 
 ## Deploy
 
