@@ -19,8 +19,9 @@ export const DEFAULT_LANG: Lang = (import.meta.env.PUBLIC_DEFAULT_LANG as Lang) 
 export const FALLBACK_LANG: Lang = (import.meta.env.PUBLIC_FALLBACK_LANG as Lang) ?? DEFAULT_LANG;
 export const CDN_HOST: string = import.meta.env.PUBLIC_CDN_HOST ?? 'https://cdn.autional.cn';
 
-/** CDN 资产族 pin —— 吸收 cn 仓 `90c7345`（第 63 轮补·四，2026-10-08）：tokens rc.16 / preset rc.10 / ui rc.48 需 f0db1b97 资产。 */
-export const CDN_PIN = 'v0.1.0-rc.f0db1b97';
+/** CDN 资产族 pin —— 吸收 cn 仓 `90c7345`（第 63 轮补·四，2026-10-08）：tokens rc.16 / preset rc.10 / ui rc.48 需 f0db1b97 资产。
+ *  2026-10-27 抬至 be30012d：CDN 不再摊平 tokens.css（保留 @layer base），Tailwind 4 下无层 base 会压过 utility。 */
+export const CDN_PIN = 'v0.1.0-rc.be30012d';
 
 /** CDN 资产 URL 拼接：cdnAsset('icons/favicon.svg')。 */
 export const cdnAsset = (path: string): string => `${CDN_HOST}/ui/${CDN_PIN}/${path}`;
