@@ -18,15 +18,15 @@ const svcTitle = svc ? t(`services.${svc.name}`) : service;
 // Read pre-generated wiki HTML at build time
 const htmlPath = join(process.cwd(), 'wiki-src', CORPUS_LANG_DIR, service ?? '', 'index.html');
 let endpointHtml = '';
-let inlineStyles = '';
 let endpointCount = 0;
 let jsonLdScripts: Record<string, any>[] = [];
 
 try {
   const html = readFileSync(htmlPath, 'utf-8');
 
-  const styleMatch = html.match(/<style>([\s\S]*?)<\/style>/);
-  if (styleMatch) inlineStyles = styleMatch[1];
+  // 语料自带的 <style> 不再注入：它按独立页面写死（:root 变量、* 全局重置、裸元素选择器），
+  // 注入后会泄漏到站点 chrome，并在 Tailwind 4 原生 @layer 下反压 utility（间距归零）。
+  // 内文样式统一由 global.css 的 .wiki-detail-content 层提供。
 
   // Extract only the <main> content (pre-generated HTML may use bare <main> or <main class="...">)
   const mainMatch = html.match(/<main[^>]*>([\s\S]*?)<\/main>/);
@@ -67,8 +67,7 @@ const description = svc
         <span class="text-[0.65rem] font-mono font-medium text-primary-400 shrink-0"><span>{endpointCount}</span><span data-i18n="service.endpointsCountSuffix">{t('service.endpointsCountSuffix')}</span></span>
       </div>
     </div>
-    <div class="wiki-content px-4 md:px-8 py-10 max-w-4xl">
-      {inlineStyles && <style set:html={inlineStyles} />}
+    <div class="wiki-detail-content px-4 md:px-8 py-10 max-w-4xl">
       <div set:html={endpointHtml} />
     </div>
   </div>

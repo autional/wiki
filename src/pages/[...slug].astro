@@ -30,7 +30,6 @@ const htmlPath = join(process.cwd(), 'wiki-src', CORPUS_LANG_DIR, slug ?? '', 'i
 let pageTitle = slug?.split('/').pop() || t('layout.meta.title');
 let description = '';
 let mainContent = '';
-let inlineStyles = '';
 let jsonLdScripts: Record<string, any>[] = [];
 
 try {
@@ -42,8 +41,7 @@ try {
   const descMatch = html.match(/<meta name="description" content="([^"]*)"/);
   if (descMatch) description = descMatch[1];
 
-  const styleMatch = html.match(/<style>([\s\S]*?)<\/style>/);
-  if (styleMatch) inlineStyles = styleMatch[1];
+  // 语料自带的 <style> 不再注入（同 [service].astro：全局无层样式会反压站点层）。
 
   // Extract only the <main> content (pre-generated HTML may use bare <main> or <main class="...">)
   const mainMatch = html.match(/<main[^>]*>([\s\S]*?)<\/main>/);
@@ -75,8 +73,7 @@ const isEndpointDetail = (slug?.split('/').length || 0) > 1;
 >
   <div class="flex-1 overflow-y-auto bg-neutral-50/50">
     <div class="wiki-rendered px-4 md:px-8 py-10 max-w-4xl">
-      {inlineStyles && <style set:html={inlineStyles} />}
-      <div class="wiki-content" set:html={mainContent} />
+      <div class="wiki-detail-content" set:html={mainContent} />
     </div>
   </div>
 </WikiLayout>

@@ -37,6 +37,28 @@
     color: var(--color-neutral-800);
   }
 
+  /* 面包屑：语料内文自带 .breadcrumb（旧内联样式里的一段），站点 chrome 不带，
+     所以随内文样式层一起给。对应旧值：13px / --c-text2 / margin-bottom 24px。 */
+  .wiki-detail-content .breadcrumb {
+    font-size: 0.8125rem;
+    color: var(--color-neutral-500);
+    margin-bottom: 1.25rem;
+  }
+
+  .wiki-detail-content .breadcrumb a {
+    color: var(--color-neutral-500);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .wiki-detail-content .breadcrumb a:hover {
+    color: var(--color-primary-600);
+  }
+
+  .wiki-detail-content .breadcrumb span {
+    margin: 0 0.25rem;
+  }
+
   .wiki-detail-content h1 {
     font-size: 1.75rem;
     font-weight: 700;
@@ -225,6 +247,11 @@
     color: var(--color-primary-600);
     padding: 0.1rem 0.4rem;
     border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* 列表末列的「详情 → / detail →」链接整体不折行（en 词更长，窄列会把箭头挤到下一行） */
+  .wiki-detail-content .table-wrap td:last-child a {
     white-space: nowrap;
   }
 
