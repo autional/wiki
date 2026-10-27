@@ -188,6 +188,14 @@
     margin: 0;
   }
 
+  /* 窄屏保底宽度：auto 布局会把「摘要」列压到约 50px，单行拉到 140px+ 高。
+     给表格 46rem 底宽后由 .table-wrap 横向滚动，列宽按内容分配。 */
+  @media (max-width: 640px) {
+    .wiki-detail-content .table-wrap table {
+      min-width: 46rem;
+    }
+  }
+
   /* Tables (parameters, responses, schemas) */
   .wiki-detail-content table {
     width: 100%;
