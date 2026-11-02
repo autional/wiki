@@ -99,7 +99,6 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
     </div>
     <div class="flex items-center gap-3 sm:gap-5 shrink-0">
       <a href={brotherUrl('reference')} class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition" data-i18n="layout.chrome.reference">{t('layout.chrome.reference')}</a>
-      <a href={`${brotherUrl('auth')}/`} class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition" data-i18n="layout.chrome.signIn">{t('layout.chrome.signIn')}</a>
       <a href={GITHUB_REPO_URL} class="text-xs font-medium text-primary-500 hover:text-primary-700 transition" data-i18n="layout.chrome.github">{t('layout.chrome.github')}</a>
       <a href={brotherUrl('www')} class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition">{SITE_ROOT_DOMAIN} &rarr;</a>
       <button type="button" data-lang-switch data-lang-target={targetLang} title={targetLangLabel} aria-label={targetLangLabel} class="text-xs font-medium text-primary-500 hover:text-primary-700 transition border border-primary-100 rounded-lg px-2 py-1">{targetLang === 'en' ? 'EN' : '中文'}</button>

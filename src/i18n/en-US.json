@@ -19,8 +19,7 @@
     },
     "chrome": {
       "reference": "API Reference",
-      "github": "GitHub",
-      "signIn": "Sign in"
+      "github": "GitHub"
     },
     "servicesTitle": "Services",
     "search": {
