@@ -19,6 +19,13 @@ export const DEFAULT_LANG: Lang = (import.meta.env.PUBLIC_DEFAULT_LANG as Lang) 
 export const FALLBACK_LANG: Lang = (import.meta.env.PUBLIC_FALLBACK_LANG as Lang) ?? DEFAULT_LANG;
 export const CDN_HOST: string = import.meta.env.PUBLIC_CDN_HOST ?? 'https://cdn.autional.cn';
 
+/**
+ * 对侧区同路径站点（hreflang 用）：仅 TLD 互换（.cn ↔ .com）。
+ * 与 docs 站同口径：x-default 恒指 .com（全球面；.cn 面向中国大陆）。
+ */
+export const SIBLING_SITE_URL: string =
+  REGION === 'com' ? SITE_URL.replace(/\.com(\/|$)/, '.cn$1') : SITE_URL.replace(/\.cn(\/|$)/, '.com$1');
+
 /** CDN 资产族 pin —— 吸收 cn 仓 `90c7345`（第 63 轮补·四，2026-10-08）：tokens rc.16 / preset rc.10 / ui rc.48 需 f0db1b97 资产。
  *  2026-10-27 抬至 be30012d：CDN 不再摊平 tokens.css（保留 @layer base），Tailwind 4 下无层 base 会压过 utility。 */
 export const CDN_PIN = 'v0.1.0-rc.be30012d';

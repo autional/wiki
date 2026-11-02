@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import ServiceNav from '../components/ServiceNav.astro';
 import { t } from '../i18n';
-import { LOCALE, SITE_URL, SITE_ROOT_DOMAIN, brotherUrl, cdnAsset, GITHUB_REPO_URL } from '../lib/site-env';
+import { LOCALE, REGION, SITE_URL, SIBLING_SITE_URL, SITE_ROOT_DOMAIN, brotherUrl, cdnAsset, GITHUB_REPO_URL } from '../lib/site-env';
 
 export interface Props {
   title?: string;
@@ -19,6 +19,7 @@ const {
   noindex = false,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const pathname = Astro.url.pathname;
 const currentSvc = Astro.url.pathname.split('/')[1] || '';
 const ogImage = new URL('/og-default.png', Astro.site).href;
 
@@ -54,6 +55,15 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
   <meta name="description" content={description} />
   {noindex && <meta name="robots" content="noindex" />}
   <link rel="canonical" href={canonical.href}>
+  {/* hreflang：同路径在两区的对应页（两区页面结构一一对应）。x-default 指 .com（全球面）。
+      noindex 页不做语言配对（页面本身不入索引，给出配对只会产生噪声）。 */}
+  {!noindex && (
+    <>
+      <link rel="alternate" hreflang="zh-CN" href={new URL(pathname, REGION === 'cn' ? SITE_URL : SIBLING_SITE_URL).href} />
+      <link rel="alternate" hreflang="en-US" href={new URL(pathname, REGION === 'com' ? SITE_URL : SIBLING_SITE_URL).href} />
+      <link rel="alternate" hreflang="x-default" href={new URL(pathname, REGION === 'com' ? SITE_URL : SIBLING_SITE_URL).href} />
+    </>
+  )}
   <!-- theme-color is consumed by the browser, not CSS: var() is dropped as an invalid
        value (the site previously wrote var(--color-primary-700), i.e. no theme-color). Must be a literal. -->
     <meta name="theme-color" content="#003153">
@@ -89,6 +99,7 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
     </div>
     <div class="flex items-center gap-3 sm:gap-5 shrink-0">
       <a href={brotherUrl('reference')} class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition" data-i18n="layout.chrome.reference">{t('layout.chrome.reference')}</a>
+      <a href={`${brotherUrl('auth')}/`} class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition" data-i18n="layout.chrome.signIn">{t('layout.chrome.signIn')}</a>
       <a href={GITHUB_REPO_URL} class="text-xs font-medium text-primary-500 hover:text-primary-700 transition" data-i18n="layout.chrome.github">{t('layout.chrome.github')}</a>
       <a href={brotherUrl('www')} class="hidden sm:inline text-xs font-medium text-primary-500 hover:text-primary-700 transition">{SITE_ROOT_DOMAIN} &rarr;</a>
       <button type="button" data-lang-switch data-lang-target={targetLang} title={targetLangLabel} aria-label={targetLangLabel} class="text-xs font-medium text-primary-500 hover:text-primary-700 transition border border-primary-100 rounded-lg px-2 py-1">{targetLang === 'en' ? 'EN' : '中文'}</button>

@@ -19,7 +19,8 @@
     },
     "chrome": {
       "reference": "API 参考",
-      "github": "GitHub"
+      "github": "GitHub",
+      "signIn": "登录"
     },
     "servicesTitle": "服务列表",
     "search": {
