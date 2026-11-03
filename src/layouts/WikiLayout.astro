@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import ServiceNav from '../components/ServiceNav.astro';
 import { t } from '../i18n';
-import { LOCALE, REGION, SITE_URL, SIBLING_SITE_URL, SITE_ROOT_DOMAIN, brotherUrl, cdnAsset, GITHUB_REPO_URL } from '../lib/site-env';
+import { LOCALE, REGION, SITE_URL, SIBLING_SITE_URL, SITE_ROOT_DOMAIN, brotherUrl, GITHUB_REPO_URL } from '../lib/site-env';
 
 export interface Props {
   title?: string;
@@ -42,14 +42,14 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="stylesheet" href={cdnAsset('tokens.css')} />
-    <link rel="stylesheet" href={cdnAsset('profiles/docs.css')} />
-    <link rel="icon" href={cdnAsset('icons/favicon.ico')} sizes="any">
-    <link rel="icon" type="image/png" sizes="32x32" href={cdnAsset('icons/favicon-32x32.png')}>
-    <link rel="icon" type="image/png" sizes="16x16" href={cdnAsset('icons/favicon-16x16.png')}>
-    <link rel="icon" type="image/svg+xml" href={cdnAsset('icons/favicon.svg')}>
-    <link rel="apple-touch-icon" sizes="180x180" href={cdnAsset('icons/apple-touch-icon.png')}>
-    <link rel="manifest" href={cdnAsset('icons/site.webmanifest')}>
+    <!-- icons:start（由 ui/scripts/sync-consumers.mjs 生成，勿手改） -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <!-- icons:end -->
 
   <title>{title}</title>
   <meta name="description" content={description} />
