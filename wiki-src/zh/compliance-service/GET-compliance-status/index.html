@@ -179,6 +179,32 @@
 </table></div>
 </section>
 <section><h2>引用的 Schema</h2>
+<h3 id="schema-service-compliance/internal/handler/dto.assessmentcoverageitem">service-compliance/internal/handler/dto.AssessmentCoverageItem</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>assessed</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>7</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>percent</code></td>
+    <td><code>number</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>70</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>10</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
 <h3 id="schema-service-compliance/internal/handler/dto.compliancestatusdetailresponse">service-compliance/internal/handler/dto.ComplianceStatusDetailResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
@@ -217,6 +243,20 @@
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
+    <td><code>assessment_coverage</code></td>
+    <td><code>object</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>覆盖度</td>
+  </tr><tr>
+    <td><code>assessment_version</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>assessment-v2</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
     <td><code>evaluation_error</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
@@ -224,12 +264,33 @@
     <td style="font-size:11px"></td>
     <td>评估错误</td>
   </tr><tr>
+    <td><code>framework_assessments</code></td>
+    <td>array of<br/><p>参见 <a href="#schema-service-compliance/internal/handler/dto.frameworkassessmentitem"><code>service-compliance/internal/handler/dto.FrameworkAssessmentItem</code></a></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>P2（2026-10-27）：四态评估视图。状态词表 compliant/non_compliant/not_assessed/evaluation_error。</td>
+  </tr><tr>
+    <td><code>gate_disabled_assessments</code></td>
+    <td>array of<br/><p>参见 <a href="#schema-service-compliance/internal/handler/dto.frameworkassessmentitem"><code>service-compliance/internal/handler/dto.FrameworkAssessmentItem</code></a></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>选中但门禁未启用</td>
+  </tr><tr>
     <td><code>gdpr_compliant</code></td>
     <td><code>boolean</code></td>
     <td><span class="optional">否</span></td>
     <td><code>True</code></td>
     <td style="font-size:11px"></td>
     <td>GDPR</td>
+  </tr><tr>
+    <td><code>invalid_overrides</code></td>
+    <td>array of<br/><p>参见 <a href="#schema-service-compliance/internal/handler/dto.invalidoverrideitem"><code>service-compliance/internal/handler/dto.InvalidOverrideItem</code></a></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>被忽略的覆盖</td>
   </tr><tr>
     <td><code>iso27001_compliant</code></td>
     <td><code>boolean</code></td>
@@ -300,6 +361,20 @@
     <td><code>True</code></td>
     <td style="font-size:11px"></td>
     <td>SOX</td>
+  </tr><tr>
+    <td><code>standalone_assessments</code></td>
+    <td>array of<br/><p>参见 <a href="#schema-service-compliance/internal/handler/dto.frameworkassessmentitem"><code>service-compliance/internal/handler/dto.FrameworkAssessmentItem</code></a></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>已选独立标准</td>
+  </tr><tr>
+    <td><code>unknown_standards</code></td>
+    <td>array of<br/><p><strong>string</strong></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>未知标准ID</td>
   </tr></tbody>
 </table></div>
 <h3 id="schema-service-compliance/internal/handler/dto.errorresponse">service-compliance/internal/handler/dto.ErrorResponse</h3>
@@ -317,6 +392,161 @@
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td><code>invalid request</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-service-compliance/internal/handler/dto.frameworkassessmentitem">service-compliance/internal/handler/dto.FrameworkAssessmentItem</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>controls_assessed</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>7</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>controls_failed</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>2</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>controls_passed</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>5</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>controls_total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>10</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>controls_unknown</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>3</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>display_name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>ISO/IEC 27001:2022</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>evaluation_error</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>framework</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>iso27001</code></td>
+    <td style="font-size:11px"></td>
+    <td>门禁键；独立标准为空</td>
+  </tr><tr>
+    <td><code>gate_disabled</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>选中但门禁未启用，不参与评估</td>
+  </tr><tr>
+    <td><code>standard_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>iso27001_2022</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>standards</code></td>
+    <td>array of<br/><p>参见 <a href="#schema-service-compliance/internal/handler/dto.standardassessmentitem"><code>service-compliance/internal/handler/dto.StandardAssessmentItem</code></a></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>status</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>not_assessed</code></td>
+    <td style="font-size:11px"></td>
+    <td>compliant/non_compliant/not_assessed/evaluation_error</td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-service-compliance/internal/handler/dto.invalidoverrideitem">service-compliance/internal/handler/dto.InvalidOverrideItem</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>parameter</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>tls_min_version</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>reason</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>value does not satisfy operator gte for control ITGC-OP-01</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-service-compliance/internal/handler/dto.standardassessmentitem">service-compliance/internal/handler/dto.StandardAssessmentItem</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>controls_assessed</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>4</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>controls_total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>10</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>controls_unknown</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>6</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>standard_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>sox_itgc</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>standard_name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>SOX ITGC</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>status</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>not_assessed</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr></tbody>

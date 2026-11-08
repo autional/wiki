@@ -220,6 +220,15 @@
     <td style="font-size:11px"></td>
     <td>错误URI</td>
   </tr><tr>
+    <td><code>i18n_key</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>error.oauth_invalid_request</code></td>
+    <td style="font-size:11px"></td>
+    <td>I18nKey 本地化键（AUTH-46①/U416）：协议字段 error/error_description 保持 RFC 6749 §5.2 原样，
+本字段是**附加**信息（omitempty；未知错误码不填），供前端/AI 客户端按键确定性渲染文案，
+无需解析英文原文。仅出现在 JSON 错误体，不写入 302 错误重定向的查询串。</td>
+  </tr><tr>
     <td><code>state</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
@@ -252,6 +261,20 @@
     <td><code>app-123</code></td>
     <td style="font-size:11px"></td>
     <td>Internal</td>
+  </tr><tr>
+    <td><code>email</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>user@example.com</code></td>
+    <td style="font-size:11px"></td>
+    <td>Email Claims（scope=email 时填充；真源 = identity 的邮箱身份与验证状态）</td>
+  </tr><tr>
+    <td><code>email_verified</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>True</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
   </tr><tr>
     <td><code>family_name</code></td>
     <td><code>string</code></td>

@@ -185,19 +185,27 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
-    <td><code>totp_devices</code></td>
-    <td><code>string</code></td>
-    <td><span class="required">是</span></td>
-    <td><code>[{&quot;secret&quot;:&quot;JBSWY3DPEHPK3PXP&quot;}]</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
     <td><code>device_fingerprint</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td><code>fp-abc123</code></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>scheme</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>e2ee_v1</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>totp_devices</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>v2:c2FsdA==:aXY=:Y2lwaGVy</code></td>
+    <td style="font-size:11px"></td>
+    <td>TOTPDevices 仅接受 v2 端到端加密信封（`v2:&lt;base64 salt&gt;:&lt;base64 iv&gt;:&lt;base64 ciphertext&gt;`，≤64KiB）；
+明文一律不落库（按 metadata_v1 处理）。</td>
   </tr></tbody>
 </table></div>
 </div>
@@ -307,12 +315,33 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
+    <td><code>needs_resync</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>NeedsResync 历史行（服务端可解密形态）已停止回传，客户端需重新同步。</td>
+  </tr><tr>
+    <td><code>payload_dropped</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>PayloadDropped 旧客户端明文载荷已被丢弃（不落库）；仅同步响应返回。</td>
+  </tr><tr>
+    <td><code>scheme</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>metadata_v1</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
     <td><code>totp_devices</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
-    <td><code>[{&quot;secret&quot;:&quot;JBSWY3DPEHPK3PXP&quot;}]</code></td>
+    <td><code>v2:c2FsdA==:aXY=:Y2lwaGVy</code></td>
     <td style="font-size:11px"></td>
-    <td></td>
+    <td>TOTPDevices 仅回传 e2ee_v1 密文；旧行一律为空（不回传、不解密）。</td>
   </tr></tbody>
 </table></div>
 </section>

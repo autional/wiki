@@ -503,8 +503,36 @@ ISO 8601 格式
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
+    <td><code>activate_at</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>active_kid</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>G23：active 密钥元数据（来自 jwt/state）。</td>
+  </tr><tr>
     <td><code>keys</code></td>
     <td>array of<br/><p>参见 <a href="#schema-service-secret/internal/handler/dto.jwtkeyinfo"><code>service-secret/internal/handler/dto.JWTKeyInfo</code></a></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>require_kid_after</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>retire_after</code></td>
+    <td><code>integer</code></td>
     <td><span class="optional">否</span></td>
     <td></td>
     <td style="font-size:11px"></td>

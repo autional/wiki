@@ -179,10 +179,50 @@
 </table></div>
 </section>
 <section><h2>引用的 Schema</h2>
+<h3 id="schema-service-compliance/internal/handler/dto.assessmentcoverageitem">service-compliance/internal/handler/dto.AssessmentCoverageItem</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>assessed</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>7</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>percent</code></td>
+    <td><code>number</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>70</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>10</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
 <h3 id="schema-service-compliance/internal/handler/dto.compliancescoreresponse">service-compliance/internal/handler/dto.ComplianceScoreResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
+    <td><code>assessment_coverage</code></td>
+    <td><a href="#schema-service-compliance/internal/handler/dto.assessmentcoverageitem"><code>service-compliance/internal/handler/dto.AssessmentCoverageItem</code></a></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>assessment_version</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>assessment-v2</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
     <td><code>grade</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
@@ -196,6 +236,13 @@
     <td><code>85.5</code></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>score_available</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>True</code></td>
+    <td style="font-size:11px"></td>
+    <td>P2（2026-10-27）：无任何框架完成评估时 score_available=false，overall_score 无意义。</td>
   </tr><tr>
     <td><code>tenant_id</code></td>
     <td><code>string</code></td>

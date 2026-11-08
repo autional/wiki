@@ -244,12 +244,27 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
+    <td><code>description</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>管理面元数据（CC-05 / API.md §5，000012 增量列）。Publish/Import 的写路径**不覆盖**这些列
+（元数据由管理面单独维护，见 gorm.casUpdateItemTx 列集），故对既有行为保持兼容。</td>
+  </tr><tr>
     <td><code>environment</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>group_name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>配置组名（域内分组，API /groups 数据源）</td>
   </tr><tr>
     <td><code>id</code></td>
     <td><code>string</code></td>
@@ -272,12 +287,26 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
+    <td><code>owner</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>责任人/团队</td>
+  </tr><tr>
     <td><code>revision</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">否</span></td>
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>sensitive</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>敏感标记（**不代表**存明文密钥；门禁另行）</td>
   </tr><tr>
     <td><code>service_name</code></td>
     <td><code>string</code></td>
@@ -292,6 +321,13 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>tags</code></td>
+    <td>array of<br/><p><strong>string</strong></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>标签（DB jsonb；nil = null）</td>
   </tr><tr>
     <td><code>tenant_id</code></td>
     <td><code>string</code></td>

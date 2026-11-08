@@ -175,10 +175,43 @@
 <section><h2>响应</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>状态</th><th>描述</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-service-compliance/internal/handler/dto.overridelistresponse"><code>service-compliance/internal/handler/dto.OverrideListResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>unauthorized</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>forbidden</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>not found</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>server error</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-dto.dataresponse-service-compliance/internal/handler/dto/overridelistresponse"><code>dto.DataResponse-service-compliance/internal/handler/dto/OverrideListResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>unauthorized</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>forbidden</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>404</strong></td><td>not found</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>server error</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>引用的 Schema</h2>
+<h3 id="schema-dto.dataresponse-service-compliance/internal/handler/dto/overridelistresponse">dto.DataResponse-service-compliance/internal/handler/dto/OverrideListResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>data</code></td>
+    <td><a href="#schema-service-compliance/internal/handler/dto.overridelistresponse"><code>service-compliance/internal/handler/dto.OverrideListResponse</code></a></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
 <h3 id="schema-service-compliance/internal/handler/dto.errorresponse">service-compliance/internal/handler/dto.ErrorResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>

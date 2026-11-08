@@ -227,23 +227,35 @@
 <section><h2>响应</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>状态</th><th>描述</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>success</td><td><a href="#schema-service-compliance/internal/handler/dto.aidecisionitemresponse"><code>service-compliance/internal/handler/dto.AIDecisionItemResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>bad request</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>success</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>bad request</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>引用的 Schema</h2>
-<h3 id="schema-service-compliance/internal/handler/dto.aidecisionitemresponse">service-compliance/internal/handler/dto.AIDecisionItemResponse</h3>
+<h3 id="schema-service-compliance/internal/handler/dto.errorresponse">service-compliance/internal/handler/dto.ErrorResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
     <td><code>code</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">否</span></td>
-    <td></td>
+    <td><code>400</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
-    <td><code>data</code></td>
-    <td><a href="#schema-service-compliance/internal/handler/dto.aidecisionresponse"><code>service-compliance/internal/handler/dto.AIDecisionResponse</code></a></td>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>invalid request</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-service-core/base/dto.simpleresponse">service-core/base/dto.SimpleResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
     <td><span class="optional">否</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -260,86 +272,6 @@
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-compliance/internal/handler/dto.aidecisionresponse">service-compliance/internal/handler/dto.AIDecisionResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
-  <tbody><tr>
-    <td><code>created_at</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>2026-05-01T10:00:00Z</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>decision_id</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>DEC-2026-001</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>id</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>01JQ...</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>input</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>{&quot;credit_score&quot;:720,&quot;amount&quot;:5000}</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>model</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>credit_risk_v3</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>output</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>{&quot;decision&quot;:&quot;approved&quot;,&quot;confidence&quot;:0.92}</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>reviewed</code></td>
-    <td><code>boolean</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>False</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>reviewer</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>compliance_officer</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr></tbody>
-</table></div>
-<h3 id="schema-service-compliance/internal/handler/dto.errorresponse">service-compliance/internal/handler/dto.ErrorResponse</h3>
-<div class="table-wrap"><table class="schema-table">
-  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
-  <tbody><tr>
-    <td><code>code</code></td>
-    <td><code>integer</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>400</code></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
-    <td><code>message</code></td>
-    <td><code>string</code></td>
-    <td><span class="optional">否</span></td>
-    <td><code>invalid request</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr></tbody>

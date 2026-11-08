@@ -215,10 +215,132 @@
 <section><h2>响应</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>状态</th><th>描述</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-service-compliance/internal/handler/dto.readinessreportresponse"><code>service-compliance/internal/handler/dto.ReadinessReportResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>bad request</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>unauthorized</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>forbidden</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>server error</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>OK</td><td><a href="#schema-dto.dataresponse-service-compliance/internal/handler/dto/readinessreportresponse"><code>dto.DataResponse-service-compliance/internal/handler/dto/ReadinessReportResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>bad request</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>unauthorized</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>forbidden</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr><tr><td><strong>500</strong></td><td>server error</td><td><a href="#schema-service-compliance/internal/handler/dto.errorresponse"><code>service-compliance/internal/handler/dto.ErrorResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>引用的 Schema</h2>
+<h3 id="schema-dto.dataresponse-service-compliance/internal/handler/dto/readinessreportresponse">dto.DataResponse-service-compliance/internal/handler/dto/ReadinessReportResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>data</code></td>
+    <td><a href="#schema-service-compliance/internal/handler/dto.readinessreportresponse"><code>service-compliance/internal/handler/dto.ReadinessReportResponse</code></a></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-service-compliance/internal/handler/dto.controlassessmentitem">service-compliance/internal/handler/dto.ControlAssessmentItem</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>control_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>pci_8.6.3</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>current</code></td>
+    <td><code>object</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>8</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>最小密码长度 (单因子)</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>operator</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>gte</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>override_applied</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>False</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>parameter</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>password_min_length_sfa</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>reason</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>required</code></td>
+    <td><code>object</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>12</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>requirement</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>8.6.3</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>severity</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>critical</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>source</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>client_supplied</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>state</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>non_compliant</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
 <h3 id="schema-service-compliance/internal/handler/dto.errorresponse">service-compliance/internal/handler/dto.ErrorResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
@@ -284,6 +406,13 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
+    <td><code>reason</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
     <td><code>required</code></td>
     <td><code>object</code></td>
     <td><span class="optional">否</span></td>
@@ -304,16 +433,45 @@
     <td><code>pci_dss_v4</code></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>state</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>non_compliant</code></td>
+    <td style="font-size:11px"></td>
+    <td>P2（四态）：状态词表 compliant / non_compliant / not_assessed / evaluation_error。
+compliant=false 不再等于失败：not_assessed / evaluation_error 也非通过，但不算缺口。</td>
   </tr></tbody>
 </table></div>
 <h3 id="schema-service-compliance/internal/handler/dto.readinessreportresponse">service-compliance/internal/handler/dto.ReadinessReportResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
+    <td><code>assessed_controls</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>7</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
     <td><code>compliance_rate</code></td>
     <td><code>number</code></td>
     <td><span class="optional">否</span></td>
     <td><code>77.8</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>controls</code></td>
+    <td>array of<br/><p>参见 <a href="#schema-service-compliance/internal/handler/dto.controlassessmentitem"><code>service-compliance/internal/handler/dto.ControlAssessmentItem</code></a></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>error_controls</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>0</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -359,10 +517,25 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
+    <td><code>state</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>not_assessed</code></td>
+    <td style="font-size:11px"></td>
+    <td>P2（四态）：缺证据的控制单列 unknown（含来源错误），不算失败；
+合规率按已评估控制计算；只有全部控制已测且通过 ready_for_audit 才为 true。</td>
+  </tr><tr>
     <td><code>total_controls</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">否</span></td>
     <td><code>9</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>unknown_controls</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>2</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr></tbody>

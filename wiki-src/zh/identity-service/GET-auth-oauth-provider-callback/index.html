@@ -231,6 +231,13 @@
     <td style="font-size:11px"></td>
     <td>MFA challenge token</td>
   </tr><tr>
+    <td><code>enrolled_mfa_methods</code></td>
+    <td>array of<br/><p><strong>string</strong></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>User's enrolled MFA methods</td>
+  </tr><tr>
     <td><code>expires_in</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">否</span></td>
@@ -244,6 +251,21 @@
     <td><code>False</code></td>
     <td style="font-size:11px"></td>
     <td>Is new user</td>
+  </tr><tr>
+    <td><code>link_required</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>False</code></td>
+    <td style="font-size:11px"></td>
+    <td>LinkRequired 现有账号与本次第三方身份未绑定：需登录本地账号后显式绑定。
+为 true 时不携带任何令牌。</td>
+  </tr><tr>
+    <td><code>membership_status</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>pending</code></td>
+    <td style="font-size:11px"></td>
+    <td>MembershipStatus 新注册待审批（WS-A A4）；pending 时不携带令牌。</td>
   </tr><tr>
     <td><code>mfa_check_reason</code></td>
     <td><code>string</code></td>

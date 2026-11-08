@@ -216,10 +216,24 @@
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
+    <td><code>alias</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>小说</code></td>
+    <td style="font-size:11px"></td>
+    <td>Alias 显示简称（metadata.alias）：优先于 ClientName 展示，空则由前端回退。</td>
+  </tr><tr>
     <td><code>client_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td><code>app-123</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>client_name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>My App</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
@@ -237,10 +251,24 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
+    <td><code>logo_uri</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>https://app.example.com/logo.png</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
     <td><code>scopes</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td><code>openid profile email</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>website</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>https://app.example.com</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr></tbody>

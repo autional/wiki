@@ -206,6 +206,14 @@
     <td style="font-size:11px"></td>
     <td>Email</td>
   </tr><tr>
+    <td><code>initial_role</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>InitialRole 开通链初始角色（super_admin|admin|member）。仅当 X-API-Key 命中内部 key 时生效，
+其余场景静默忽略（fail-closed，防公开注册提权）。试用/建租户链由 service-tenant 内部调用设置。</td>
+  </tr><tr>
     <td><code>invitation_code</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>

@@ -219,14 +219,14 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>每页数量（默认 20，上限 500；P1-2 服务端归一）</td>
+    <td>每页数量（默认 20，上限 100；非法值 400）</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>响应</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>状态</th><th>描述</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>版本历史</td><td><code>object</code></td></tr><tr><td><strong>400</strong></td><td>namespace 非法</td><td><code>object</code></td></tr><tr><td><strong>401</strong></td><td>缺少或无效的 X-API-Key</td><td><code>object</code></td></tr><tr><td><strong>403</strong></td><td>key 的 namespace 与请求不符</td><td><code>object</code></td></tr><tr><td><strong>404</strong></td><td>配置项不存在</td><td><code>object</code></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><code>object</code></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>版本历史</td><td><code>object</code></td></tr><tr><td><strong>400</strong></td><td>namespace 非法 / 分页参数非法</td><td><code>object</code></td></tr><tr><td><strong>401</strong></td><td>缺少或无效的 X-API-Key</td><td><code>object</code></td></tr><tr><td><strong>403</strong></td><td>key 的 namespace 与请求不符</td><td><code>object</code></td></tr><tr><td><strong>404</strong></td><td>配置项不存在</td><td><code>object</code></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><code>object</code></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>引用的 Schema</h2>
@@ -235,6 +235,13 @@
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
     <td><code>app_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>changeset_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td></td>
@@ -282,6 +289,14 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>reason</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>变更审计（000012 增量列）。Reason 由 Publish 的 reason 入参落库（历史读面 API §2 需要）；
+ChangesetID 由 CC-04 变更单流程回填，当前恒空。</td>
   </tr><tr>
     <td><code>revision</code></td>
     <td><code>integer</code></td>

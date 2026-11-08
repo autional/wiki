@@ -192,7 +192,21 @@
     <td style="font-size:11px">items: 1–None</td>
     <td></td>
   </tr><tr>
+    <td><code>alias</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Alias 显示简称（可选）：前台列表优先展示，空则用 Name。</td>
+  </tr><tr>
     <td><code>client_auth_methods</code></td>
+    <td>array of<br/><p><strong>string</strong></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>cors_origins</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
     <td><span class="optional">否</span></td>
     <td></td>
@@ -236,6 +250,13 @@
   </tr><tr>
     <td><code>logo_url</code></td>
     <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>post_logout_redirect_uris</code></td>
+    <td>array of<br/><p><strong>string</strong></p></td>
     <td><span class="optional">否</span></td>
     <td></td>
     <td style="font-size:11px"></td>
@@ -426,6 +447,13 @@
     <td><code>My Application</code></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>post_logout_redirect_uris</code></td>
+    <td>array of<br/><p><strong>string</strong></p></td>
+    <td><span class="optional">否</span></td>
+    <td><code>['[&quot;https://app.example.com/&quot;]']</code></td>
+    <td style="font-size:11px"></td>
+    <td>PostLogoutRedirectURIs 登出回跳白名单（OIDC RP-Initiated Logout 1.0 独立注册面，ADR-1）</td>
   </tr><tr>
     <td><code>privacy_policy</code></td>
     <td><code>string</code></td>

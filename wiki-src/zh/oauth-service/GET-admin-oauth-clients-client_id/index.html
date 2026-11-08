@@ -224,6 +224,13 @@
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
+    <td><code>alias</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>小说</code></td>
+    <td style="font-size:11px"></td>
+    <td>Alias 显示简称（metadata.alias）</td>
+  </tr><tr>
     <td><code>client_auth_methods</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
@@ -307,6 +314,13 @@
     <td><code>My App</code></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>post_logout_redirect_uris</code></td>
+    <td>array of<br/><p><strong>string</strong></p></td>
+    <td><span class="optional">否</span></td>
+    <td><code>['[&quot;https://admin.autional.cn/&quot;]']</code></td>
+    <td style="font-size:11px"></td>
+    <td>PostLogoutRedirectURIs 登出回跳白名单（OIDC RP-Initiated Logout 1.0 独立注册面，ADR-1）</td>
   </tr><tr>
     <td><code>privacy_policy</code></td>
     <td><code>string</code></td>

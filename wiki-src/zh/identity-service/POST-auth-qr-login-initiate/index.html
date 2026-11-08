@@ -172,6 +172,22 @@
       <h1><span class="meta-item method POST">POST</span> <code class="path">/auth/qr-login/initiate</code></h1>
 <p class="summary">生成一个新的二维码登录会话，返回会话令牌和数字匹配码供用户扫描</p>
 <div class="meta"><span class="meta-item">会话管理</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
+<section><h2>请求体</h2>
+<p><strong>Schema：</strong> <a href="#schema-service-identity/internal/handler/dto.qrlogininitiaterequest"><code>service-identity/internal/handler/dto.QrLoginInitiateRequest</code></a></p>
+<div id="schema-service-identity/internal/handler/dto.qrlogininitiaterequest">
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>tenant_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Explicit tenant from the address bar</td>
+  </tr></tbody>
+</table></div>
+</div>
+</section>
 <section><h2>响应</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>状态</th><th>描述</th><th>Schema</th></tr></thead>

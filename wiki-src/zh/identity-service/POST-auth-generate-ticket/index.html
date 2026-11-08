@@ -178,19 +178,19 @@
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
-    <td><code>user_id</code></td>
-    <td><code>string</code></td>
-    <td><span class="required">是</span></td>
-    <td><code>usr_abc123</code></td>
-    <td style="font-size:11px"></td>
-    <td>用户ID</td>
-  </tr><tr>
     <td><code>tenant_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td><code>tnt_xyz789</code></td>
     <td style="font-size:11px"></td>
-    <td>租户ID</td>
+    <td>租户ID（空 → 默认 JWT 租户）</td>
+  </tr><tr>
+    <td><code>user_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>usr_abc123</code></td>
+    <td style="font-size:11px"></td>
+    <td>用户ID（空 → 默认 JWT actor）</td>
   </tr></tbody>
 </table></div>
 </div>

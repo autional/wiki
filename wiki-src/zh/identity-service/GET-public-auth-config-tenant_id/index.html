@@ -599,6 +599,13 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
+    <td><code>issuer</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>https://api.autional.cn/acme</code></td>
+    <td style="font-size:11px"></td>
+    <td>OIDC issuer（按根域+租户 slug 派生；18 §0）</td>
+  </tr><tr>
     <td><code>login_methods</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
     <td><span class="optional">否</span></td>
@@ -632,7 +639,10 @@
     <td><span class="optional">否</span></td>
     <td><code>app-01KV1ZCSJ5ZJ8G78B4TDG398NK</code></td>
     <td style="font-size:11px"></td>
-    <td></td>
+    <td>OAuthClientID 租户**门户**客户端的 client_id（kind=portal）。
+
+兼容保留：历史接入文档/SDK 曾把它当作「应用 appId」读取，导致应用回调必然登记失败
+（门户客户端只登记平台门户域）。语义清晰的新名字见 PortalOAuthClientID，两者同值。</td>
   </tr><tr>
     <td><code>oauth_providers</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
@@ -661,6 +671,14 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>portal_oauth_client_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>app-01KV1ZCSJ5ZJ8G78B4TDG398NK</code></td>
+    <td style="font-size:11px"></td>
+    <td>PortalOAuthClientID 与 OAuthClientID 同值，仅用于表达「这是门户客户端，不是应用 appId」。
+第三方应用应使用自有 OAuth 客户端（管理后台 oauth-clients 页登记后签发的 client_id）。</td>
   </tr><tr>
     <td><code>silent_challenge_enabled</code></td>
     <td><code>boolean</code></td>

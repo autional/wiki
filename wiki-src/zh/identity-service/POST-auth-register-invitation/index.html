@@ -189,15 +189,29 @@
     <td><code>string</code></td>
     <td><span class="required">是</span></td>
     <td></td>
-    <td style="font-size:11px">length: 8–128</td>
+    <td style="font-size:11px">length: 8–256</td>
     <td></td>
   </tr><tr>
     <td><code>username</code></td>
     <td><code>string</code></td>
-    <td><span class="optional">否</span></td>
+    <td><span class="required">是</span></td>
     <td></td>
     <td style="font-size:11px">length: 3–32</td>
     <td></td>
+  </tr><tr>
+    <td><code>password_transmission</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>tenant_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>TenantID 可选：仅用于邀请一致性校验（body 显式租户）；不参与租户解析。</td>
   </tr></tbody>
 </table></div>
 </div>
@@ -254,12 +268,26 @@
     <td style="font-size:11px"></td>
     <td>MFA challenge token (short-lived, requires MFA verification)</td>
   </tr><tr>
+    <td><code>enrolled_mfa_methods</code></td>
+    <td>array of<br/><p><strong>string</strong></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>用户已开通的 MFA 方法（挑战页仅展示这些）</td>
+  </tr><tr>
     <td><code>expires_in</code></td>
     <td><code>integer</code></td>
     <td><span class="optional">否</span></td>
     <td><code>1800</code></td>
     <td style="font-size:11px"></td>
     <td>Expiration time</td>
+  </tr><tr>
+    <td><code>membership_status</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>pending</code></td>
+    <td style="font-size:11px"></td>
+    <td>MembershipStatus 新注册待审批（WS-A A3）；pending 时不返回 token。</td>
   </tr><tr>
     <td><code>mfa_check_reason</code></td>
     <td><code>string</code></td>
@@ -411,6 +439,21 @@
     <td><code>2026-07-20T08:00:00Z</code></td>
     <td style="font-size:11px"></td>
     <td>Last login time</td>
+  </tr><tr>
+    <td><code>metadata</code></td>
+    <td><code>object</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>AUTH-44：metadata 仅 /auth/me 回传（portal 偏好等）；其余构造点省略。</td>
+  </tr><tr>
+    <td><code>mfa_enabled</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>True</code></td>
+    <td style="font-size:11px"></td>
+    <td>AUTH-44：指针 + omitempty —— 仅权威构造点（/auth/me）填充；其余构造点省略该键，
+避免登录响应等处误报 mfa_enabled=false（零值不等于&quot;未启用&quot;）。</td>
   </tr><tr>
     <td><code>must_change_password</code></td>
     <td><code>boolean</code></td>

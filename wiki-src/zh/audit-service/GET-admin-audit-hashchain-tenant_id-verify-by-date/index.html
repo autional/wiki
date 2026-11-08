@@ -208,7 +208,7 @@
 <section><h2>响应</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>状态</th><th>描述</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>验证结果</td><td><a href="#schema-service-audit/internal/handler/dto.verifychaindetailresponse"><code>service-audit/internal/handler/dto.VerifyChainDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数校验失败</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>验证结果</td><td><a href="#schema-service-audit/internal/handler/dto.verifychaindetailresponse"><code>service-audit/internal/handler/dto.VerifyChainDetailResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>请求参数校验失败</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>401</strong></td><td>未认证</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>403</strong></td><td>跨租户访问（路径租户与认证租户不一致；平台管理员除外）</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr><tr><td><strong>500</strong></td><td>服务内部错误</td><td><a href="#schema-dto.problem"><code>dto.Problem</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>引用的 Schema</h2>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POST /oauth/logout — OAuth 服务 API 文档 — Autional</title>
-  <meta name="description" content="OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）；未携带 id_token_hint 时要求已认证会话（Bearer access token）；post_logout_redirect_uri 仅在命中客户端注册 URI 时精确匹配跳转，否则回退 JSON 响应。">
+  <meta name="description" content="OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）。无 hint 四支分流：已认证会话（Bearer）→ 200 JSON {logged_out, location}；无会话浏览器（Accept 含 text/html）→ 302 确认页；无会话机器流 → 401。post_logout_redirect_uri 仅在命中客户端注册白名单时精确匹配（302 回跳或 location 出），否则忽略/省略。">
   <meta name="robots" content="index, follow">
   <meta name="language" content="zh-CN">
   <meta name="docsearch:language" content="zh-CN">
@@ -13,15 +13,15 @@
   <link rel="alternate" hreflang="x-default" href="https://wiki.autional.cn/oauth-service/POST-oauth-logout/">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzFkNGVkOCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9IjcwMCI+QTwvdGV4dD48L3N2Zz4=">
   <meta property="og:title" content="POST /oauth/logout — OAuth 服务 API | Autional">
-  <meta property="og:description" content="OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）；未携带 id_token_hint 时要求已认证会话（Bearer access token）；post_logout_redirect_uri 仅在命中客户端注册 URI 时精确匹配跳转，否则回退 JSON 响应。">
+  <meta property="og:description" content="OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）。无 hint 四支分流：已认证会话（Bearer）→ 200 JSON {logged_out, location}；无会话浏览器（Accept 含 text/html）→ 302 确认页；无会话机器流 → 401。post_logout_redirect_uri 仅在命中客户端注册白名单时精确匹配（302 回跳或 location 出），否则忽略/省略。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wiki.autional.cn/oauth-service/POST-oauth-logout/">
   <meta property="og:site_name" content="Autional API Wiki">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="POST /oauth/logout — OAuth 服务 API | Autional">
-  <meta name="twitter:description" content="OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）；未携带 id_token_hint 时要求已认证会话（Bearer access token）；post_logout_redirect_uri 仅在命中客户端注册 URI 时精确匹配跳转，否则回退 JSON 响应。">
+  <meta name="twitter:description" content="OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）。无 hint 四支分流：已认证会话（Bearer）→ 200 JSON {logged_out, location}；无会话浏览器（Accept 含 text/html）→ 302 确认页；无会话机器流 → 401。post_logout_redirect_uri 仅在命中客户端注册白名单时精确匹配（302 回跳或 location 出），否则忽略/省略。">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://wiki.autional.cn/"}, {"@type": "ListItem", "position": 2, "name": "API Reference", "item": "https://wiki.autional.cn/"}, {"@type": "ListItem", "position": 3, "name": "OAuth 服务", "item": "https://wiki.autional.cn/oauth-service/"}, {"@type": "ListItem", "position": 4, "name": "POST /oauth/logout"}]}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /oauth/logout — OAuth 服务 API | Autional", "description": "OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）；未携带 id_token_hint 时要求已认证会话（Bearer access token）；post_logout_redirect_uri 仅在命中客户端注册 URI 时精确匹配跳转，否则回退 JSON 响应。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "POST /oauth/logout — OAuth 服务 API | Autional", "description": "OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）。无 hint 四支分流：已认证会话（Bearer）→ 200 JSON {logged_out, location}；无会话浏览器（Accept 含 text/html）→ 302 确认页；无会话机器流 → 401。post_logout_redirect_uri 仅在命中客户端注册白名单时精确匹配（302 回跳或 location 出），否则忽略/省略。", "about": {"@type": "SoftwareApplication", "name": "Autional"}}</script>
   <style>  html{visibility:visible;opacity:1}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -170,7 +170,7 @@
     <main>
       <nav class="breadcrumb"><a href="/">文档</a><span>›</span><a href="https://reference.autional.cn">API 参考</a><span>›</span><a href="/oauth-service/">OAuth 服务</a><span>›</span><span>POST /oauth/logout</span></nav>
       <h1><span class="meta-item method POST">POST</span> <code class="path">/oauth/logout</code></h1>
-<p class="summary">OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）；未携带 id_token_hint 时要求已认证会话（Bearer access token）；post_logout_redirect_uri 仅在命中客户端注册 URI 时精确匹配跳转，否则回退 JSON 响应。</p>
+<p class="summary">OIDC RP-Initiated Logout 1.0。id_token_hint 必须为本服务 RSA 验签有效（含 iss 校验）。无 hint 四支分流：已认证会话（Bearer）→ 200 JSON {logged_out, location}；无会话浏览器（Accept 含 text/html）→ 302 确认页；无会话机器流 → 401。post_logout_redirect_uri 仅在命中客户端注册白名单时精确匹配（302 回跳或 location 出），否则忽略/省略。</p>
 <div class="meta"><span class="meta-item">OAuth</span> <span class="meta-item auth public">None</span> <span class="meta-item">application/json</span></div>
 <section><h2>请求参数</h2>
 <div class="table-wrap"><table>
@@ -201,7 +201,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>状态参数，随重定向原样返回（URL 转义）</td>
+    <td>状态参数，随重定向/location 原样返回（URL 转义）</td>
   </tr><tr>
     <td><code>client_id</code></td>
     <td><code>query</code></td>
@@ -210,14 +210,14 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>无 id_token_hint 的已认证会话登出时的客户端标识（用于重定向白名单校验）</td>
+    <td>无 id_token_hint 时的客户端标识（白名单校验；确认页透传）</td>
   </tr></tbody>
 </table></div>
 </section>
 <section><h2>响应</h2>
 <div class="table-wrap"><table>
   <thead><tr><th>状态</th><th>描述</th><th>Schema</th></tr></thead>
-  <tbody><tr><td><strong>200</strong></td><td>登出成功</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>302</strong></td><td>重定向到已注册的 post_logout_redirect_uri</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>invalid_request：id_token_hint 无效（验签/iss/过期/缺 sub）</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>invalid_request：无有效 id_token_hint 且无已认证会话</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>access_denied：id_token_hint 主体与当前会话用户不一致</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr></tbody>
+  <tbody><tr><td><strong>200</strong></td><td>登出成功（无 hint 已认证会话：data={logged_out, location?}；hint 无回跳：message=logged_out）</td><td><a href="#schema-service-oauth/internal/handler/dto.logoutjsonresponse"><code>service-oauth/internal/handler/dto.LogoutJSONResponse</code></a></td></tr><tr><td><strong>302</strong></td><td>重定向（hint 命中注册 URI；或无会话浏览器 → 确认页）</td><td><a href="#schema-service-core/base/dto.simpleresponse"><code>service-core/base/dto.SimpleResponse</code></a></td></tr><tr><td><strong>400</strong></td><td>invalid_request：id_token_hint 无效（验签/iss/过期/缺 sub）</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>401</strong></td><td>invalid_request：无有效 id_token_hint 且无已认证会话（机器流）</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr><tr><td><strong>403</strong></td><td>access_denied：id_token_hint 主体与当前会话用户不一致</td><td><a href="#schema-service-oauth/internal/handler/dto.oautherrorresponse"><code>service-oauth/internal/handler/dto.OAuthErrorResponse</code></a></td></tr></tbody>
 </table></div>
 </section>
 <section><h2>引用的 Schema</h2>
@@ -247,6 +247,58 @@
     <td></td>
   </tr></tbody>
 </table></div>
+<h3 id="schema-service-oauth/internal/handler/dto.logoutjsonresponse">service-oauth/internal/handler/dto.LogoutJSONResponse</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>code</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>data</code></td>
+    <td><a href="#schema-service-oauth/internal/handler/dto.logoutresult"><code>service-oauth/internal/handler/dto.LogoutResult</code></a></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>message</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>timestamp</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-service-oauth/internal/handler/dto.logoutresult">service-oauth/internal/handler/dto.LogoutResult</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>location</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>https://app.example.com/after-logout</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>logged_out</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>True</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
 <h3 id="schema-service-oauth/internal/handler/dto.oautherrorresponse">service-oauth/internal/handler/dto.OAuthErrorResponse</h3>
 <p>OAuth标准错误响应</p>
 <div class="table-wrap"><table class="schema-table">
@@ -272,6 +324,15 @@
     <td><code>https://docs.example.com/errors</code></td>
     <td style="font-size:11px"></td>
     <td>错误URI</td>
+  </tr><tr>
+    <td><code>i18n_key</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>error.oauth_invalid_request</code></td>
+    <td style="font-size:11px"></td>
+    <td>I18nKey 本地化键（AUTH-46①/U416）：协议字段 error/error_description 保持 RFC 6749 §5.2 原样，
+本字段是**附加**信息（omitempty；未知错误码不填），供前端/AI 客户端按键确定性渲染文案，
+无需解析英文原文。仅出现在 JSON 错误体，不写入 302 错误重定向的查询串。</td>
   </tr><tr>
     <td><code>state</code></td>
     <td><code>string</code></td>

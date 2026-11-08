@@ -178,13 +178,6 @@
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
-    <td><code>email</code></td>
-    <td><code>string</code></td>
-    <td><span class="required">是</span></td>
-    <td></td>
-    <td style="font-size:11px"></td>
-    <td></td>
-  </tr><tr>
     <td><code>name_id</code></td>
     <td><code>string</code></td>
     <td><span class="required">是</span></td>
@@ -199,7 +192,28 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
+    <td><code>email</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>Email 与 UserID 至少一个（AUTH-12：SAML 已链接路径按 user_id 解析）。</td>
+  </tr><tr>
     <td><code>name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>tenant_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>显式租户；空 → X-Tenant-ID</td>
+  </tr><tr>
+    <td><code>user_id</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td></td>
@@ -259,6 +273,20 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>status</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>AUTH-12：active/pending/...；saml-service 据此拒绝非 active</td>
+  </tr><tr>
+    <td><code>tenant_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>解析所用租户（调用方校验与 provider 租户一致）</td>
   </tr><tr>
     <td><code>user_id</code></td>
     <td><code>string</code></td>

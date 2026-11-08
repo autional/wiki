@@ -194,6 +194,32 @@
 </table></div>
 </section>
 <section><h2>引用的 Schema</h2>
+<h3 id="schema-service-compliance/internal/handler/dto.assessmentcoveragepublic">service-compliance/internal/handler/dto.AssessmentCoveragePublic</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>assessed</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>7</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>percent</code></td>
+    <td><code>number</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>70</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>10</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
 <h3 id="schema-service-compliance/internal/handler/dto.errorresponse">service-compliance/internal/handler/dto.ErrorResponse</h3>
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
@@ -209,6 +235,60 @@
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
     <td><code>invalid request</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr></tbody>
+</table></div>
+<h3 id="schema-service-compliance/internal/handler/dto.frameworkassessmentpublic">service-compliance/internal/handler/dto.FrameworkAssessmentPublic</h3>
+<div class="table-wrap"><table class="schema-table">
+  <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
+  <tbody><tr>
+    <td><code>controls_assessed</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>7</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>controls_total</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>10</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>controls_unknown</code></td>
+    <td><code>integer</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>3</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>display_name</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>ISO/IEC 27001:2022</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>framework</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>iso27001</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>standard_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>iso27001_2022</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>status</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>not_assessed</code></td>
     <td style="font-size:11px"></td>
     <td></td>
   </tr></tbody>
@@ -250,6 +330,34 @@
 <div class="table-wrap"><table class="schema-table">
   <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>示例</th><th>约束</th><th>描述</th></tr></thead>
   <tbody><tr>
+    <td><code>assessment_coverage</code></td>
+    <td><a href="#schema-service-compliance/internal/handler/dto.assessmentcoveragepublic"><code>service-compliance/internal/handler/dto.AssessmentCoveragePublic</code></a></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>assessment_version</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>assessment-v2</code></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
+    <td><code>evaluation_error</code></td>
+    <td><code>boolean</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>False</code></td>
+    <td style="font-size:11px"></td>
+    <td>EvaluationError 只暴露&quot;是否发生评估异常&quot;，不公开内部错误串。</td>
+  </tr><tr>
+    <td><code>framework_assessments</code></td>
+    <td>array of<br/><p>参见 <a href="#schema-service-compliance/internal/handler/dto.frameworkassessmentpublic"><code>service-compliance/internal/handler/dto.FrameworkAssessmentPublic</code></a></p></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>P2（2026-10-27）：显式四态 + 覆盖度。legacy 布尔保留（additive）。</td>
+  </tr><tr>
     <td><code>frameworks_enabled</code></td>
     <td>array of<br/><p><strong>string</strong></p></td>
     <td><span class="optional">否</span></td>

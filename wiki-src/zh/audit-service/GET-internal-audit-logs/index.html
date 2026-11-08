@@ -196,12 +196,12 @@
   </tr><tr>
     <td><code>action</code></td>
     <td><code>query</code></td>
-    <td><code>string</code></td>
+    <td><code>array</code></td>
     <td><span class="optional">否</span></td>
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>操作类型</td>
+    <td>操作类型（可重复传递实现多值 OR 查询）</td>
   </tr><tr>
     <td><code>resource_type</code></td>
     <td><code>query</code></td>
@@ -219,7 +219,7 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>开始时间戳</td>
+    <td>开始时间戳（start_date 串优先）</td>
   </tr><tr>
     <td><code>end_time</code></td>
     <td><code>query</code></td>
@@ -228,7 +228,25 @@
     <td></td>
     <td></td>
     <td style="font-size:11px"></td>
-    <td>结束时间戳</td>
+    <td>结束时间戳（end_date 串优先）</td>
+  </tr><tr>
+    <td><code>start_date</code></td>
+    <td><code>query</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>开始日期(YYYY-MM-DD，UTC+8；优先于 start_time)</td>
+  </tr><tr>
+    <td><code>end_date</code></td>
+    <td><code>query</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>结束日期(YYYY-MM-DD，UTC+8，含当日全量；优先于 end_time)</td>
   </tr><tr>
     <td><code>page</code></td>
     <td><code>query</code></td>
@@ -615,6 +633,13 @@ ISO 8601 格式
     <td><code>1713175800</code></td>
     <td style="font-size:11px"></td>
     <td>时间戳</td>
+  </tr><tr>
+    <td><code>trace_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td><code>4bf92f3577b34da6a3ce929d0e0e4736</code></td>
+    <td style="font-size:11px"></td>
+    <td>W3C 追踪ID</td>
   </tr><tr>
     <td><code>user_agent</code></td>
     <td><code>string</code></td>

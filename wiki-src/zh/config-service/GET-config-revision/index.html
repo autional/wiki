@@ -232,6 +232,13 @@
     <td style="font-size:11px"></td>
     <td></td>
   </tr><tr>
+    <td><code>changeset_id</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td></td>
+  </tr><tr>
     <td><code>created_at</code></td>
     <td><code>string</code></td>
     <td><span class="optional">否</span></td>
@@ -273,6 +280,14 @@
     <td></td>
     <td style="font-size:11px"></td>
     <td></td>
+  </tr><tr>
+    <td><code>reason</code></td>
+    <td><code>string</code></td>
+    <td><span class="optional">否</span></td>
+    <td></td>
+    <td style="font-size:11px"></td>
+    <td>变更审计（000012 增量列）。Reason 由 Publish 的 reason 入参落库（历史读面 API §2 需要）；
+ChangesetID 由 CC-04 变更单流程回填，当前恒空。</td>
   </tr><tr>
     <td><code>revision</code></td>
     <td><code>integer</code></td>
