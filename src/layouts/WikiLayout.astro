@@ -3,6 +3,7 @@ import '../styles/global.css';
 import ServiceNav from '../components/ServiceNav.astro';
 import { t } from '../i18n';
 import { LOCALE, REGION, SITE_URL, SIBLING_SITE_URL, SITE_ROOT_DOMAIN, brotherUrl, GITHUB_REPO_URL } from '../lib/site-env';
+import { siblingPathFor } from '../lib/sibling-index';
 
 export interface Props {
   title?: string;
@@ -22,6 +23,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const pathname = Astro.url.pathname;
 const currentSvc = Astro.url.pathname.split('/')[1] || '';
 const ogImage = new URL('/og-default.png', Astro.site).href;
+
+// 对侧区同端点路径（按 METHOD + 归一化 path 映射，避免参数名差异导致 hreflang 404）。
+// null = 对侧未收录该端点，此时省略对应 hreflang / x-default。
+const siblingPath = noindex ? null : siblingPathFor(pathname);
+const siblingHref = siblingPath ? new URL(siblingPath, SIBLING_SITE_URL).href : null;
+const zhHref = REGION === 'cn' ? canonical.href : siblingHref;
+const enHref = REGION === 'com' ? canonical.href : siblingHref;
+const xDefaultHref = REGION === 'com' ? canonical.href : siblingHref;
 
 const defaultJsonLd = {
   '@context': 'https://schema.org',
@@ -55,13 +64,13 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
   <meta name="description" content={description} />
   {noindex && <meta name="robots" content="noindex" />}
   <link rel="canonical" href={canonical.href}>
-  {/* hreflang：同路径在两区的对应页（两区页面结构一一对应）。x-default 指 .com（全球面）。
-      noindex 页不做语言配对（页面本身不入索引，给出配对只会产生噪声）。 */}
+  {/* hreflang：同端点在两区的对应页（按 METHOD + 归一化 path 映射；对侧未收录则省略）。
+      x-default 指 .com（全球面）。noindex 页不做语言配对。 */}
   {!noindex && (
     <>
-      <link rel="alternate" hreflang="zh-CN" href={new URL(pathname, REGION === 'cn' ? SITE_URL : SIBLING_SITE_URL).href} />
-      <link rel="alternate" hreflang="en-US" href={new URL(pathname, REGION === 'com' ? SITE_URL : SIBLING_SITE_URL).href} />
-      <link rel="alternate" hreflang="x-default" href={new URL(pathname, REGION === 'com' ? SITE_URL : SIBLING_SITE_URL).href} />
+      {zhHref && <link rel="alternate" hreflang="zh-CN" href={zhHref} />}
+      {enHref && <link rel="alternate" hreflang="en-US" href={enHref} />}
+      {xDefaultHref && <link rel="alternate" hreflang="x-default" href={xDefaultHref} />}
     </>
   )}
   <!-- theme-color is consumed by the browser, not CSS: var() is dropped as an invalid
@@ -124,9 +133,9 @@ const targetLangLabel = t(targetLang === 'en' ? 'lang.switchToEn' : 'lang.switch
     </aside>
 
     <!-- main content -->
-    <div class="flex-1 flex overflow-hidden bg-neutral-50/50" data-pagefind-body>
+    <main class="flex-1 flex overflow-hidden bg-neutral-50/50" data-pagefind-body>
       <slot />
-    </div>
+    </main>
   </div>
 
   <!-- mobile service drawer -->

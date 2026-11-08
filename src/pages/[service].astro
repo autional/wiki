@@ -1,5 +1,5 @@
 ---
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import WikiLayout from '../layouts/WikiLayout.astro';
 import { services, serviceByName } from '../data/services';
@@ -17,6 +17,7 @@ const svcTitle = svc ? t(`services.${svc.name}`) : service;
 
 // Read pre-generated wiki HTML at build time
 const htmlPath = join(process.cwd(), 'wiki-src', CORPUS_LANG_DIR, service ?? '', 'index.html');
+const corpusExists = existsSync(htmlPath);
 let endpointHtml = '';
 let endpointCount = 0;
 let jsonLdScripts: Record<string, any>[] = [];
@@ -51,20 +52,22 @@ try {
   endpointHtml = `<p class="text-sm text-[var(--color-text-muted)] py-20 text-center">${t('service.notIndexed')}</p>`;
 }
 
-const pageTitle = svc
+const pageTitle = svc && corpusExists
   ? t('service.meta.title', { title: svcTitle ?? '', name: svc.name })
   : t('service.meta.titleFallback', { name: service ?? '' });
-const description = svc
+const description = svc && corpusExists
   ? t('service.meta.description', { title: svcTitle ?? '', name: svc.name, count: endpointCount, port: svc.port })
   : t('service.meta.descriptionFallback', { name: service ?? '' });
 ---
 
-<WikiLayout title={pageTitle} description={description} jsonLd={jsonLdScripts}>
+<WikiLayout title={pageTitle} description={description} jsonLd={jsonLdScripts} noindex={!corpusExists}>
   <div class="flex-1 overflow-y-auto bg-neutral-50/50">
     <div class="sticky top-0 bg-white/95 backdrop-blur border-b border-primary-100/50 px-4 py-3 z-10">
       <div class="flex items-center justify-between">
         <span class="text-sm font-semibold text-primary-900 truncate" data-i18n={svc ? `services.${svc.name}` : undefined}>{svcTitle}</span>
-        <span class="text-[0.65rem] font-mono font-medium text-primary-400 shrink-0"><span>{endpointCount}</span><span data-i18n="service.endpointsCountSuffix">{t('service.endpointsCountSuffix')}</span></span>
+        {corpusExists && (
+          <span class="text-[0.65rem] font-mono font-medium text-primary-400 shrink-0"><span>{endpointCount}</span><span data-i18n="service.endpointsCountSuffix">{t('service.endpointsCountSuffix')}</span></span>
+        )}
       </div>
     </div>
     <div class="wiki-detail-content px-4 md:px-8 py-10 max-w-4xl">

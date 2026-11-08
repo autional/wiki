@@ -130,6 +130,11 @@ def _shared_replacements(region: str) -> list:
         # (the surrounding text is translated separately, see ZH_CHROME_TRANSLATIONS).
         (re.compile(r"<code>docker/specs/([a-z0-9-]+)/</code>"),
          rf'<a href="{ref}/specs/\1.json"><code>\1.json</code></a>'),
+        # Internal work-item ids leaking from spec descriptions
+        # ("UP-53：「未实现」与「真实 0」…" / "（UP-91-A）：可缺省").
+        (re.compile(r"（UP-[0-9]+(?:-[A-Z])?）\s*[：:]?\s*"), ""),
+        (re.compile(r"\(UP-[0-9]+(?:-[A-Z])?\)\s*[：:]?\s*"), ""),
+        (re.compile(r"\bUP-[0-9]+(?:-[A-Z])?\s*[：:]\s*"), ""),
         # Mobile: wrap tables in a horizontal scroll container (styling in global.css).
         ("<table", '<div class="table-wrap"><table'),
         ("</table>", "</table></div>"),
@@ -256,6 +261,8 @@ def normalize(content: str, lang: str) -> str:
 def check(content: str, src: str, lang: str) -> str | None:
     if MALFORMED_HREF.search(content):
         return "malformed href remains after normalization"
+    if re.search(r"\bUP-[0-9]{2,}(?:-[A-Z])?\b", content):
+        return "residual (internal work-item id): UP-xx"
     residuals = ZH_RESIDUALS if lang == "zh" else EN_RESIDUALS
     for residual in residuals:
         if residual in content:
