@@ -1,5 +1,10 @@
 # Autional API Wiki Portal
 
+> 🚨 **2026-11-10 托管变更**：`*.autional.cn` **已迁出 Vercel** —— 改为 mf01 构建（node:24-alpine + 钉版 pnpm）→ 香港自建托管。
+> `.cn` 的构建 env 由 workspace `shared/infra-ops/sites/sites.manifest.json` 注入；push 后由 mf01 cron（约 10 分钟）构建发布，不经 Vercel。
+> `*.autional.com` 仍在 Vercel —— 本文中涉及 Vercel 的构建/部署描述对 `.com` 仍然成立。
+> 现行口径：workspace `docs/AUTIONAL-CN-SITES-SELF-HOST.md`。
+
 **Sites**: [wiki.autional.com](https://wiki.autional.com) (com) / [wiki.autional.cn](https://wiki.autional.cn) (cn)
 **Stack**: Astro 7 + Tailwind 4（2026-10-22 由 Astro 5 / Tailwind 3.4 抬版，CVE-2026-114127/114128）
 **Repository**: [github.com/autional/wiki](https://github.com/autional/wiki)
@@ -25,7 +30,7 @@ REGION=com SITE_URL=https://wiki.autional.com DEFAULT_LANG=en FALLBACK_LANG=en C
 
 ## Content Source
 
-`wiki-src/<lang>/` is the build-time content source for the Astro pages and is committed (Vercel builds from this repo). It lives outside `public/`, so the raw mirror never reaches `dist/`; legacy `/wiki/api/**` URLs return **308** (Vercel `permanent: true`) to the clean routes by `vercel.json`.
+`wiki-src/<lang>/` is the build-time content source for the Astro pages and is committed (built from this repo: mf01 for `.cn`, Vercel for `.com`). It lives outside `public/`, so the raw mirror never reaches `dist/`; legacy `/wiki/api/**` URLs return **308** (Vercel `permanent: true`) to the clean routes by `vercel.json`.
 
 - **zh** — generated in the Autional monorepo: `python scripts/generate/generate_api_wiki.py --html`, then normalized and copied into `wiki-src/zh/` by `python scripts/sync-wiki.py --lang zh`.
 - **en** — regenerated from the reference portal's English specs by `python scripts/gen-wiki-en.py` (runs the same generator against `reference/public/specs/*-en.json`), then normalized and copied into `wiki-src/en/` by `python scripts/sync-wiki.py --lang en --src <gen-wiki-en html dir>`.
@@ -51,4 +56,4 @@ Services without a spec render the portal's "not yet indexed" fallback.
 
 ## Deploy
 
-Push to `main` — Vercel auto-deploys. Projects: `wiki` (com) / `cn-wiki` (cn)；env 按项目分别注入。
+Push to `main` — `.com` 由 Vercel 自动部署（项目 ``wiki``）；`.cn` 由 mf01 cron 构建发布（约 10 分钟，不经 Vercel）。env 按区分别注入。
